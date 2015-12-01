@@ -1,0 +1,240 @@
+"Games"
+{
+	"hl2mp"
+	{
+		"Offsets"
+		{
+			// void CHL2MP_Player::FireBullets ( const FireBulletsInfo_t &info )
+			"FireBullets"
+			{
+				"windows"	"112"
+				"linux"		"113"
+				"mac"		"113"
+			}	
+			// Activity CBaseCombatCharacter::Weapon_TranslateActivity( Activity baseAct, bool *pRequired )
+			"Weapon_TranslateActivity"
+			{
+				"windows"	"257"
+				"linux"		"258"
+				"mac"		"258"
+			}
+			// float CBaseCombatWeapon::GetFireRate( void )
+			"GetFireRate"
+			{
+				"windows"	"283"
+				"linux"		"284"
+				"mac"		"284"
+			}
+			// bool CBaseCombatWeapon::HasPrimaryAmmo( void )
+			"HasPrimaryAmmo"
+			{
+				"windows"	"243"
+				"linux"		"244"
+				"mac"		"244"
+			}	
+			// bool CBaseCombatWeapon::HasSecondaryAmmo( void )
+			"HasSecondaryAmmo"
+			{
+				"windows"	"244"
+				"linux"		"245"
+				"mac"		"245"
+			}
+			// bool CBaseCombatWeapon::ReloadOrSwitchWeapons( void )
+			"ReloadOrSwitchWeapons"
+			{
+				"windows"	"253"
+				"linux"		"254"
+				"mac"		"254"
+			}
+			// bool CHL2MPRules::CanHavePlayerItem( CBasePlayer *pPlayer, CBaseCombatWeapon *pItem )
+			//"CanHavePlayerItem"
+			//{
+			//	"windows"	"85"
+			//	"linux"		"86"
+			//	"mac"		"86"
+			//}	
+			// bool CHL2MP_Player::Weapon_Switch( CBaseCombatWeapon *pWeapon, int viewmodelindex = 0)
+			"Weapon_Switch"
+			{
+				"windows"	"264"
+				"linux"		"265"
+				"mac"		"265"
+			}
+			// void CBasePlayer::Weapon_Equip( CBaseCombatWeapon *pWeapon )
+			"Weapon_Equip"
+			{
+				"windows"	"261"
+				"linux"		"262"
+				"mac"		"262"
+			}
+			// bool CBasePlayer::BumpWeapon( CBaseCombatWeapon *pWeapon )
+			"BumpWeapon"
+			{
+				"windows"	"396"
+				"linux"		"397"
+				"mac"		"397"
+			}	
+			// void CBaseCombatWeapon::AddViewKick( void )
+			"AddViewKick"
+			{
+				"windows"	"298"
+				"linux"		"299"
+				"mac"		"299"
+			}
+			// bool CBaseCombatWeapon::Reload( void )
+			"Reload"
+			{
+				"windows"	"270"
+				"linux"		"271"
+				"mac"		"271"
+			}	
+			// void CBaseCombatWeapon:WeaponSound( WeaponSound_t sound_type, float soundtime = 0.0f )
+			"WeaponSound"
+			{
+				"windows"	"289"
+				"linux"		"290"
+				"mac"		"290"
+			}	
+			// void CBaseCombatWeapon::StopWeaponSound( WeaponSound_t sound_type )
+			"StopWeaponSound"
+			{
+				"windows"	"290"
+				"linux"		"291"
+				"mac"		"291"
+			}	
+			// void CBaseCombatWeapon::ItemPostFrame( void )
+			"ItemPostFrame"
+			{
+				"windows"	"259"
+				"linux"		"260"
+				"mac"		"260"
+			}
+			// void CBaseCombatWeapon::PrimaryAttack( void )
+			"PrimaryAttack"
+			{
+				"windows"	"273"
+				"linux"		"274"
+				"mac"		"274"
+			}
+			// void CBaseCombatWeapon::SecondaryAttack( void )
+			"SecondaryAttack"
+			{
+				"windows"	"274"
+				"linux"		"275"
+				"mac"		"275"
+			}
+			// bool CBaseCombatWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
+			"Holster"
+			{
+				"windows"	"249"
+				"linux"		"250"
+				"mac"		"250"
+			}
+			// bool CBaseCombatWeapon::SendWeaponAnim( int iActivity )
+			"SendWeaponAnim"
+			{
+				"windows"	"236"
+				"linux"		"237"
+				"mac"		"237"
+			}
+			// void CBaseCombatWeapon::SendViewModelAnim( int nSequence )
+			"SendViewModelAnim"
+			{
+				"windows"	"237"
+				"linux"		"238"
+				"mac"		"238"
+			}
+			// void CBaseCombatWeapon::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator )
+			"Operator_HandleAnimEvent"
+			{
+				"windows"	"359"
+				"linux"		"360"
+				"mac"		"360"
+			}
+			// int CBaseCombatWeapon::GetDefaultClip1( void )
+			"GetDefaultClip1"
+			{
+				"windows"	"313"
+				"linux"		"314"
+				"mac"		"314"
+			}
+			// void CBaseCombatWeapon::CheckRespawn( void )
+			"CheckRespawn"
+			{
+				"windows"	"349"
+				"linux"		"350"
+				"mac"		"350"
+			}	
+			// bool CBaseCombatWeapon::UsesClipsForAmmo1( void )
+			"UsesClipsForAmmo1"
+			{
+				"windows"	"326"
+				"linux"		"327"
+				"mac"		"327"
+			}
+			// int CHL2_Player::GiveAmmo( int nCount, int nAmmoIndex, bool bSuppressSound)
+			"GiveAmmo"
+			{
+				"windows"	"252"
+				"linux"		"253"
+				"mac"		"253"
+			}
+			// int CBaseCombatCharacter::GetAmmoCount( int iAmmoIndex )
+			"GetAmmoCount"
+			{
+				"windows"	"255"
+				"linux"		"256"
+				"mac"		"256"
+			}
+			// void CBaseCombatCharacter::RemoveAmmo( int iCount, int iAmmoIndex )
+			"RemoveAmmo"
+			{
+				"windows"	"254"
+				"linux"		"254"
+				"mac"		"254"
+			}
+			// void CHL2MP_Player::SetAnimation( PLAYER_ANIM playerAnim )
+			"SetAnimation"
+			{
+				"windows"	"365"
+				"linux"		"366"
+				"mac"		"366"
+			}
+			// void CBaseCombatWeapon::SetViewModel()
+			"SetViewModel"
+			{
+				"windows"	"238"
+				"linux"		"239"
+				"mac"		"239"
+			}
+			// bool CBaseCombatWeapon::Deploy()
+			"Deploy"
+			{
+				"windows"	"248"
+				"linux"		"249"
+				"mac"		"249"
+			}
+			// void CBaseCombatWeapon::Drop( const Vector &vecVelocity )
+			"Drop"
+			{
+				"windows"	"220"
+				"linux"		"221"
+				"mac"		"221"
+			}
+			// void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
+			"Explode"
+			{
+				"windows"	"224"
+				"linux"		"225"
+				"mac"		"225"
+			}
+			// Vector CBaseCombatCharacter::Weapon_ShootPosition( )
+			"Weapon_ShootPosition"
+			{
+				"windows"	"265"
+				"linux"		"266"
+				"mac"		"266"
+			}
+		}
+	}
+}
