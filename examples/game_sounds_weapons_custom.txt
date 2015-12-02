@@ -1,0 +1,45 @@
+// CUSTOM Weapons
+
+// OICW
+
+"Weapon_OICW.Single"
+{
+	"channel"	"CHAN_WEAPON"
+	"volume"	"0.8"
+	"soundlevel"	"SNDLVL_GUNFIRE"
+	"pitch"		"85,95"
+
+	"rndwave"
+	{
+		"wave"	"weapons/oicw/oicw_fire1.wav"
+		"wave"	"weapons/oicw/oicw_fire2.wav"
+		"wave"	"weapons/oicw/oicw_fire3.wav"
+	}
+}
+
+"Weapon_OICW.Reload"
+{
+	"channel"		"CHAN_ITEM"
+	"volume"		"0.7"
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"	"weapons/oicw/oicw_reload.wav"
+}
+
+"Weapon_OICW.Special1"
+{
+	"channel"		"CHAN_ITEM"
+	"volume"		"0.7"
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"		"weapons/sniper/sniper_zoomin.wav"
+}
+
+"Weapon_OICW.Special2"
+{
+	"channel"		"CHAN_ITEM"
+	"volume"		"0.7"
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"		"weapons/sniper/sniper_zoomout.wav"
+}
