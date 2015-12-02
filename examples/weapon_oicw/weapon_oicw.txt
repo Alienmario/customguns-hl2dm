@@ -1,0 +1,126 @@
+WeaponData
+{
+	// Weapon data is loaded by both the Game and Client DLLs.
+	"viewmodel"				"models/weapons/v_oicw.mdl"
+	"playermodel"			"models/weapons/w_oicw.mdl"
+	
+	// this prefix determines how player holds the gun in third person and will be used by customguns if this gun is custom
+	// more prefixes can be found in weapon scripts files
+	"anim_prefix"		"ar2"
+
+	"clip_size"			"30"
+	"default_clip"		"30"
+	"clip2_size"		"-1"
+	"default_clip2"		"-1"
+	"primary_ammo"		"SMG1"
+	"secondary_ammo"	"None"
+
+	"autoswitchto"		"0"
+	"autoswitchfrom"	"0"
+	
+	// In order to get custom weapon sounds working, copy game_sounds_weapons.txt (can be found in /hl2/scripts)
+	// to /hl2mp/custom/Custom_Weapons/scripts and add a new sound entry, f.e. Weapon_Minigun.Single and then just link it here.
+	SoundData
+	{
+		"empty"			"Weapon_SMG1.Empty"
+		"single_shot"	"Weapon_OICW.Single"
+		"reload"		"Weapon_OICW.Reload"
+		"special1"		"Weapon_OICW.Special1"
+		"special2"		"Weapon_OICW.Special2"
+	}
+
+	"CustomGunsPluginData"
+	{
+		"name"						"OICW"
+		
+		// mdl or vmt for selection menu
+		"model"						"models/weapons/w_oicw.mdl" 
+
+		// make the gun usable only by admins who have this flag(s), or -1 to alow everyone to use the gun
+		"admin_level"				"-1"
+		
+		// add this gun to player's inventory on spawn?
+		"give_on_spawn"				"0"
+		
+		// add this gun to player's inventory when he equips this weapon
+		"give_with_weapon"			"weapon_smg1"
+		
+		// binds to this weapon, auto switching when player selects it; if set, both weapons should use the same ammo type and give_with_weapon should be set the same as this!
+		"bind_to_weapon"			""
+		
+		// if 1, does not disappear from inventory when player drops the physical weapon or is stripped from weapons; recommended for admin weapons or weapons given on spawn
+		"persistent"				"0"
+		
+		// -1 to disable scope zoom
+		"scope_fov" 		"36"
+		"scope_overlay"		"overlays/weapons/oicw/scope_lens"
+		"scope_sound_on"	"Weapon_OICW.Special1"
+		"scope_sound_off"	"Weapon_OICW.Special2"
+		
+		
+		// weapon_type - possible values:
+		//		bullet - (default) Standard bullet weapon, uses clip sizes and ammo type defined above
+		//		throwable - Throws something away from the player - grenades, molotovs, ..
+		//		custom - Overrides ammo to an unknown value. This means the gun won't fire or reload itself. Its ammo ("m_iClip1" value) can be managed via other plugins. If used, set "primary_ammo" other than "None" to enable HUD ammo display.
+		"weapon_type"		"bullet"
+		
+		"bullet_settings"	// Used by bullet weapons ONLY
+		{
+			// per-shot damage
+			"damage" "8"
+			
+			// bullet spread, 0 to 0.1 are normally used, where 0 is no spread
+			// https://github.com/ValveSoftware/source-sdk-2013/blob/55ed12f8d1eb6887d348be03aee5573d44177ffb/mp/src/game/shared/basecombatweapon_shared.h#L95
+			// ==> sin (degrees/2)
+			"spread" "0.01"
+			
+			// player view kick absolute scale; 0.5 is defined as 'easy'
+			"view_kick_scale" "1.5"
+			// player view kick maximum angle (in degrees)
+			"view_kick_max_angle" "1.0"
+			// time of fire when view kick reaches maximum angle (in seconds)
+			// Fix! set to -1 if this is not a machine gun and view kick should be constant instead of calculated from start of fire
+			"view_kick_max_time" "1.0"
+			
+			// fire rate, time between each bullet, in seconds
+			// ==> 1 / (RPM / 60)
+			"fire_rate" "0.13"
+			
+			// Barrel spinup time - useful for minigun; will play 'special1' sound. Set 0.0 to disable this
+			"fire_delay"	"0.0"
+			// Barrel spinup viewmodel sequence (animation) number -- use /seqtest [num] to check
+			"fire_delay_sequence"	"0"
+			// Don't do barrel spinup this long after firing (how long the barrel keeps spinning)
+			"fire_delay_cooldown"	"0.0"
+			
+			// Fix! If this weapon has looping sound instead of per-bullet sound this will attempt to stop it when player stops firing
+			"fire_sound_is_loop" "0"
+			// Fix! The length of fire loop sound. If firing for longer than this value, fire sound will be restarted. Used only if "fire_sound_is_loop" is set 1!
+			"fire_sound_loop_length" "-1"
+			
+			// Makes bullet fire (trail) visible to the attacker. This can look bad for some high power weapons (sniper)
+			"bullet_fire_visible"	"1"
+		}
+		
+		"download"
+		{
+			"item"	"models/weapons/w_oicw.mdl"
+			"item"	"models/weapons/v_oicw.mdl"
+			
+			// Normally, the materials would download automatically, but this model has some strange naming conventions
+			"item"	"materials/models/weapons/v_oicw/v_oicw_sheet.vmt"
+			"item"	"materials/models/weapons/v_oicw/v_oicw_sheet.vtf"
+			"item"	"materials/models/weapons/v_oicw/v_oicw_sheet_normal.vtf"
+			
+			// Scope
+			"item"	"materials/overlays/weapons/oicw/scope_lens.vmt"
+			"item"	"materials/overlays/weapons/oicw/scope.vtf"
+			"item"	"materials/overlays/weapons/oicw/scope2.vtf"
+			
+			"item"	"sound/weapons/oicw/oicw_fire1.wav"
+			"item"	"sound/weapons/oicw/oicw_fire2.wav"
+			"item"	"sound/weapons/oicw/oicw_fire3.wav"
+			"item"	"sound/weapons/oicw/oicw_reload.wav"
+		}
+	}
+}

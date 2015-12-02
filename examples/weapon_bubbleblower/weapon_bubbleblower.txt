@@ -1,0 +1,49 @@
+WeaponData
+{
+	// Weapon data is loaded by both the Game and Client DLLs.
+	"viewmodel"			"models/weapons/v_rpg.mdl"
+	"playermodel"		"models/weapons/w_rocket_launcher.mdl"
+	
+	// this prefix will be used and fixed by customguns if this gun is custom
+	// more prefixes can be found in weapon scripts files
+	"anim_prefix"		"missile launcher"
+
+	"primary_ammo"		"None"
+	"secondary_ammo"	"None"
+	"clip_size"			"-1"
+	"default_clip"		"-1"
+	"clip2_size"		"-1"
+	"default_clip2"		"-1"
+	
+	"autoswitchto"		"0"
+	"autoswitchfrom"	"0"
+
+	"CustomGunsPluginData"
+	{
+		"name"						"Bubbles"
+		
+		// mdl or vmt for selection menu
+		"model"						"materials/effects/bubble.vmt" 
+		
+		// make the gun usable only by admins who have this flag(s), or -1 to alow everyone to use the gun
+		"admin_level"				"-1"
+		
+		// add this gun to player's inventory on spawn?
+		"give_on_spawn"				"0"
+		
+		// add this gun to player's inventory when he equips this weapon
+		"give_with_weapon"			""
+				
+		// binds to this weapon, auto switching when player selects it; if set, both weapons should use the same ammo type and give_with_weapon should be set the same as this!
+		"bind_to_weapon"			""
+		
+		// if 1, does not disappear from inventory when player drops the physical weapon or is stripped from weapons; recommended for admin weapons or weapons given on spawn
+		"persistent"				"1"
+		
+		// weapon_type - possible values:
+		//		bullet - (default) Standard bullet weapon, uses clip sizes and ammo type defined above
+		//		throwable - Throws something away from the player - grenades, molotovs, ..
+		//		custom - Overrides ammo to an unknown value. This weapon must be coded in order to do anything. Its ammo can be managed via "m_iClip1" value. If used, set "primary_ammo" to valid type like "pistol" to enable HUD ammo display.
+		"weapon_type"				"custom"
+	}
+}
