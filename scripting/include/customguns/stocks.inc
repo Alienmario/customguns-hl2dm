@@ -139,11 +139,11 @@ stock void fov(int client, int to, float time, int from = -1){
 	SetEntPropFloat(client, Prop_Send, "m_flFOVRate", time);
 }
 
-stock void itemPickup(int client/*,  char[] itemname */){
+stock void itemPickup(int client){
 	EmitGameSoundToAll("HL2Player.PickupWeapon", client);
-	///Handle hPickup = StartMessageOne("ItemPickup", client);
-	//BfWriteString(hPickup, itemname);
-	//EndMessage();
+	Handle hPickup = StartMessageOne("ItemPickup", client);
+	BfWriteString(hPickup, "item_longjump");
+	EndMessage();
 }
 
 //

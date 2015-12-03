@@ -15,8 +15,6 @@ Handle gunThrowTimer;
 Handle gunThrowGravity;
 Handle gunThrowFriction;
 Handle gunThrowAngVelScale;
-//Handle gunThrowLoopSound;
-//Handle gunThrowDetSound;
 
 Handle gunThrowMoloGibs;
 Handle gunThrowMoloGibsLife;
@@ -25,7 +23,6 @@ Handle gunThrowMoloGibsVelocity;
 Handle gunThrowMoloGibsMaxVariation;
 
 void Throwable_OnPluginStart(){
-	
 	gunThrowModel = CreateArray(PLATFORM_MAX_PATH);
 	gunThrowForce = CreateArray();
 	gunThrowPullback = CreateArray();
@@ -38,8 +35,6 @@ void Throwable_OnPluginStart(){
 	gunThrowGravity = CreateArray();
 	gunThrowFriction = CreateArray();
 	gunThrowAngVelScale = CreateArray();
-	//gunThrowLoopSound = CreateArray(128);
-	//gunThrowDetSound = CreateArray(128);
 	
 	gunThrowMoloGibs = CreateArray();
 	gunThrowMoloGibsLife = CreateArray();
@@ -365,17 +360,6 @@ void createTrail(int throwable, int index, float origin[3]){
 	AcceptEntityInput(ent, "SetParent", throwable);
 	AcceptEntityInput(ent, "Enable");
 }
-/* 
-public void OnEntityDestroyed(int ent){
-	int size = GetArraySize(grenades);
-	for(int i = 0; i<size; i++){
-		if(EntRefToEntIndex(GetArrayCell(grenades, i)) == ent){
-			RemoveFromArray(grenades, i);
-			throwableDestroyed(ent);
-			return;
-		}
-	}
-} */
 
 // void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 public MRESReturn Explode(int throwable, Handle hReturn, Handle hParams) {

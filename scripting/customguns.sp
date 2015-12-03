@@ -3,6 +3,7 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <dhooks>
+
 #include <customguns/smartdm>
 #include <customguns/activity_list>
 #include <customguns/drawingtools>
@@ -511,7 +512,7 @@ public Action tGiveCustomGun(Handle timer, any userid)
 	}
 }
 
-/* 
+/*
 ** index = -1 >> give physical weapon if client doesn't have it yet
 ** valid index >> give new weapon of index
 */
@@ -635,10 +636,10 @@ public Action OnPlayerRunCmd(client, &buttons, &impulse, float vel[3], float ang
 						firstOpen[client] = GetGameTime();
 					}
 					else if (GetGameTime() >= firstOpen[client] + 0.25) {
-						if (!StrEqual(sWeapon, "weapon_physcannon")) {
+						//if (!StrEqual(sWeapon, "weapon_physcannon")) {
 							onMenuOpening(client);
 							open[client] = true;
-						}
+						//}
 					}
 				}
 			}
