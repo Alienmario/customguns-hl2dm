@@ -3,6 +3,39 @@
 #endif
 #define _CustomGuns_Stocks_included
 
+
+/* weapon means: set only if this weapon is active */
+stock void setWeaponAmmo(int client, int clip, char[] weapon = ""){
+	int gun = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
+	if(gun==-1) return;
+	if(!StrEqual(weapon, "")){
+		char activeWeapon[32];
+		GetEdictClassname(gun, activeWeapon, sizeof(activeWeapon)); 
+		if(!StrEqual(weapon, activeWeapon, false)){
+			return;
+		}
+	}
+	SetEntProp(gun, Prop_Send, "m_iClip1", clip);
+}
+
+/* weapon means: add only if this weapon is active */
+stock void addWeaponAmmo(int client, int clip, char[] weapon = ""){
+	int gun = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
+	if(gun==-1) return;
+	if(!StrEqual(weapon, "")){
+		char activeWeapon[32];
+		GetEdictClassname(gun, activeWeapon, sizeof(activeWeapon)); 
+		if(!StrEqual(weapon, activeWeapon, false)){
+			return;
+		}
+	}
+	SetEntProp(gun, Prop_Send, "m_iClip1", GetEntProp(gun, Prop_send, "m_iClip1")+clip);
+}
+
+stock int getWeaponAmmo(int client){
+	return GetEntProp(GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon"), Prop_send, "m_iClip1");
+}
+
 stock int getClientInProximity(int client, float radius, bool sameTeam = false, bool onlyWounded = false){
 	int closest = -1;
 	float minDistance = radius;
@@ -56,38 +89,6 @@ stock Float:GetDifferenceBetweenAngles(float fA[3], float fB[3])
     float fFwdA[3]; GetAngleVectors(fA, fFwdA, NULL_VECTOR, NULL_VECTOR);
     float fFwdB[3]; GetAngleVectors(fB, fFwdB, NULL_VECTOR, NULL_VECTOR);
     return RadToDeg(ArcCosine(fFwdA[0] * fFwdB[0] + fFwdA[1] * fFwdB[1] + fFwdA[2] * fFwdB[2]));
-}
-
-/* weapon means: set only if this weapon is active */
-stock void setWeaponAmmo(int client, int clip, char[] weapon = ""){
-	int gun = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
-	if(gun==-1) return;
-	if(!StrEqual(weapon, "")){
-		char activeWeapon[32];
-		GetEdictClassname(gun, activeWeapon, sizeof(activeWeapon)); 
-		if(!StrEqual(weapon, activeWeapon, false)){
-			return;
-		}
-	}
-	SetEntProp(gun, Prop_Send, "m_iClip1", clip);
-}
-
-/* weapon means: add only if this weapon is active */
-stock void addWeaponAmmo(int client, int clip, char[] weapon = ""){
-	int gun = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
-	if(gun==-1) return;
-	if(!StrEqual(weapon, "")){
-		char activeWeapon[32];
-		GetEdictClassname(gun, activeWeapon, sizeof(activeWeapon)); 
-		if(!StrEqual(weapon, activeWeapon, false)){
-			return;
-		}
-	}
-	SetEntProp(gun, Prop_Send, "m_iClip1", GetEntProp(gun, Prop_send, "m_iClip1")+clip);
-}
-
-stock int getWeaponAmmo(int client){
-	return GetEntProp(GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon"), Prop_send, "m_iClip1");
 }
 
 /* Plays a sequence on player's viewmodel */
@@ -332,6 +333,11 @@ stock void disablePickup(int entity){
 	SetEntProp(entity, Prop_Data, "m_iEFlags", GetEntProp(entity, Prop_Data, "m_iEFlags")|EFL_NO_PHYSCANNON_INTERACTION);
 }
 
+stock bool IsSolid(int entity){
+	return SolidType_t:GetEntProp(entity, Prop_Data, "m_nSolidType", 1) != SOLID_NONE
+	&& !(SolidFlags_t:GetEntProp(entity, Prop_Data, "m_usSolidFlags", 2) & FSOLID_NOT_SOLID == FSOLID_NOT_SOLID)
+}
+
 stock void SetMinMaxSize(int entity, float vecMins[3], float vecMaxs[3])
 {
 	for (int i=0; i<3; i++) {
@@ -438,15 +444,7 @@ void followEntity(int ent, int parent){
 }
 */
 
- 
-/* 	
-	int offset_ammo = FindDataMapOffs(client, "m_iAmmo");
-	for(int i=0; i<MAX_AMMO_SLOTS; i++){
-		int offset = offset_ammo + (i * 4);
-		SetEntData(client, offset, 50, 4, true);
-	}
-*/
-	
+
 /*
 	TE_Start("Sprite Spray");
 	TE_WriteVector("m_vecOrigin", gunPos);

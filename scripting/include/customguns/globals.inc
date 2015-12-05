@@ -49,7 +49,6 @@ Handle gunFireLoopLength;
 Handle gunFireVisible;
 
 
-
 int CLIENT_BEING_EQUIPPED = -1;
 
 bool open[MAXPLAYERS + 1];
@@ -72,7 +71,6 @@ float nextFireSound[MAXPLAYERS + 1];
 float lastFired[MAXPLAYERS+1];
 
 
-
 Handle DHOOK_FireBullets;
 Handle DHOOK_TranslateActivity;
 Handle DHOOK_Operator_HandleAnimEvent;
@@ -88,8 +86,6 @@ Handle DHOOK_SecondaryAttack;
 Handle DHOOK_Holster;
 Handle DHOOK_WeaponSound;
 Handle DHOOK_Drop;
-//Handle DHOOK_Deploy;
-//Handle DHOOK_SendViewModelAnim;
 Handle DHOOK_GetDefaultClip1;
 Handle DHOOK_Explode;
 

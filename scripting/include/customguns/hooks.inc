@@ -47,7 +47,7 @@ public OnWeaponSwitchPost(client, weapon)
 		
 		if (StrEqual(sWeapon, bindWeapon)) {
 			int inventoryIndex = getInventoryIndex(client, i);
-			if(inventoryIndex != -1/*  && canSelectItem(client, inventoryIndex) */){
+			if(inventoryIndex != -1){
 				giveCustomGun(client, i, true);
 			}
 		}
@@ -75,68 +75,6 @@ public Action vmSwapDelay(Handle timer, any data){
 	if(IsValidEntity(data))
 		SDKCall(CALL_SendWeaponAnim, data, ACT_VM_DRAW);
 }
-
-/* public void OnEntityCreated(int entity, const char[] classname){
-	if(StrEqual(classname, "weapon_ar2")){
-		CreateTimer(0.5, mdl);
-		PrecacheModel("models/weapons/w_minigun.mdl");
-	}
-} */
-/* 
-public Action hookVM(Handle timer, any ent) {
-	ent = EntRefToEntIndex(ent);
-	if (IsValidEntity(ent)) {
-		//SendProxy_Hook(ent, "m_hWeapon", Prop_Int, vmWeaponProxy);
-		//SendProxy_HookPropChange(ent, "m_nAnimationParity", vmAnimChanged); 
-	}
-}
-
-public vmAnimChanged(entity, const String:propName[], const String:oldValue[], const String:newValue[])
-{
-	int client = GetOwner(entity);
-	if(IsPlayer(client)){
-		if(gunEnt[client] != -1){
-			seqChanged[client] = true;
-		} else {
-			seqChanged[client] = false;
-		}
-	}
-}
-
-public Action vmWeaponProxy(entity, const char[] propname, &iValue, element) {
-	int client = GetOwner(entity);
-	if (IsPlayer(client)) {
-		static float nextSeqChange[MAXPLAYERS+1];
-		if (seqChanged[client] && ! GetEntProp(entity, Prop_Data, "m_bSequenceFinished") && GetGameTime() >= nextSeqChange[client]) {
-			iValue = -1;
-			seqChanged[client] = false;
-			nextSeqChange[client] = GetGameTime() + GetConVarFloat(customguns_anim_rate);
-			return Plugin_Changed;
-		}
-	}
-	return Plugin_Continue;
-} 
-*/
-
-/* 
-public OnEntityCreated(entity, const String:classname[]){
-	SDKHook(entity, SDKHook_OnTakeDamage, OnTakeDamage);
-}
-
-public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype){
-	if(inflictor==attacker && IsPlayer(attacker)) {
-		char sWeapon[32];
-		GetClientWeapon(attacker, sWeapon, sizeof(sWeapon));
-		
-		int index = getIndex(sWeapon);
-		if (index!=-1){
-			damage = float(GetArrayCell(gunDmg, index));
-			damagetype = GetArrayCell(gunDmgType, index);
-			return Plugin_Changed;
-		}
-	}
-	return Plugin_Continue;
-} */
 
 // int CBaseCombatWeapon::GetDefaultClip1( void )
 // Kind of a hack: If we're giving a weapon to player, override it's default ammo with our saved ammo from inventory if any. Otherwise, do nothing.
@@ -191,16 +129,13 @@ public MRESReturn AddViewKick(int weapon) {
 	76 bool m_bPrimaryAttack; 
 */
 public MRESReturn FireBullets(int client, Handle hParams) {
-	char sWeapon[32];
-	GetClientWeapon(client, sWeapon, sizeof(sWeapon));
-	
-	int index = getIndex(sWeapon);
-	if (index != -1) {
-		int damage = GetArrayCell(gunDmg, index);
+	// check if client is firing custom gun
+	if (selectedGunIndex[client] != -1 && gunEnt[client] != -1) {
+		int damage = GetArrayCell(gunDmg, selectedGunIndex[client]);
 		DHookSetParamObjectPtrVar(hParams, 1, 52, ObjectValueType_Float, float(damage));
 		DHookSetParamObjectPtrVar(hParams, 1, 56, ObjectValueType_Int, damage);
 		
-		float spread = GetArrayCell(gunSpread, index);
+		float spread = GetArrayCell(gunSpread, selectedGunIndex[client]);
 		DHookSetParamObjectPtrVar(hParams, 1, 28, ObjectValueType_Float, spread);
 		DHookSetParamObjectPtrVar(hParams, 1, 32, ObjectValueType_Float, spread);
 		DHookSetParamObjectPtrVar(hParams, 1, 36, ObjectValueType_Float, spread);
@@ -212,10 +147,15 @@ public MRESReturn FireBullets(int client, Handle hParams) {
 		int ammoID = DHookGetParamObjectPtrVar(hParams, 1, 44, ObjectValueType_Int);
 		int shots = DHookGetParamObjectPtrVar(hParams, 1, 0, ObjectValueType_Int);
 		
-		TE_SetupShotgunShot(origin, vecDir, ammoID, GetURandomInt() & 255, shots, client, spread, true, GetArrayCell(gunFireVisible, index));
-		TE_SendToClient(client); 
+		static bool post;
+		if(post){
+			TE_SetupShotgunShot(origin, vecDir, ammoID, GetURandomInt() & 255, shots, client, spread, true, GetArrayCell(gunFireVisible, selectedGunIndex[client]));
+			TE_SendToClient(client);
+		}
+		post = !post;
+		return MRES_Handled;
 	}
-	return MRES_Handled;
+	return MRES_Ignored;
 }
 
 // Activity CBaseCombatCharacter::Weapon_TranslateActivity( Activity baseAct, bool *pRequired )

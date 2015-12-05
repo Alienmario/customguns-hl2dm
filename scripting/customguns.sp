@@ -142,177 +142,181 @@ public OnPluginStart()
 	
 	int offset;
 	
-	// void CBaseGrenade::Explode( CGameTrace *pTrace, int bitsDamageType ) // (trace_t)
- 	offset = GameConfGetOffset(gamedata, "Explode");
-	DHOOK_Explode = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, Explode);
-	DHookAddParam(DHOOK_Explode, HookParamType_ObjectPtr, -1);
-	DHookAddParam(DHOOK_Explode, HookParamType_Int);
-	
-	// void CHL2MP_Player::FireBullets ( const FireBulletsInfo_t &info )
-	offset = GameConfGetOffset(gamedata, "FireBullets");
-	DHOOK_FireBullets = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, FireBullets);
-	DHookAddParam(DHOOK_FireBullets, HookParamType_ObjectPtr, -1, DHookPass_ByVal);
-	
-	// Activity CBaseCombatCharacter::Weapon_TranslateActivity( Activity baseAct, bool *pRequired )
-	offset = GameConfGetOffset(gamedata, "Weapon_TranslateActivity");
-	DHOOK_TranslateActivity = DHookCreate(offset, HookType_Entity, ReturnType_Int, ThisPointer_CBaseEntity, TranslateActivity);
-	DHookAddParam(DHOOK_TranslateActivity, HookParamType_Int);
-	DHookAddParam(DHOOK_TranslateActivity, HookParamType_Bool);
-
-	// void CBaseCombatWeapon::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator )
-	offset = GameConfGetOffset(gamedata, "Operator_HandleAnimEvent");
-	DHOOK_Operator_HandleAnimEvent = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, Operator_HandleAnimEvent);
-	DHookAddParam(DHOOK_Operator_HandleAnimEvent, HookParamType_ObjectPtr, -1);
-	DHookAddParam(DHOOK_Operator_HandleAnimEvent, HookParamType_CBaseEntity);
-
-	// float CBaseCombatWeapon::GetFireRate( void )
-	offset = GameConfGetOffset(gamedata, "GetFireRate");
-	DHOOK_GetFireRate = DHookCreate(offset, HookType_Entity, ReturnType_Float, ThisPointer_CBaseEntity, GetFireRate);
-	
-	// void CBaseCombatWeapon::AddViewKick( void )
-	offset = GameConfGetOffset(gamedata, "AddViewKick");
-	DHOOK_AddViewKick = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, AddViewKick);
-	
-	// bool CBaseCombatWeapon::ReloadOrSwitchWeapons( void )
-	offset = GameConfGetOffset(gamedata, "ReloadOrSwitchWeapons");
-	DHOOK_ReloadOrSwitchWeapons = DHookCreate(offset, HookType_Entity, ReturnType_Bool, ThisPointer_CBaseEntity, ReloadOrSwitchWeapons);
-	
-	// bool CBasePlayer::BumpWeapon( CBaseCombatWeapon *pWeapon )
-	offset = GameConfGetOffset(gamedata, "BumpWeapon");
-	DHOOK_BumpWeapon = DHookCreate(offset, HookType_Entity, ReturnType_Bool, ThisPointer_CBaseEntity, BumpWeapon);
-	DHookAddParam(DHOOK_BumpWeapon, HookParamType_CBaseEntity);
-	
-	// bool CBaseCombatWeapon::Reload( void )
-	offset = GameConfGetOffset(gamedata, "Reload");
-	DHOOK_Reload = DHookCreate(offset, HookType_Entity, ReturnType_Bool, ThisPointer_CBaseEntity, Reload);
-	
-	// void CBaseCombatWeapon::ItemPostFrame( void )
-	offset = GameConfGetOffset(gamedata, "ItemPostFrame");
-	DHOOK_ItemPostFrame = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, ItemPostFrame);
-	DHOOK_ItemPostFramePost = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, ItemPostFramePost);
-	
-	// void CBaseCombatWeapon::PrimaryAttack( void )
-	offset = GameConfGetOffset(gamedata, "PrimaryAttack");
-	DHOOK_PrimaryAttack = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, PrimaryAttack);
+	{
+		// void CBaseGrenade::Explode( CGameTrace *pTrace, int bitsDamageType ) // (trace_t)
+		offset = GameConfGetOffset(gamedata, "Explode");
+		DHOOK_Explode = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, Explode);
+		DHookAddParam(DHOOK_Explode, HookParamType_ObjectPtr, -1);
+		DHookAddParam(DHOOK_Explode, HookParamType_Int);
 		
-	// void CBaseCombatWeapon::SecondaryAttack( void )
-	offset = GameConfGetOffset(gamedata, "SecondaryAttack");
-	DHOOK_SecondaryAttack = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, SecondaryAttack);
-	
-	// bool CBaseCombatWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
-	offset = GameConfGetOffset(gamedata, "Holster");
-	DHOOK_Holster = DHookCreate(offset, HookType_Entity, ReturnType_Bool, ThisPointer_CBaseEntity, Holster);
-	DHookAddParam(DHOOK_Holster, HookParamType_CBaseEntity);
-	
-	// void CBaseCombatWeapon::Drop( const Vector &vecVelocity )
-	offset = GameConfGetOffset(gamedata, "Drop");
-	DHOOK_Drop = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, Drop);
-	DHookAddParam(DHOOK_Drop, HookParamType_VectorPtr, -1, DHookPass_ByRef);
+		// void CHL2MP_Player::FireBullets ( const FireBulletsInfo_t &info )
+		offset = GameConfGetOffset(gamedata, "FireBullets");
+		DHOOK_FireBullets = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, FireBullets);
+		DHookAddParam(DHOOK_FireBullets, HookParamType_ObjectPtr, -1, DHookPass_ByVal);
+		
+		// Activity CBaseCombatCharacter::Weapon_TranslateActivity( Activity baseAct, bool *pRequired )
+		offset = GameConfGetOffset(gamedata, "Weapon_TranslateActivity");
+		DHOOK_TranslateActivity = DHookCreate(offset, HookType_Entity, ReturnType_Int, ThisPointer_CBaseEntity, TranslateActivity);
+		DHookAddParam(DHOOK_TranslateActivity, HookParamType_Int);
+		DHookAddParam(DHOOK_TranslateActivity, HookParamType_Bool);
 
-	// void CBaseCombatWeapon:WeaponSound( WeaponSound_t sound_type, float soundtime = 0.0f )
-	offset = GameConfGetOffset(gamedata, "WeaponSound");
-	DHOOK_WeaponSound = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, WeaponSound);
-	DHookAddParam(DHOOK_WeaponSound, HookParamType_Int);
-	DHookAddParam(DHOOK_WeaponSound, HookParamType_Float);
+		// void CBaseCombatWeapon::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator )
+		offset = GameConfGetOffset(gamedata, "Operator_HandleAnimEvent");
+		DHOOK_Operator_HandleAnimEvent = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, Operator_HandleAnimEvent);
+		DHookAddParam(DHOOK_Operator_HandleAnimEvent, HookParamType_ObjectPtr, -1);
+		DHookAddParam(DHOOK_Operator_HandleAnimEvent, HookParamType_CBaseEntity);
 
-	// int CBaseCombatWeapon::GetDefaultClip1( void )
-	offset = GameConfGetOffset(gamedata, "GetDefaultClip1");
-	DHOOK_GetDefaultClip1 = DHookCreate(offset, HookType_Entity, ReturnType_Int, ThisPointer_CBaseEntity, GetDefaultClip1);
+		// float CBaseCombatWeapon::GetFireRate( void )
+		offset = GameConfGetOffset(gamedata, "GetFireRate");
+		DHOOK_GetFireRate = DHookCreate(offset, HookType_Entity, ReturnType_Float, ThisPointer_CBaseEntity, GetFireRate);
+		
+		// void CBaseCombatWeapon::AddViewKick( void )
+		offset = GameConfGetOffset(gamedata, "AddViewKick");
+		DHOOK_AddViewKick = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, AddViewKick);
+		
+		// bool CBaseCombatWeapon::ReloadOrSwitchWeapons( void )
+		offset = GameConfGetOffset(gamedata, "ReloadOrSwitchWeapons");
+		DHOOK_ReloadOrSwitchWeapons = DHookCreate(offset, HookType_Entity, ReturnType_Bool, ThisPointer_CBaseEntity, ReloadOrSwitchWeapons);
+		
+		// bool CBasePlayer::BumpWeapon( CBaseCombatWeapon *pWeapon )
+		offset = GameConfGetOffset(gamedata, "BumpWeapon");
+		DHOOK_BumpWeapon = DHookCreate(offset, HookType_Entity, ReturnType_Bool, ThisPointer_CBaseEntity, BumpWeapon);
+		DHookAddParam(DHOOK_BumpWeapon, HookParamType_CBaseEntity);
+		
+		// bool CBaseCombatWeapon::Reload( void )
+		offset = GameConfGetOffset(gamedata, "Reload");
+		DHOOK_Reload = DHookCreate(offset, HookType_Entity, ReturnType_Bool, ThisPointer_CBaseEntity, Reload);
+		
+		// void CBaseCombatWeapon::ItemPostFrame( void )
+		offset = GameConfGetOffset(gamedata, "ItemPostFrame");
+		DHOOK_ItemPostFrame = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, ItemPostFrame);
+		DHOOK_ItemPostFramePost = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, ItemPostFramePost);
+		
+		// void CBaseCombatWeapon::PrimaryAttack( void )
+		offset = GameConfGetOffset(gamedata, "PrimaryAttack");
+		DHOOK_PrimaryAttack = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, PrimaryAttack);
+			
+		// void CBaseCombatWeapon::SecondaryAttack( void )
+		offset = GameConfGetOffset(gamedata, "SecondaryAttack");
+		DHOOK_SecondaryAttack = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, SecondaryAttack);
+		
+		// bool CBaseCombatWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
+		offset = GameConfGetOffset(gamedata, "Holster");
+		DHOOK_Holster = DHookCreate(offset, HookType_Entity, ReturnType_Bool, ThisPointer_CBaseEntity, Holster);
+		DHookAddParam(DHOOK_Holster, HookParamType_CBaseEntity);
+		
+		// void CBaseCombatWeapon::Drop( const Vector &vecVelocity )
+		offset = GameConfGetOffset(gamedata, "Drop");
+		DHOOK_Drop = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, Drop);
+		DHookAddParam(DHOOK_Drop, HookParamType_VectorPtr, -1, DHookPass_ByRef);
+
+		// void CBaseCombatWeapon:WeaponSound( WeaponSound_t sound_type, float soundtime = 0.0f )
+		offset = GameConfGetOffset(gamedata, "WeaponSound");
+		DHOOK_WeaponSound = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, WeaponSound);
+		DHookAddParam(DHOOK_WeaponSound, HookParamType_Int);
+		DHookAddParam(DHOOK_WeaponSound, HookParamType_Float);
+
+		// int CBaseCombatWeapon::GetDefaultClip1( void )
+		offset = GameConfGetOffset(gamedata, "GetDefaultClip1");
+		DHOOK_GetDefaultClip1 = DHookCreate(offset, HookType_Entity, ReturnType_Int, ThisPointer_CBaseEntity, GetDefaultClip1);
+	}
 	
 	/***************************/
 	/********** CALLS **********/
 	/***************************/
 	
-	// bool CBaseCombatWeapon::SendWeaponAnim( int iActivity )
-	StartPrepSDKCall(SDKCall_Entity);
-	PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "SendWeaponAnim");
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
-	CALL_SendWeaponAnim = EndPrepSDKCall();
+	{
+		// bool CBaseCombatWeapon::SendWeaponAnim( int iActivity )
+		StartPrepSDKCall(SDKCall_Entity);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "SendWeaponAnim");
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+		CALL_SendWeaponAnim = EndPrepSDKCall();
 
-	// void CBaseCombatWeapon::SendViewModelAnim( int nSequence )
-	StartPrepSDKCall(SDKCall_Entity);
-	PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "SendViewModelAnim");
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	CALL_SendViewModelAnim = EndPrepSDKCall();
-	
-	// bool CBaseCombatWeapon::HasPrimaryAmmo( void )
-	StartPrepSDKCall(SDKCall_Entity);
-	PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "HasPrimaryAmmo");
-	PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
-	CALL_HasPrimaryAmmo = EndPrepSDKCall();
-	
-	// bool CBaseCombatWeapon::HasSecondaryAmmo( void )
-	StartPrepSDKCall(SDKCall_Entity);
-	PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "HasSecondaryAmmo");
-	PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
-	CALL_HasSecondaryAmmo = EndPrepSDKCall();
-	
-	// bool CBaseCombatWeapon::UsesClipsForAmmo1( void )
-	StartPrepSDKCall(SDKCall_Entity);
-	PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "UsesClipsForAmmo1");
-	PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
-	CALL_UsesClipsForAmmo1 = EndPrepSDKCall();
-	
-	// void CBaseCombatWeapon:WeaponSound( WeaponSound_t sound_type, float soundtime = 0.0f )
-	StartPrepSDKCall(SDKCall_Entity);
-	PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "WeaponSound");
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
-	CALL_WeaponSound = EndPrepSDKCall();
-	
-	// void CBaseCombatWeapon::StopWeaponSound( WeaponSound_t sound_type )
-	StartPrepSDKCall(SDKCall_Entity);
-	PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "StopWeaponSound");
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	CALL_StopWeaponSound = EndPrepSDKCall();
-	
-	// void CBaseCombatWeapon::CheckRespawn( void )
-	StartPrepSDKCall(SDKCall_Entity);
-	PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "CheckRespawn");
-	CALL_CheckRespawn = EndPrepSDKCall();
-	
-	// bool CHL2MP_Player::Weapon_Switch( CBaseCombatWeapon *pWeapon, int viewmodelindex = 0)
-	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "Weapon_Switch");
-	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	CALL_Weapon_Switch = EndPrepSDKCall();
-	
-	// int CHL2_Player::GiveAmmo( int nCount, int nAmmoIndex, bool bSuppressSound)
-	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "GiveAmmo");
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
-	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
-	CALL_GiveAmmo = EndPrepSDKCall();
-	
-	// int CBaseCombatCharacter::GetAmmoCount( int iAmmoIndex )
-	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "GetAmmoCount");
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
-	CALL_GetAmmoCount = EndPrepSDKCall();
-	
-	// void CBaseCombatCharacter::RemoveAmmo( int iCount, int iAmmoIndex )
-	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "RemoveAmmo");
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	CALL_RemoveAmmo = EndPrepSDKCall();
-	
-	// void CHL2MP_Player::SetAnimation( PLAYER_ANIM playerAnim )
-	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "SetAnimation");
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	CALL_SetAnimation = EndPrepSDKCall();
+		// void CBaseCombatWeapon::SendViewModelAnim( int nSequence )
+		StartPrepSDKCall(SDKCall_Entity);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "SendViewModelAnim");
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		CALL_SendViewModelAnim = EndPrepSDKCall();
 		
-	// Vector CBaseCombatCharacter::Weapon_ShootPosition( )
-	StartPrepSDKCall(SDKCall_Player);
-	PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "Weapon_ShootPosition");
-	PrepSDKCall_SetReturnInfo(SDKType_Vector, SDKPass_ByValue);
-	CALL_ShootPosition = EndPrepSDKCall();
+		// bool CBaseCombatWeapon::HasPrimaryAmmo( void )
+		StartPrepSDKCall(SDKCall_Entity);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "HasPrimaryAmmo");
+		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+		CALL_HasPrimaryAmmo = EndPrepSDKCall();
+		
+		// bool CBaseCombatWeapon::HasSecondaryAmmo( void )
+		StartPrepSDKCall(SDKCall_Entity);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "HasSecondaryAmmo");
+		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+		CALL_HasSecondaryAmmo = EndPrepSDKCall();
+		
+		// bool CBaseCombatWeapon::UsesClipsForAmmo1( void )
+		StartPrepSDKCall(SDKCall_Entity);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "UsesClipsForAmmo1");
+		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+		CALL_UsesClipsForAmmo1 = EndPrepSDKCall();
+		
+		// void CBaseCombatWeapon:WeaponSound( WeaponSound_t sound_type, float soundtime = 0.0f )
+		StartPrepSDKCall(SDKCall_Entity);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "WeaponSound");
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+		CALL_WeaponSound = EndPrepSDKCall();
+		
+		// void CBaseCombatWeapon::StopWeaponSound( WeaponSound_t sound_type )
+		StartPrepSDKCall(SDKCall_Entity);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "StopWeaponSound");
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		CALL_StopWeaponSound = EndPrepSDKCall();
+		
+		// void CBaseCombatWeapon::CheckRespawn( void )
+		StartPrepSDKCall(SDKCall_Entity);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "CheckRespawn");
+		CALL_CheckRespawn = EndPrepSDKCall();
+		
+		// bool CHL2MP_Player::Weapon_Switch( CBaseCombatWeapon *pWeapon, int viewmodelindex = 0)
+		StartPrepSDKCall(SDKCall_Player);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "Weapon_Switch");
+		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		CALL_Weapon_Switch = EndPrepSDKCall();
+		
+		// int CHL2_Player::GiveAmmo( int nCount, int nAmmoIndex, bool bSuppressSound)
+		StartPrepSDKCall(SDKCall_Player);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "GiveAmmo");
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
+		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+		CALL_GiveAmmo = EndPrepSDKCall();
+		
+		// int CBaseCombatCharacter::GetAmmoCount( int iAmmoIndex )
+		StartPrepSDKCall(SDKCall_Player);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "GetAmmoCount");
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+		CALL_GetAmmoCount = EndPrepSDKCall();
+		
+		// void CBaseCombatCharacter::RemoveAmmo( int iCount, int iAmmoIndex )
+		StartPrepSDKCall(SDKCall_Player);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "RemoveAmmo");
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		CALL_RemoveAmmo = EndPrepSDKCall();
+		
+		// void CHL2MP_Player::SetAnimation( PLAYER_ANIM playerAnim )
+		StartPrepSDKCall(SDKCall_Player);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "SetAnimation");
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		CALL_SetAnimation = EndPrepSDKCall();
+			
+		// Vector CBaseCombatCharacter::Weapon_ShootPosition( )
+		StartPrepSDKCall(SDKCall_Player);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "Weapon_ShootPosition");
+		PrepSDKCall_SetReturnInfo(SDKType_Vector, SDKPass_ByValue);
+		CALL_ShootPosition = EndPrepSDKCall();
+	}
 	
 	CloseHandle(gamedata);
 	
@@ -372,11 +376,18 @@ public OnPluginStart()
 			if (IsClientInGame(i)) {
 				OnClientPutInServer(i);
 				if(!IsFakeClient(i) && IsPlayerAlive(i)){
-					giveCustomGun(i, addSpawnWeapons(i));
+					addSpawnWeapons(i);
+					giveCustomGun(i);
 				}
 			}
 		}
 	}
+}
+
+public OnPluginEnd(){
+	for (int i = 1; i <= MaxClients; i++) 
+		if (IsClientInGame(i))
+			removeCustomWeapon(i)
 }
 
 public Action SeqTest(int client, int args) {
@@ -463,6 +474,7 @@ public OnClientPutInServer(int client) {
 		SDKHook(client, SDKHook_WeaponSwitchPost, OnWeaponSwitchPost);
 		SDKHook(client, SDKHook_WeaponEquipPost, OnWeaponEquipPost);
  		DHookEntity(DHOOK_FireBullets, false, client);
+ 		DHookEntity(DHOOK_FireBullets, true, client);
 		DHookEntity(DHOOK_TranslateActivity, false, client);
 		DHookEntity(DHOOK_BumpWeapon, false, client);
 		
@@ -518,6 +530,7 @@ public Action tGiveCustomGun(Handle timer, any userid)
 */
 stock giveCustomGun(client, int index = -1, bool switchTo = false) {
 	if (GetArraySize(gunClassNames) > 0) {
+		
 		if(index == -1){
 			if(!hasCustomWeapon(client)){
 				if(selectedGunIndex[client] == -1){

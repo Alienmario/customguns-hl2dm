@@ -121,16 +121,12 @@ MRESReturn Throwable_PrimaryAttack(int weapon, int index, int client) {
 			SDKCall(CALL_SendWeaponAnim, weapon, ACT_VM_THROW);
 		}
 	}
-/* 	if(supportsPullback(index)){
-
-		
-	} else {
-		
-	} */
-/* 	if ( !SDKCall(CALL_HasPrimaryAmmo, weapon) )
+	/*
+	if ( !SDKCall(CALL_HasPrimaryAmmo, weapon) )
 	{
 		//pPlayer->SwitchToNextBestWeapon( this );
-	}	 */
+	}
+	*/
 	return MRES_Supercede;
 }
 
@@ -185,18 +181,6 @@ MRESReturn Throwable_ItemPostFrame(int weapon, int index, int client) {
 			}
 		}
 	}
-	
-/* 	if( !oldDrawbackFinished && GetArrayCell(gunThrowForceAttack, index))
-	{
-		if ( ( GetClientButtons(client) & IN_ATTACK ) && GetGameTime() > GetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack") )
-		{
-			SDKCall(CALL_PrimaryAttack, weapon);
-		}
-		else if ( ( GetClientButtons(client) & IN_ATTACK2 ) && GetGameTime() > GetEntPropFloat(weapon, Prop_Send, "m_flNextSecondaryAttack") )
-		{
-			//SecondaryAttack();
-		}
-	} */
 	
 	if ( m_bRedraw[client] )
 	{

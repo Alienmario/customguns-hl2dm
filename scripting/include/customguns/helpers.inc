@@ -99,10 +99,6 @@ loadConfig() {
 							{
 								KvGetString(kv, "throwable_model", buffer, sizeof(buffer), "");
 								PushArrayString(gunThrowModel, buffer);
-								//KvGetString(kv, "looping_sound", buffer, sizeof(buffer), "");
-								//PushArrayString(gunThrowLoopSound, buffer);
-								//KvGetString(kv, "detonate_sound", buffer, sizeof(buffer), "");
-								//PushArrayString(gunThrowDetSound, buffer);
 								
 								PushArrayCell(gunThrowForce, KvGetFloat(kv, "throw_force", 800.0));
 								PushArrayCell(gunThrowPullback, KvGetNum(kv, "supports_pullback", 0));
@@ -168,7 +164,11 @@ void removeCustomWeapon(int client){
 		int weapon = GetEntDataEnt2(client, offset);
 		if (isCustom(weapon)) {
 			RemovePlayerItem(client, weapon);
-			CreateTimer(0.0, delayedKill, weapon); // can prevent some crashes
+			
+			// Let the engine kill the weapon later, instead of a timer, in case of plugin unload (killing it now can cause crashes)
+			SetVariantString("OnUser4 !self:kill::0.1:-1")
+			AcceptEntityInput(weapon, "addoutput");
+			AcceptEntityInput(weapon, "FireUser4");
 		}
 	}
 }
@@ -186,28 +186,15 @@ bool hasCustomWeapon(int client){
 	return false;
 }
 
-/* @returns default weapon index for client */
-int addSpawnWeapons(client) {
-	int defaultIndex = getDefaultIndex();
+void addSpawnWeapons(client) {
 	int size = GetArraySize(gunClassNames);
-	
-	// Am I allowed to hold default weapon?
-	if(defaultIndex != -1){
-		if(!GetArrayCell(gunGive, defaultIndex) || !canHaveGun(client, defaultIndex, false)) {
-			defaultIndex = -1;
-		}
-	}
-	
 	for (int i = 0; i < size; i++) {
 		if (GetArrayCell(gunGive, i)) {
-			if(addToInventoryIndex(client, i, false) && defaultIndex == -1){
-				defaultIndex = i;
-			}
+			addToInventoryIndex(client, i, false);
 		}
 	}
 	
 	generateWheel(client);
-	return defaultIndex;
 }
 
 stock bool addToInventory(int client, const char[] weapon, bool refreshWheel = true, bool ignoreAdminLevel = false) {
@@ -328,8 +315,8 @@ bool canSelectItem(int client, int inventoryIndex) {
 	return invAmmo == -1
 		|| invAmmo > 0 // got ammo (cached clips) in inventory
 		|| invAmmoType == -1 // melee/other
+		|| getType(GetArrayCell(inventory[client], inventoryIndex)) == GunType_Custom // custom-ammotype-guns always selectable
 		|| SDKCall(CALL_GetAmmoCount, client, invAmmoType) > 0 // got ammo in stock
-		|| GetArrayCell(gunType, GetArrayCell(inventory[client], inventoryIndex)) == GunType_Custom // custom-ammotype-guns always selectable
 }
 
 bool isCustom(int weaponEnt) {
