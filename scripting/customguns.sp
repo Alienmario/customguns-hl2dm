@@ -24,7 +24,7 @@ public Plugin myinfo =
 	name = "Custom guns", 
 	author = "Alienmario", 
 	description = "Custom guns plugin for HL2DM", 
-	version = "1.1"
+	version = "1.1.2"
 };
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, err_max)
@@ -371,14 +371,12 @@ public OnPluginStart()
 	RegAdminCmd("sm_customguns", CustomGun, ADMFLAG_ROOT, "Spawns a custom gun by classname");
 	RegAdminCmd("sm_seqtest", SeqTest, ADMFLAG_ROOT, "Viewmodel sequence test");
 	
-	if(GetConVarBool(customguns_autogive)){
-		for (int i = 1; i <= MaxClients; i++) {
-			if (IsClientInGame(i)) {
-				OnClientPutInServer(i);
-				if(!IsFakeClient(i) && IsPlayerAlive(i)){
-					addSpawnWeapons(i);
-					giveCustomGun(i);
-				}
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i)) {
+			OnClientPutInServer(i);
+			if(!IsFakeClient(i) && IsPlayerAlive(i)){
+				addSpawnWeapons(i);
+				giveCustomGun(i);
 			}
 		}
 	}
@@ -441,7 +439,7 @@ public Action CustomGun(int client, int args) {
 	return Plugin_Handled;
 }
 
-public OnMapStart() {
+public OnConfigsExecuted() {
 	modelText = PrecacheModel(MODEL_TEXT, true);
 	//modelBorder = PrecacheModel(MODEL_BORDER, true);
 	PrecacheSound(SND_OPEN, true);

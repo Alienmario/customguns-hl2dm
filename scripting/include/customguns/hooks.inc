@@ -48,7 +48,12 @@ public OnWeaponSwitchPost(client, weapon)
 		if (StrEqual(sWeapon, bindWeapon)) {
 			int inventoryIndex = getInventoryIndex(client, i);
 			if(inventoryIndex != -1){
+				int lastWeapon = GetEntPropEnt(client, Prop_Data, "m_hLastWeapon");
+				
 				giveCustomGun(client, i, true);
+				
+				SetEntPropEnt(client, Prop_Data, "m_hLastWeapon", lastWeapon);
+				ChangeEdictState(client, FindDataMapOffs(client, "m_hLastWeapon"));
 			}
 		}
 	}
