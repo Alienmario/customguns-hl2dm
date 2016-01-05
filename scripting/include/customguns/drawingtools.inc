@@ -3,63 +3,73 @@
 #endif
 #define _CustomGuns_DrawingTools_included
 
-DrawModel(int client, const float origin[3], int modelIndex, float life, int brightness){
-	TE_Start("GlowSprite");
-	TE_WriteVector("m_vecOrigin", origin);
-	TE_WriteNum("m_nModelIndex", modelIndex);
-	TE_WriteFloat("m_fScale", 0.2);
-	TE_WriteFloat("m_fLife", life);
-	TE_WriteNum("m_nBrightness", brightness);
-	TE_SendToClient(client);
-}
+#define DRAWTEXT_LETTER_SPACING 0.25
 
-#define DrawText_LETTER_WIDTH 2.0
-#define DrawText_LETTER_HEIGHT 3.0
-#define DrawText_LETTER_SIZE 1.2
-#define DrawText_LETTER_SPACING 0.25
+#define DRAWTEXT_ALIGN_START -1
+#define DRAWTEXT_ALIGN_CENTER 0
+#define DRAWTEXT_ALIGN_END 1
 
-int DrawText_DrawingTo;
+#define DRAWTEXT_HEIGHT_DEFAULT 3.0
+#define DRAWTEXT_WIDTH_DEFAULT 2.0
+#define DRAWTEXT_SIZE_DEFAULT 0.4
+
+int DrawText_Client;
 int DrawText_Model;
 int DrawText_Color[4];
-float DrawText_HeightScale;
-float DrawText_BoldnessScale;
+float DrawText_Height;
+float DrawText_Size;
 float DrawText_Life;
+float DrawText_Amplitude;
 
-stock DrawText(int client, float min[3], float max[3], int model, const char[] text, float life = 0.1, int color[4] = { 255, 0, 0, 255 }, bool alignRight = false, float scaleWidth = 1.0, float scaleHeight = 1.0, float scaleBoldness = 2.0){
-	float distance = GetVectorDistance(min, max);
-	float unit = DrawText_LETTER_WIDTH*scaleWidth+DrawText_LETTER_SPACING*scaleWidth;
-	int maxLetters = RoundToFloor(distance / unit);
-	if(strlen(text) < maxLetters){
-		maxLetters = strlen(text);
-		//distance = ((maxLetters*DrawText_LETTER_WIDTH*scaleWidth)+((maxLetters-1)*DrawText_LETTER_SPACING*scaleWidth));
+/**
+ * Draws text in the world with beams
+ *
+ * @param client			client index or -1 for all
+ * @param start				world position from where to start
+ * @param end				world position where drawing cuts off
+ * @param model				material index from PrecacheModel
+ *
+ * @return					number of letters drawn
+ */
+stock DrawText(int client, const float start[3], const float end[3], int model, const char[] text, float life, int align = DRAWTEXT_ALIGN_CENTER, const int color[4] = { 255, 255, 255, 255 }, float fontWidth = DRAWTEXT_WIDTH_DEFAULT, float fontHeight = DRAWTEXT_HEIGHT_DEFAULT, float fontSize = DRAWTEXT_SIZE_DEFAULT, float amplitude = 0.0){
+	DrawText_Client = client;
+	DrawText_Model = model;
+	DrawText_Color = color;
+	DrawText_Height = fontHeight;
+	DrawText_Size = fontSize;
+	DrawText_Life = life;
+	DrawText_Amplitude = amplitude;
+
+	float distance = GetVectorDistance(start, end);
+	
+	// Get letter count that fits in specified space
+	int letters = RoundToFloor(distance / (fontWidth + fontWidth*DRAWTEXT_LETTER_SPACING));
+	
+	float startOffset; // letter offset, amount of free space from start
+	
+	// clamp letters to text length
+	int textlen = strlen(text);
+	if(textlen < letters){
+		// if centered, set start offset
+		if (align == DRAWTEXT_ALIGN_CENTER){
+			startOffset = (letters-textlen)/2.0;
+		}
+		letters = textlen;	
 	}
 	
-/* 	if(center){
-		//get distance from last letter to max location and add half of that as the start offset
-		float buffer[3];
-		MoveVector(max, min, (maxLetters*DrawText_LETTER_WIDTH*scaleWidth + (maxLetters-1)*DrawText_LETTER_SPACING*scaleWidth) / distance, buffer);
-		float distanceEnd = GetVectorDistance(buffer, max);
-		MoveVector(min, max, (distanceEnd / 2.0) / distance, min);
-		DrawText(client, min, max, model, text, life, color, false, scaleWidth, scaleHeight);
-	} */
-
-	DrawText_DrawingTo = client;
-	DrawText_HeightScale = scaleHeight;
-	DrawText_BoldnessScale = scaleBoldness;
-	DrawText_Model = model;
-	DrawText_Life = life;
-	DrawText_Color = color;
-	
 	float letterMin[3], letterMax[3];
-	for(int i = 0; i < maxLetters; i++){
+	for(int i = 0; i < letters; i++){
+	
 		//compute min and max world location for the letter
-		if(alignRight){
-			MoveVector(min, max, (((maxLetters-1-i)*DrawText_LETTER_WIDTH*scaleWidth + (maxLetters-1-i)*DrawText_LETTER_SPACING*scaleWidth) / distance), letterMax);
-			MoveVector(min, max, (((maxLetters-i)*DrawText_LETTER_WIDTH*scaleWidth + (maxLetters-i-1)*DrawText_LETTER_SPACING*scaleWidth) / distance), letterMin);
+		if(align == DRAWTEXT_ALIGN_END){
+			MoveVector(end, start, (((letters-1-i)*fontWidth + (letters-1-i)*DRAWTEXT_LETTER_SPACING*fontWidth) / distance), letterMax);
+			MoveVector(end, start, (((letters-i)*fontWidth + (letters-i-1)*DRAWTEXT_LETTER_SPACING*fontWidth) / distance), letterMin);
 		} else {
-			MoveVector(max, min, ((i*DrawText_LETTER_WIDTH*scaleWidth + i*DrawText_LETTER_SPACING*scaleWidth) / distance), letterMin);
-			MoveVector(max, min, (((i+1)*DrawText_LETTER_WIDTH*scaleWidth + i*DrawText_LETTER_SPACING*scaleWidth) / distance), letterMax);
+			float j = i + startOffset; //applied start offset
+			MoveVector(start, end, ((j*fontWidth + j*DRAWTEXT_LETTER_SPACING*fontWidth) / distance), letterMin);
+			MoveVector(start, end, (((j+1)*fontWidth + j*DRAWTEXT_LETTER_SPACING*fontWidth) / distance), letterMax);
 		}
+		
 		switch (CharToUpper(text[i])){
 			case 'A':
 			{
@@ -318,27 +328,33 @@ stock DrawText(int client, float min[3], float max[3], int model, const char[] t
 			}
 		}
 	}
-	return maxLetters;
+	return letters;
 }
 
 /**
 	Draws one line of a letter indicated by start and end vectors and world min/max position to client
  */
-stock DrawLetterLines(float min[3], float max[3], float lineStartNorm[2], float lineEndNorm[2]){
+stock DrawLetterLines(const float min[3], const float max[3], const float lineStartNorm[2], const float lineEndNorm[2]){
 	float lineStart[3], lineEnd[3];
 	MoveVector(min, max, lineStartNorm[0], lineStart);
 	MoveVector(min, max, lineEndNorm[0], lineEnd);
-	lineStart[2] += lineStartNorm[1]*DrawText_LETTER_HEIGHT*DrawText_HeightScale;
-	lineEnd[2] += lineEndNorm[1]*DrawText_LETTER_HEIGHT*DrawText_HeightScale;
-	TE_SetupBeamPoints(lineStart, lineEnd, DrawText_Model, -1, 0, 30, DrawText_Life, DrawText_LETTER_SIZE*DrawText_BoldnessScale, DrawText_LETTER_SIZE*DrawText_BoldnessScale, 2, 0.0, DrawText_Color, 0);
-	TE_SendToClient(DrawText_DrawingTo);
+	lineStart[2] += lineStartNorm[1] * DrawText_Height;
+	lineEnd[2] += lineEndNorm[1] * DrawText_Height;
+	
+	TE_SetupBeamPoints(lineStart, lineEnd, DrawText_Model, -1, 0, 30, DrawText_Life, DrawText_Size, DrawText_Size, 0, DrawText_Amplitude, DrawText_Color, 0);
+	
+	if(DrawText_Client <= 0){
+		TE_SendToAll();
+	} else {
+		TE_SendToClient(DrawText_Client);
+	}
 }
 
-stock MoveVector(const Float:start[3], const Float:end[3], Float:scale, Float:output[3])
+stock MoveVector(const float start[3], const float end[3], float scale, float output[3])
 {
-	SubtractVectors(end,start,output);
-	ScaleVector(output,scale);
-	AddVectors(start,output,output);
+	SubtractVectors(end, start, output);
+	ScaleVector(output, scale);
+	AddVectors(start, output, output);
 }
 
 /**

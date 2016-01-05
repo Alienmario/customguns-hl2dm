@@ -46,8 +46,7 @@ public OnWeaponSwitchPost(client, weapon)
 		GetArrayString(gunBind, i, bindWeapon, sizeof(bindWeapon));
 		
 		if (StrEqual(sWeapon, bindWeapon)) {
-			int inventoryIndex = getInventoryIndex(client, i);
-			if(inventoryIndex != -1){
+			if(hasInInventory(client, i)){
 				int lastWeapon = GetEntPropEnt(client, Prop_Data, "m_hLastWeapon");
 				
 				giveCustomGun(client, i, true);
@@ -151,16 +150,12 @@ public MRESReturn FireBullets(int client, Handle hParams) {
 		DHookGetParamObjectPtrVarVector(hParams, 1, 16, ObjectValueType_Vector, vecDir);
 		int ammoID = DHookGetParamObjectPtrVar(hParams, 1, 44, ObjectValueType_Int);
 		int shots = DHookGetParamObjectPtrVar(hParams, 1, 0, ObjectValueType_Int);
-		
-		static bool post;
-		if(post){
-			TE_SetupShotgunShot(origin, vecDir, ammoID, GetURandomInt() & 255, shots, client, spread, true, GetArrayCell(gunFireVisible, selectedGunIndex[client]));
-			TE_SendToClient(client);
-		}
-		post = !post;
-		return MRES_Handled;
+
+		TE_SetupShotgunShot(origin, vecDir, ammoID, GetURandomInt() & 255, shots, client, spread, true, GetArrayCell(gunFireVisible, selectedGunIndex[client]));
+		TE_SendToClient(client);
+
 	}
-	return MRES_Ignored;
+	return MRES_Handled;
 }
 
 // Activity CBaseCombatCharacter::Weapon_TranslateActivity( Activity baseAct, bool *pRequired )
@@ -294,7 +289,7 @@ public MRESReturn ReloadOrSwitchWeapons(int weapon, Handle hReturn) {
 		}
 		
 		// give new weapon
-		giveCustomGun(owner, reselectIndex(owner));
+		giveCustomGun(owner, selectBestIndex(owner));
 	}
 	return MRES_Ignored;
 }
@@ -335,9 +330,10 @@ public MRESReturn ItemPostFrame(int weapon) {
 			float delayFireCooldown = GetArrayCell(gunDelayFireCooldown, index);
 			int delaySequence = GetArrayCell(gunDelaySequence, index);
 
-			if( buttons & IN_ATTACK && SDKCall(CALL_HasPrimaryAmmo, weapon) /* GetEntProp(weapon, Prop_Data, "m_iClip1") > 0 */
-			&& curtime >= lastFired[client]+delayFireCooldown
-			&& GetEntPropFloat(weapon, Prop_Data, "m_fFireDuration") <= 0.0)
+			if( buttons & IN_ATTACK
+			&& curtime >= lastFired[client] + delayFireCooldown
+			&& GetEntPropFloat(weapon, Prop_Data, "m_fFireDuration") <= 0.0
+			&& SDKCall(CALL_HasPrimaryAmmo, weapon))
 			{
 				if(delaySequence != -1) SDKCall(CALL_SendViewModelAnim, weapon, delaySequence);
 				SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", curtime+delay);
@@ -348,7 +344,6 @@ public MRESReturn ItemPostFrame(int weapon) {
 			{
 				if( !(buttons & IN_ATTACK) || GetEntPropFloat(weapon, Prop_Data, "m_fFireDuration") <= 0.0){ // spinup cancelled by player (unpressed button)
 					SDKCall(CALL_StopWeaponSound, weapon, SPECIAL1);
-					//SDKCall(CALL_SendViewModelAnim, weapon, SEQ_IDLE);
 					SDKCall(CALL_SendWeaponAnim, weapon, ACT_VM_IDLE);
 					inSpinUp[client] = false;
 				} else if (curtime >= GetEntPropFloat(weapon, Prop_Data, "m_flNextPrimaryAttack")) { // spinup transitioning to firing
@@ -404,7 +399,6 @@ public MRESReturn PrimaryAttack(int weapon) {
 			if (GetArrayCell(gunFireLoopFix, index)) {
 				firing[client] = true;
 			}
-			
 			lastFired[client] = GetGameTime();
 		}
 		

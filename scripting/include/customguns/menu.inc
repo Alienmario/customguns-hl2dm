@@ -34,6 +34,7 @@ generateWheel(int client) {
 drawMenu(int client) {
 	float eyePos[3], fwdVector[3], rightVector[3], upVector[3];
 	GetClientEyePosition(client, eyePos);
+	
 	GetAngleVectors(startEyeAngles[client], fwdVector, rightVector, upVector);
 	
 	int selected = getInventoryAimIndex(client);
@@ -69,15 +70,17 @@ drawMenu(int client) {
 			}
 		}
 		
-		float scale = 0.9 - animScale * 0.3; // scale inwards the circle
+		float scale = 0.9 - animScale * 0.5; // scale inwards the circle
+		float fwdScale = 1.0 - animScale * 0.25; // scale towards the player
 		SetArrayCell(inventoryAnimScale[client], i, animScale);
 		
-		gunPos[0] = eyePos[0] + rightVector[0] * localPos[0] * scale + fwdVector[0] * localPos[1] + upVector[0] * localPos[2] * scale;
-		gunPos[1] = eyePos[1] + rightVector[1] * localPos[0] * scale + fwdVector[1] * localPos[1] + upVector[1] * localPos[2] * scale;
-		gunPos[2] = eyePos[2] + rightVector[2] * localPos[0] * scale + fwdVector[2] * localPos[1] + upVector[2] * localPos[2] * scale;
+		gunPos[0] = eyePos[0] + rightVector[0] * localPos[0] * scale + fwdVector[0] * localPos[1] * fwdScale + upVector[0] * localPos[2] * scale;
+		gunPos[1] = eyePos[1] + rightVector[1] * localPos[0] * scale + fwdVector[1] * localPos[1] * fwdScale + upVector[1] * localPos[2] * scale;
+		gunPos[2] = eyePos[2] + rightVector[2] * localPos[0] * scale + fwdVector[2] * localPos[1] * fwdScale + upVector[2] * localPos[2] * scale;
 		
 		int brightness = selectable ? 255 : 35
-		DrawModel(client, gunPos, GetArrayCell(gunModelIndexes, GetArrayCell(inventory[client], i)), 0.1, brightness);
+		TE_SetupGlowSprite(gunPos, GetArrayCell(gunModelIndexes, GetArrayCell(inventory[client], i)), 0.1, 0.2, brightness);
+		TE_SendToClient(client);
 		
 		// draw text
 		if (selected == i && shouldDraw) {
@@ -90,22 +93,16 @@ drawMenu(int client) {
 			
 			ScaleVector(minText, MENU_DISTANCE+TEXT_DISTANCE_OFFSET);
 			AddVectors(eyePos, minText, minText);
-			
-			if (localPos[2] >= 0) {
-				minText[2] += 5.0;
-			} else {
-				minText[2] -= 5.0;
-			}
-			
+
 			maxText = minText;
 			
 			float textRightVector[3]; textRightVector = rightVector;
-			ScaleVector(textRightVector, -20.0);
+			ScaleVector(textRightVector, -40.0);
 			AddVectors(minText, textRightVector, minText);
 			ScaleVector(textRightVector, -1.0);
 			AddVectors(maxText, textRightVector, maxText);
 			
-			DrawText(client, maxText, minText, modelText, buffer, 0.1, _, localPos[0] >= 0, 1.5, 1.5, 0.3);
+			DrawText(client, minText, maxText, modelText, buffer, 0.1, DRAWTEXT_ALIGN_CENTER, _, DRAWTEXT_WIDTH_DEFAULT*1.5, DRAWTEXT_HEIGHT_DEFAULT*1.5, DRAWTEXT_SIZE_DEFAULT, 50.0 * (1-animScale));
 		}
 	}
 	
@@ -125,15 +122,18 @@ onMenuOpening(int client) {
 	GetClientEyeAngles(client, startEyeAngles[client]);
 	EmitSoundToClient(client, SND_OPEN, _, _, _, _, 0.6);
 	fov(client, 100, 0.3);
+	setViewmodelVisible(client, false);
 }
 
 onMenuClosing(int client) {
 	fov(client, -1, 0.2);
+	setViewmodelVisible(client, true);
 	
 	int selected = getInventoryAimIndex(client);
 	if (selected != -1) {
+		preferedGunIndex[client] = GetArrayCell(inventory[client], selected);
 		EmitSoundToClient(client, SND_CLOSE_OK);
-		giveCustomGun(client, GetArrayCell(inventory[client], selected), true);
+		giveCustomGun(client, preferedGunIndex[client], true);
 	} else EmitGameSoundToClient(client, SND_CLOSE_CANC);
 }
 
@@ -162,7 +162,7 @@ int getInventoryAimIndex(int client) {
 		NormalizeVector(localPos, localPos);
 		
 		float a = GetVectorDotProduct(localPos, fwdVector);
-		if (threshold[client] < a > highest) {
+		if (/* threshold[client] <  */a > highest) {
 			highest = a;
 			highestIndex = i;
 		}

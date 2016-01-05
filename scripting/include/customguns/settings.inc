@@ -12,10 +12,10 @@
 #define MODEL_TEXT "materials/sprites/lgtning_noz.vmt"
 //#define MODEL_BORDER "materials/particle/particle_ring_refract_01.vmt"
 
-#define MENU_DISTANCE 50.0
-#define MENU_RADIUS 40.0
+#define MENU_DISTANCE 60.0
+#define MENU_RADIUS 45.0
 
-#define TEXT_DISTANCE_OFFSET -0.0
+#define TEXT_DISTANCE_OFFSET -20.0
 
 /* #define MENU_BORDER_SCALE 2.0
 #define MENU_BORDER_TRANSPARENCY 255

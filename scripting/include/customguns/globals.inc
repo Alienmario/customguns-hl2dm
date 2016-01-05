@@ -21,6 +21,7 @@ Handle gunAnimPrefix;
 Handle gunType;
 Handle gunModels;
 Handle gunModelIndexes;
+Handle gunSkin;
 Handle gunAdminLevel;
 Handle gunPersistent;
 Handle gunGive;
@@ -59,6 +60,7 @@ float threshold[MAXPLAYERS + 1];
 
 int gunEnt[MAXPLAYERS + 1] =  { -1, ... };
 int selectedGunIndex[MAXPLAYERS + 1] = { -1, ... };
+int preferedGunIndex[MAXPLAYERS + 1] = { -1, ... };
 
 Handle inventory[MAXPLAYERS + 1];
 Handle inventoryWheel[MAXPLAYERS + 1];

@@ -15,7 +15,7 @@ stock void setWeaponAmmo(int client, int clip, char[] weapon = ""){
 			return;
 		}
 	}
-	SetEntProp(gun, Prop_Send, "m_iClip1", clip);
+	SetEntProp(gun, Prop_Send, "m_iClip1", clip<0? 0:clip);
 }
 
 /* weapon means: add only if this weapon is active */

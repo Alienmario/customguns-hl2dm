@@ -69,6 +69,6 @@ static void toggleZoom(int client, int gunIndex){
 	nextToggle[client] = GetGameTime() + 0.2;
 }
 
-static bool zooming(int client){
+bool zooming(int client){
 	return zoomingGunIndex[client] != -1;
 }

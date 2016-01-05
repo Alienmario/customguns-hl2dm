@@ -33,6 +33,7 @@ loadConfig() {
 							PushArrayString(gunNames, buffer);
 							KvGetString(kv, "model", buffer, sizeof(buffer), "");
 							PushArrayString(gunModels, buffer);
+							PushArrayCell(gunSkin, KvGetNum(kv, "skin", 0));
 							PushArrayCell(gunGive, KvGetNum(kv, "give_on_spawn", 1));
 							KvGetString(kv, "give_with_weapon", buffer, 32, "");
 							PushArrayString(gunGiveMasterWeapon, buffer);
@@ -240,7 +241,11 @@ void clearInventory(int client, bool clearPersistent = false){
 	}
 }
 
-int reselectIndex(int client){
+int selectBestIndex(int client){
+	if(preferedGunIndex[client] != -1 && canSelectInInventory(client, preferedGunIndex[client])){
+		return preferedGunIndex[client];
+	}
+	
 	int defaultIndex = getDefaultIndex();
 	int index = -1;
 	if(inventory[client]){
@@ -293,9 +298,16 @@ bool pickAmmoFromWeapon(int client, int weapon) {
 	return false;
 }
 
-/* bool hasInInventory(int client, int weaponIndex){
+bool hasInInventory(int client, int weaponIndex){
 	return getInventoryIndex(client, weaponIndex) != -1;
-} */
+}
+
+bool canSelectInInventory(int client, int weaponIndex){
+	int invIndex = getInventoryIndex(client, weaponIndex);
+	if(invIndex != -1 && canSelectItem(client, invIndex))
+		return true;
+	return false;
+}
 
 int getInventoryIndex(int client, int weaponIndex) {
 	if(inventory[client]){

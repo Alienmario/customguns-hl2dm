@@ -110,27 +110,47 @@ enum SolidType_t
 enum Collision_Group_t
 {
 	COLLISION_GROUP_NONE  = 0,
-	COLLISION_GROUP_DEBRIS,				// Collides with nothing but world and static stuff
-	COLLISION_GROUP_DEBRIS_TRIGGER,		// Same as debris, but hits triggers
-	COLLISION_GROUP_INTERACTIVE_DEB,	// Collides with everything except other interactive debris or debris
-	COLLISION_GROUP_INTERACTIVE,		// Collides with everything except interactive debris or debris
+	COLLISION_GROUP_DEBRIS,			// Collides with nothing but world and static stuff
+	COLLISION_GROUP_DEBRIS_TRIGGER, // Same as debris, but hits triggers
+	COLLISION_GROUP_INTERACTIVE_DEBRIS,	// Collides with everything except other interactive debris or debris
+	COLLISION_GROUP_INTERACTIVE,	// Collides with everything except interactive debris or debris
 	COLLISION_GROUP_PLAYER,
 	COLLISION_GROUP_BREAKABLE_GLASS,
 	COLLISION_GROUP_VEHICLE,
-	COLLISION_GROUP_PLAYER_MOVEMENT,	// For HL2, same as Collision_Group_Player, for
+	COLLISION_GROUP_PLAYER_MOVEMENT,  // For HL2, same as Collision_Group_Player, for
 										// TF2, this filters out other players and CBaseObjects
-	COLLISION_GROUP_NPC,				// Generic NPC group
-	COLLISION_GROUP_IN_VEHICLE,			// for any entity inside a vehicle
-	COLLISION_GROUP_WEAPON,				// for any weapons that need collision detection
-	COLLISION_GROUP_VEHICLE_CLIP,		// vehicle clip brush to restrict vehicle movement
-	COLLISION_GROUP_PROJECTILE,			// Projectiles!
-	COLLISION_GROUP_DOOR_BLOCKER,		// Blocks entities not permitted to get near moving doors
-	COLLISION_GROUP_PASSABLE_DOOR,		// Doors that the player shouldn't collide with
-	COLLISION_GROUP_DISSOLVING,			// Things that are dissolving are in this group
-	COLLISION_GROUP_PUSHAWAY,			// Nonsolid on client and server, pushaway in player code
+	COLLISION_GROUP_NPC,			// Generic NPC group
+	COLLISION_GROUP_IN_VEHICLE,		// for any entity inside a vehicle
+	COLLISION_GROUP_WEAPON,			// for any weapons that need collision detection
+	COLLISION_GROUP_VEHICLE_CLIP,	// vehicle clip brush to restrict vehicle movement
+	COLLISION_GROUP_PROJECTILE,		// Projectiles!
+	COLLISION_GROUP_DOOR_BLOCKER,	// Blocks entities not permitted to get near moving doors
+	COLLISION_GROUP_PASSABLE_DOOR,	// Doors that the player shouldn't collide with
+	COLLISION_GROUP_DISSOLVING,		// Things that are dissolving are in this group
+	COLLISION_GROUP_PUSHAWAY,		// Nonsolid on client and server, pushaway in player code
 
-	COLLISION_GROUP_NPC_ACTOR,			// Used so NPCs in scripts ignore the player.
-	COLLISION_GROUP_NPC_SCRIPTED		// USed for NPCs in scripts that should not collide with each other
+	COLLISION_GROUP_NPC_ACTOR,		// Used so NPCs in scripts ignore the player.
+	COLLISION_GROUP_NPC_SCRIPTED,	// USed for NPCs in scripts that should not collide with each other
+
+	LAST_SHARED_COLLISION_GROUP
+};
+
+enum
+{
+	HL2COLLISION_GROUP_PLASMANODE = LAST_SHARED_COLLISION_GROUP,
+	HL2COLLISION_GROUP_SPIT,
+	HL2COLLISION_GROUP_HOMING_MISSILE,
+	HL2COLLISION_GROUP_COMBINE_BALL,
+
+	HL2COLLISION_GROUP_FIRST_NPC,
+	HL2COLLISION_GROUP_HOUNDEYE,
+	HL2COLLISION_GROUP_CROW,
+	HL2COLLISION_GROUP_HEADCRAB,
+	HL2COLLISION_GROUP_STRIDER,
+	HL2COLLISION_GROUP_GUNSHIP,
+	HL2COLLISION_GROUP_ANTLION,
+	HL2COLLISION_GROUP_LAST_NPC,
+	HL2COLLISION_GROUP_COMBINE_BALL_NPC,
 };
 
 enum SolidFlags_t
