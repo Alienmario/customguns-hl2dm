@@ -19,12 +19,14 @@
 #include <customguns/menu>
 #include <customguns/addons_scope>
 
+#define PLUGIN_VERSION  "1.2"
+
 public Plugin myinfo = 
 {
 	name = "Custom guns", 
 	author = "Alienmario", 
 	description = "Custom guns plugin for HL2DM", 
-	version = "1.1.3"
+	version = PLUGIN_VERSION
 };
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, err_max)
@@ -362,6 +364,7 @@ public OnPluginStart()
 	HookEvent("player_spawn", OnSpawn);
 	HookEvent("player_death", OnDeath);
 	
+	CreateConVar("hl2dm_customguns_version", PLUGIN_VERSION, "Customguns version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
 	customguns_default = CreateConVar("customguns_default", "weapon_hands", "The preferred custom weapon that players should spawn with", FCVAR_PLUGIN);
 	customguns_global_switcher = CreateConVar("customguns_global_switcher", "1", "Enables fast switching from any weapon by holding reload button. If 0, players can switch only when holding a custom weapon.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	customguns_autogive = CreateConVar("customguns_autogive", "1", "Globally enables/disables auto-giving of all custom weapons", FCVAR_PLUGIN, true, 0.0, true, 1.0);
@@ -442,6 +445,7 @@ public Action CustomGun(int client, int args) {
 }
 
 public OnConfigsExecuted() {
+	modelBG = PrecacheModel(MENU_BG_MODEL, true);
 	modelText = PrecacheModel(MODEL_TEXT, true);
 	//modelBorder = PrecacheModel(MODEL_BORDER, true);
 	PrecacheSound(SND_OPEN, true);
@@ -658,7 +662,7 @@ public Action OnPlayerRunCmd(client, &buttons, &impulse, float vel[3], float ang
 		int gunIndex = getIndex(sWeapon);
 		
 		//handle opening/closing menu
-		if (!open[client] && IsPlayerAlive(client) && !zooming(client) && inventory[client] && GetArraySize(inventory[client])>0 && GetEntProp(client, Prop_Send, "m_iTeamNum") > 1) {
+		if (!open[client] && IsPlayerAlive(client) && !zooming(client) && inventory[client] && GetArraySize(inventory[client])>0 && GetEntProp(client, Prop_Send, "m_iTeamNum") != 1) {
 			if (buttons & IN_ATTACK3) {
 				onMenuOpening(client);
 				open[client] = true;

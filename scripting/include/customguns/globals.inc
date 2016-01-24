@@ -5,6 +5,7 @@
 
 
 int modelText;
+int modelBG;
 //int modelBorder;
 
 
@@ -56,7 +57,6 @@ bool open[MAXPLAYERS + 1];
 float firstOpen[MAXPLAYERS + 1];
 float nextDraw[MAXPLAYERS + 1];
 float startEyeAngles[MAXPLAYERS + 1][3];
-float threshold[MAXPLAYERS + 1];
 
 int gunEnt[MAXPLAYERS + 1] =  { -1, ... };
 int selectedGunIndex[MAXPLAYERS + 1] = { -1, ... };

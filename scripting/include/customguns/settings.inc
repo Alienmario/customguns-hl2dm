@@ -9,18 +9,27 @@
 #define SND_CLOSE_CANC "Player.DenyWeaponSelection"
 #define SND_SELECT "Player.WeaponSelectionMoveSlot" //mouseover
 
-#define MODEL_TEXT "materials/sprites/lgtning_noz.vmt"
-//#define MODEL_BORDER "materials/particle/particle_ring_refract_01.vmt"
-
 #define MENU_DISTANCE 60.0
 #define MENU_RADIUS 45.0
+#define SELECT_THRESHOLD 0.86
 
-#define TEXT_DISTANCE_OFFSET -20.0
 
-/* #define MENU_BORDER_SCALE 2.0
+#define MENU_BG_MODEL "materials/sprites/blueshaft1.vmt"
+#define MENU_BG_COLOR {255, 255, 255, 20}
+#define MENU_BG_COLOR_SELECT {255, 125, 50, 200}
+#define MENU_BG_COLOR_UNSELECTABLE {80, 5, 5, 70}
+#define MENU_BG_DISTANCE_OFFSET -25.0
+#define MENU_BG_DISTANCE MENU_DISTANCE+MENU_BG_DISTANCE_OFFSET
+
+#define MODEL_TEXT "materials/sprites/lgtning_noz.vmt"
+#define TEXT_DISTANCE_OFFSET -25.0
+
+#define MODEL_BORDER "materials/particle/particle_ring_refract_01.vmt"
+#define MENU_BORDER_SCALE 0.95
 #define MENU_BORDER_TRANSPARENCY 255
-#define MENU_BORDER_DISTANCE_OFFSET 0
-#define MENU_BORDER_Z_OFFSET -0.0 */
+#define MENU_BORDER_DISTANCE_OFFSET 20.0
+#define MENU_BORDER_Z_OFFSET -0.0
+
 
 #define MOLOTOV_BURN_DMG 2.0
 #define MOLOTOV_BURN_DMG_PL 0.4

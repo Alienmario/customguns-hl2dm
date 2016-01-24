@@ -67,7 +67,7 @@ native int CG_SpawnGun(const char[] classname, float[3] origin);
  * @param client			client index
  *
  */
-native bool CG_ClearInventory(int client);
+native void CG_ClearInventory(int client);
 
 
 /**

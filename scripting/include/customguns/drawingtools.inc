@@ -5,13 +5,13 @@
 
 #define DRAWTEXT_LETTER_SPACING 0.25
 
-#define DRAWTEXT_ALIGN_START -1
-#define DRAWTEXT_ALIGN_CENTER 0
-#define DRAWTEXT_ALIGN_END 1
-
 #define DRAWTEXT_HEIGHT_DEFAULT 3.0
 #define DRAWTEXT_WIDTH_DEFAULT 2.0
 #define DRAWTEXT_SIZE_DEFAULT 0.4
+
+#define DRAWTEXT_ALIGN_START -1
+#define DRAWTEXT_ALIGN_CENTER 0
+#define DRAWTEXT_ALIGN_END 1
 
 int DrawText_Client;
 int DrawText_Model;
@@ -31,7 +31,21 @@ float DrawText_Amplitude;
  *
  * @return					number of letters drawn
  */
-stock DrawText(int client, const float start[3], const float end[3], int model, const char[] text, float life, int align = DRAWTEXT_ALIGN_CENTER, const int color[4] = { 255, 255, 255, 255 }, float fontWidth = DRAWTEXT_WIDTH_DEFAULT, float fontHeight = DRAWTEXT_HEIGHT_DEFAULT, float fontSize = DRAWTEXT_SIZE_DEFAULT, float amplitude = 0.0){
+stock DrawText
+(
+	int client,
+	const float start[3],
+	const float end[3],
+	int model,
+	const char[] text,
+	float life,
+	int align = DRAWTEXT_ALIGN_CENTER,
+	const int color[4] = { 255, 255, 255, 255 },
+	float fontWidth = DRAWTEXT_WIDTH_DEFAULT,
+	float fontHeight = DRAWTEXT_HEIGHT_DEFAULT,
+	float fontSize = DRAWTEXT_SIZE_DEFAULT,
+	float amplitude = 0.0
+){
 	DrawText_Client = client;
 	DrawText_Model = model;
 	DrawText_Color = color;

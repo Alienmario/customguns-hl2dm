@@ -22,13 +22,13 @@ generateWheel(int client) {
 			PushArrayArray(inventoryWheel[client], pos)
 		}
 	}
-	
+/* 	
 	float wep1Pos[3], wep2Pos[3];
 	if (size > 1) {
 		GetArrayArray(inventoryWheel[client], 0, wep1Pos); NormalizeVector(wep1Pos, wep1Pos);
 		GetArrayArray(inventoryWheel[client], 1, wep2Pos); NormalizeVector(wep2Pos, wep2Pos);
 		threshold[client] = GetVectorDotProduct(wep1Pos, wep2Pos);
-	} else threshold[client] = 0.0;
+	} else threshold[client] = 0.0; */
 }
 
 drawMenu(int client) {
@@ -40,13 +40,17 @@ drawMenu(int client) {
 	int selected = getInventoryAimIndex(client);
 	bool shouldDraw = GetGameTime() >= nextDraw[client]; // should draw text
 	
-	//DRAW MODELS
 	int size = GetArraySize(inventory[client]);
+	float beamEndWidth = 360.0/size/2.0;
+	if(beamEndWidth > 25.0) beamEndWidth = 25.0;
+		
+	//DRAW MODELS
 	for (int i = 0; i < size; i++) {
 		float localPos[3];
 		float gunPos[3];
 		float animScale = GetArrayCell(inventoryAnimScale[client], i);
 		bool selectable = canSelectItem(client, i);
+		
 		GetArrayArray(inventoryWheel[client], i, localPos);
 		
 		if (i == selected && selectable) {
@@ -78,8 +82,22 @@ drawMenu(int client) {
 		gunPos[1] = eyePos[1] + rightVector[1] * localPos[0] * scale + fwdVector[1] * localPos[1] * fwdScale + upVector[1] * localPos[2] * scale;
 		gunPos[2] = eyePos[2] + rightVector[2] * localPos[0] * scale + fwdVector[2] * localPos[1] * fwdScale + upVector[2] * localPos[2] * scale;
 		
-		int brightness = selectable ? 255 : 35
-		TE_SetupGlowSprite(gunPos, GetArrayCell(gunModelIndexes, GetArrayCell(inventory[client], i)), 0.1, 0.2, brightness);
+		TE_SetupGlowSprite(gunPos, GetArrayCell(gunModelIndexes, GetArrayCell(inventory[client], i)), 0.1, 0.2, selectable ? 255 : 35);
+		TE_SendToClient(client);
+		
+		//draw BG beams
+		float center[3], beamStartPos[3], beamEndPos[3];
+		center = fwdVector;
+		ScaleVector(center, MENU_DISTANCE+MENU_BORDER_DISTANCE_OFFSET);
+		AddVectors(eyePos, center, center);
+		
+		beamEndPos[0] = eyePos[0] + rightVector[0] * localPos[0] + fwdVector[0] * localPos[1] * fwdScale + upVector[0] * localPos[2];
+		beamEndPos[1] = eyePos[1] + rightVector[1] * localPos[0] + fwdVector[1] * localPos[1] * fwdScale + upVector[1] * localPos[2];
+		beamEndPos[2] = eyePos[2] + rightVector[2] * localPos[0] + fwdVector[2] * localPos[1] * fwdScale + upVector[2] * localPos[2];
+		
+		MoveVector(center, beamEndPos, 0.25, beamStartPos);
+		
+		TE_SetupBeamPoints(beamStartPos, beamEndPos, modelBG, -1, 0, 30, 0.1, 0.0, beamEndWidth, 0, 0.0, i==selected? MENU_BG_COLOR_SELECT : (selectable? MENU_BG_COLOR:MENU_BG_COLOR_UNSELECTABLE), 9);
 		TE_SendToClient(client);
 		
 		// draw text
@@ -105,14 +123,7 @@ drawMenu(int client) {
 			DrawText(client, minText, maxText, modelText, buffer, 0.1, DRAWTEXT_ALIGN_CENTER, _, DRAWTEXT_WIDTH_DEFAULT*1.5, DRAWTEXT_HEIGHT_DEFAULT*1.5, DRAWTEXT_SIZE_DEFAULT, 50.0 * (1-animScale));
 		}
 	}
-	
-	//DRAW BORDER
-/* 	ScaleVector(fwdVector, MENU_DISTANCE+MENU_BORDER_DISTANCE_OFFSET);
-	AddVectors(eyePos, fwdVector, fwdVector);
-	fwdVector[2] += MENU_BORDER_Z_OFFSET;
-	TE_SetupGlowSprite(fwdVector, modelBorder, 0.1, MENU_BORDER_SCALE, MENU_BORDER_TRANSPARENCY);
-	TE_SendToClient(client); */
-	
+
 	if (shouldDraw) {
 		nextDraw[client] = GetGameTime() + 0.05;
 	}
@@ -162,7 +173,7 @@ int getInventoryAimIndex(int client) {
 		NormalizeVector(localPos, localPos);
 		
 		float a = GetVectorDotProduct(localPos, fwdVector);
-		if (/* threshold[client] <  */a > highest) {
+		if (SELECT_THRESHOLD < a > highest) {
 			highest = a;
 			highestIndex = i;
 		}

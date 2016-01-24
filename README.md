@@ -54,6 +54,7 @@ CVARS:
 customguns_default | The preferred custom weapon that players should spawn with (weapon_hands by default)
 customguns_global_switcher | Enables fast switching from any weapon by holding reload button. If 0, players can switch only when holding a custom weapon.
 customguns_autogive | Globally enables/disables auto-giving of all custom weapons
+hl2dm_customguns_version | Plugin version
 ```
 Commands:
 ```
