@@ -1,0 +1,57 @@
+WeaponData
+{
+	// Weapon data is loaded by both the Game and Client DLLs.
+	"viewmodel"				"models/weapons/serioussam/v_cannon.mdl"
+	"playermodel"			"models/weapons/serioussam/w_cannon.mdl"
+	
+	// this prefix determines how player holds the gun in third person and will be used by customguns if this gun is custom
+	// more prefixes can be found in weapon scripts files
+	"anim_prefix"		"shotgun"
+
+	"clip_size"			"-1"
+	"default_clip"		"-1"
+	"clip2_size"		"-1"
+	"default_clip2"		"-1"
+	"primary_ammo"		"None"
+	"secondary_ammo"	"None"
+
+	"autoswitchto"		"0"
+	"autoswitchfrom"	"0"
+
+	"CustomGunsPluginData"
+	{
+		"name"						"Cannon"
+		
+		// mdl or vmt for selection menu
+		"model"						"models/weapons/serioussam/w_cannon.mdl" 
+
+		// make the gun usable only by admins who have this flag(s), or -1 to alow everyone to use the gun
+		"admin_level"				"-1"
+		
+		// add this gun to player's inventory on spawn?
+		"give_on_spawn"				"0"
+		
+		// add this gun to player's inventory when he equips this weapon
+		"give_with_weapon"			""
+		
+		// if 1, does not disappear from inventory when player drops the physical 'cubemap' weapon or is stripped from weapons; most likely used with admin weapons or weapons given on spawn!
+		"persistent"				"0"
+		
+		// weapon_type - possible values:
+		//		bullet - (default) Standard bullet weapon, uses clip sizes and ammo type defined above
+		//		throwable - Throws something away from the player - grenades, molotovs, ..
+		//		custom - Overrides ammo to an unknown value. This means the gun won't fire or reload itself. Its ammo ("m_iClip1" value) can be managed via other plugins. If used, set "primary_ammo" other than "None" to enable HUD ammo display.
+		"weapon_type"		"custom"
+		
+		"download"
+		{
+			"item"			"sound/weapons/serioussam/cannon/fire.wav"
+			"item"			"sound/weapons/serioussam/cannon/prepare.wav"
+			
+			"item"			"models/weapons/serioussam/v_cannon.mdl"
+			"item"			"models/weapons/serioussam/w_cannon.mdl"
+			
+			"item"			"models/projectiles/serioussam/cannonball.mdl"
+		}
+	}
+}
