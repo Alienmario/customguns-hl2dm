@@ -43,6 +43,7 @@ drawMenu(int client) {
 	int size = GetArraySize(inventory[client]);
 	float beamEndWidth = 360.0/size/2.0;
 	if(beamEndWidth > 25.0) beamEndWidth = 25.0;
+	float beamStartWidth = beamEndWidth/4;
 		
 	//DRAW MODELS
 	for (int i = 0; i < size; i++) {
@@ -97,7 +98,7 @@ drawMenu(int client) {
 		
 		MoveVector(center, beamEndPos, 0.25, beamStartPos);
 		
-		TE_SetupBeamPoints(beamStartPos, beamEndPos, modelBG, -1, 0, 30, 0.1, 0.0, beamEndWidth, 0, 0.0, i==selected? MENU_BG_COLOR_SELECT : (selectable? MENU_BG_COLOR:MENU_BG_COLOR_UNSELECTABLE), 9);
+		TE_SetupBeamPoints(beamStartPos, beamEndPos, modelBG, -1, 0, 30, 0.1, beamStartWidth, beamEndWidth, 0, 0.0, i==selected? MENU_BG_COLOR_SELECT : (selectable? MENU_BG_COLOR:MENU_BG_COLOR_UNSELECTABLE), 9);
 		TE_SendToClient(client);
 		
 		// draw text
