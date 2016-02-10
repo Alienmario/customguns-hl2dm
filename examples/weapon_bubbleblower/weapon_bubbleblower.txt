@@ -39,11 +39,23 @@ WeaponData
 		
 		// if 1, does not disappear from inventory when player drops the physical weapon or is stripped from weapons; recommended for admin weapons or weapons given on spawn
 		"persistent"				"1"
-		
+
 		// weapon_type - possible values:
 		//		bullet - (default) Standard bullet weapon, uses clip sizes and ammo type defined above
 		//		throwable - Throws something away from the player - grenades, molotovs, ..
-		//		custom - Overrides ammo to an unknown value. This weapon must be coded in order to do anything. Its ammo can be managed via "m_iClip1" value. If used, set "primary_ammo" to valid type like "pistol" to enable HUD ammo display.
-		"weapon_type"				"custom"
+		//		custom - Custom coded weapon
+		"weapon_type"		"custom"
+		
+		"custom_settings"
+		{
+			// * If set to 1, this custom gun will use game-defined ammo type (set above) and behavior instead of plugin managed ammo.
+			// * Fire functions will be managed by game, so they won't be called when the weapon runs out of ammo.
+			// * Use with CG_RemovePlayerAmmo() native
+			//
+			// ** Setting this to 0 will allow you to manage ammo ("m_iClip1" value) yourself via plugin. This overrides ammotype to an unknown value.
+			// ** Fire functions will always be called when the weapon is ready to fire, without any ammo checks. Also set this to 0 if your weapon doesn't use ammo.
+			// ** Set "primary_ammo" other than "None" to enable HUD ammo display.
+			"uses_game_ammo"		"0"
+		}
 	}
 }

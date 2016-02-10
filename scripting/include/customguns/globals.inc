@@ -36,6 +36,9 @@ Handle gunScopeOverlay;
 Handle gunScopeSoundOn;
 Handle gunScopeSoundOff;
 
+// Custom
+Handle gunCustomKeepAmmo;
+
 // Bulllet
 Handle gunDmg;
 Handle gunSpread;
@@ -49,6 +52,7 @@ Handle gunViewKickTime;
 Handle gunFireLoopFix;
 Handle gunFireLoopLength;
 Handle gunFireVisible;
+Handle gunReloadsSingly;
 
 
 int CLIENT_BEING_EQUIPPED = -1;
@@ -105,6 +109,10 @@ Handle CALL_GetAmmoCount;
 Handle CALL_RemoveAmmo;
 Handle CALL_SetAnimation;
 Handle CALL_ShootPosition;
+/* Handle CALL_ClearMultiDamage;
+Handle CALL_ApplyMultiDamage; */
 
 Handle PrimaryAttackForward;
 Handle SecondaryAttackForward;
+Handle ItemPostFrameForward;
+Handle HolsterForward;

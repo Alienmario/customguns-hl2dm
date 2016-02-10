@@ -262,6 +262,8 @@ public MRESReturn ReloadOrSwitchWeapons(int weapon, Handle hReturn) {
 		return MRES_Ignored;
 	}
 	
+	updateWeaponInventoryAmmo(weapon, getIndexEnt(weapon), owner);
+		
 	int buttons = GetClientButtons(owner);
 	if (/* GetArrayCell(gunAmmoTypes, selectedGunIndex[owner]) == -1 && */ !(buttons & IN_ATTACK) && !(buttons & IN_ATTACK2)
 		&& !(SDKCall(CALL_HasSecondaryAmmo, weapon) || SDKCall(CALL_HasPrimaryAmmo, weapon))) 
@@ -316,6 +318,11 @@ public MRESReturn ItemPostFrame(int weapon) {
 		int index = getIndexEnt(weapon);
 		GunType type = getType(index);
 		
+		Call_StartForward(ItemPostFrameForward);
+		Call_PushCell(client);
+		Call_PushCell(weapon);
+		Call_Finish();
+		
 		if (type == GunType_Throwable){
 			return Throwable_ItemPostFrame(weapon, index, client);
 		}
@@ -350,21 +357,26 @@ public MRESReturn ItemPostFrame(int weapon) {
 					inSpinUp[client] = false;
 				}
 			}
-		} else {
-			// Custom weapon
+		} 
+		// Custom weapon
+		else if(!GetArrayCell(gunCustomKeepAmmo, index)){
 			if ( ( GetClientButtons(client) & IN_ATTACK ) && GetGameTime() > GetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack") )
 			{
+				//SDKCall(CALL_ClearMultiDamage);
 				Call_StartForward(PrimaryAttackForward);
 				Call_PushCell(client);
 				Call_PushCell(weapon);
 				Call_Finish();
+				//SDKCall(CALL_ApplyMultiDamage);
 			}
 			else if ( ( GetClientButtons(client) & IN_ATTACK2 ) && GetGameTime() > GetEntPropFloat(weapon, Prop_Send, "m_flNextSecondaryAttack") )
 			{
+				//SDKCall(CALL_ClearMultiDamage);
 				Call_StartForward(SecondaryAttackForward);
 				Call_PushCell(client);
 				Call_PushCell(weapon);
 				Call_Finish();
+				//SDKCall(CALL_ApplyMultiDamage);
 			}
 		}
 	}
@@ -406,6 +418,10 @@ public MRESReturn PrimaryAttack(int weapon) {
 		Call_PushCell(client);
 		Call_PushCell(weapon);
 		Call_Finish();
+		
+		if (type == GunType_Custom){
+			return MRES_Supercede;
+		}
 	}
 	return MRES_Ignored;
 }
@@ -418,6 +434,13 @@ public MRESReturn SecondaryAttack(int weapon) {
 		Call_PushCell(client);
 		Call_PushCell(weapon);
 		Call_Finish();
+		
+		int index = getIndexEnt(weapon);
+		GunType type = getType(index);
+		
+		if (type == GunType_Custom){
+			return MRES_Supercede;
+		}
 	}
 	return MRES_Ignored;
 }
@@ -442,9 +465,7 @@ public MRESReturn Holster(int weapon, Handle hReturn, Handle hParams) {
 		int index = getIndexEnt(weapon);
 		GunType type = getType(index);
 		
-		// save current ammo values in player's inventory
-		int saveAmmo = SDKCall(CALL_UsesClipsForAmmo1, weapon)? GetEntProp(weapon, Prop_Data, "m_iClip1") : 0;
-		setInventoryAmmo(client, index, saveAmmo, GetEntProp(weapon, Prop_Data, "m_iPrimaryAmmoType"));
+		updateWeaponInventoryAmmo(weapon, index, client);
 		
 		if (type == GunType_Throwable)
 		{
@@ -458,6 +479,12 @@ public MRESReturn Holster(int weapon, Handle hReturn, Handle hParams) {
 				nextFireSound[client] = 0.0;
 			}
 		}
+		
+		Call_StartForward(HolsterForward);
+		Call_PushCell(client);
+		Call_PushCell(weapon);
+		Call_PushCell(DHookIsNullParam(hParams, 1)? -1 : DHookGetParam(hParams, 1));
+		Call_Finish();
 	}
 	
 	return MRES_Ignored;

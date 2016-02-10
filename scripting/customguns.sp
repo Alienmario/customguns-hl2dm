@@ -4,7 +4,6 @@
 #include <sdkhooks>
 #include <dhooks>
 
-#include <customguns/smartdm>
 #include <customguns/activity_list>
 #include <customguns/drawingtools>
 #include <customguns/const>
@@ -19,7 +18,7 @@
 #include <customguns/menu>
 #include <customguns/addons_scope>
 
-#define PLUGIN_VERSION  "1.2"
+#define PLUGIN_VERSION  "1.3"
 
 public Plugin myinfo = 
 {
@@ -42,6 +41,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, err_max)
 	CreateNative("CG_PlaySecondaryAttack", Native_PlaySecondaryAttack);
 	CreateNative("CG_SetPlayerAnimation", Native_SetPlayerAnimation);
 	CreateNative("CG_GetShootPosition", Native_GetShootPosition);
+	CreateNative("CG_RemovePlayerAmmo", Native_RemovePlayerAmmo);
 	
 	return APLRes_Success;
 }
@@ -127,6 +127,11 @@ public int Native_PlaySecondaryAttack(Handle plugin, numParams)
 	SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", curtime + seqDuration);
 	SetEntPropFloat(weapon, Prop_Send, "m_flNextSecondaryAttack", curtime + seqDuration);
 	return view_as<int>(seqDuration);
+}
+
+public Native_RemovePlayerAmmo(Handle plugin, numParams)
+{
+	RemovePlayerAmmo(GetNativeCell(1), GetNativeCell(2), GetNativeCell(3));
 }
 
 public OnPluginStart()
@@ -317,7 +322,16 @@ public OnPluginStart()
 		StartPrepSDKCall(SDKCall_Player);
 		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "Weapon_ShootPosition");
 		PrepSDKCall_SetReturnInfo(SDKType_Vector, SDKPass_ByValue);
-		CALL_ShootPosition = EndPrepSDKCall();
+		CALL_ShootPosition = EndPrepSDKCall();	
+
+/* 		// void CServerTools::ClearMultiDamage( void )
+ 		StartPrepSDKCall(SDKCall_Static);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Signature, "ClearMultiDamage");
+		CALL_ClearMultiDamage = EndPrepSDKCall();
+		
+ 		StartPrepSDKCall(SDKCall_Static);
+		PrepSDKCall_SetFromConf(gamedata, SDKConf_Signature, "ApplyMultiDamage");
+		CALL_ApplyMultiDamage = EndPrepSDKCall(); */
 	}
 	
 	CloseHandle(gamedata);
@@ -352,6 +366,8 @@ public OnPluginStart()
 	gunFireLoopFix = CreateArray();
 	gunFireLoopLength = CreateArray();
 	gunFireVisible = CreateArray();
+	gunReloadsSingly = CreateArray();
+	gunCustomKeepAmmo = CreateArray();
 	gunScopeFov = CreateArray();
 	gunScopeOverlay = CreateArray(PLATFORM_MAX_PATH);
 	gunScopeSoundOn = CreateArray(PLATFORM_MAX_PATH);
@@ -371,6 +387,8 @@ public OnPluginStart()
 
 	PrimaryAttackForward = CreateGlobalForward("CG_OnPrimaryAttack", ET_Ignore, Param_Cell, Param_Cell);
 	SecondaryAttackForward = CreateGlobalForward("CG_OnSecondaryAttack", ET_Ignore, Param_Cell, Param_Cell);
+	ItemPostFrameForward = CreateGlobalForward("CG_ItemPostFrame", ET_Ignore, Param_Cell, Param_Cell);
+	HolsterForward = CreateGlobalForward("CG_OnHolster", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 	
 	RegAdminCmd("sm_customgun", CustomGun, ADMFLAG_ROOT, "Spawns a custom gun by classname");
 	RegAdminCmd("sm_customguns", CustomGun, ADMFLAG_ROOT, "Spawns a custom gun by classname");
@@ -462,7 +480,7 @@ public OnConfigsExecuted() {
 	}
 	for (int i = 0; i < GetArraySize(gunDownloads); i++) {
 		GetArrayString(gunDownloads, i, buffer, sizeof(buffer));
-		Downloader_AddFileToDownloadsTable(buffer);
+		AddFileToDownloadsTable(buffer);
 	}
 }
 
@@ -601,7 +619,7 @@ int spawnGun(int index, const float origin[3] = NULL_VECTOR) {
 		DHookEntity(DHOOK_Holster, true, ent);
 		DHookEntity(DHOOK_GetDefaultClip1, true, ent);
 
-		DHookEntity(DHOOK_SecondaryAttack, true, ent);
+		DHookEntity(DHOOK_SecondaryAttack, false, ent);
 		DHookEntity(DHOOK_Drop, false, ent);
 		
 		if(guntype == GunType_Bullet)
@@ -626,12 +644,18 @@ int spawnGun(int index, const float origin[3] = NULL_VECTOR) {
 			DHookEntity(DHOOK_ItemPostFrame, false, ent);
 			DHookEntity(DHOOK_PrimaryAttack, false, ent);
 			DHookEntity(DHOOK_Operator_HandleAnimEvent, false, ent);
-		} else {
-			DHookEntity(DHOOK_ItemPostFrame, true, ent);
-			//DHookEntity(DHOOK_PrimaryAttack, true, ent);
+		} 
+		else 
+		{ // custom
+			if(GetArrayCell(gunCustomKeepAmmo, index)){
+				// game managed ammo and attack functions
+				DHookEntity(DHOOK_ItemPostFrame, false, ent);
+				DHookEntity(DHOOK_PrimaryAttack, false, ent);
+			} else {
+				// plugin managed ammo, attack forwards called manually by plugin
+				DHookEntity(DHOOK_ItemPostFrame, true, ent);
+			}
 		}
-		
-		//SetEntProp(ent, Prop_Data, "m_bReloadsSingly", 1);
 		
 		char weapon[32];
 		GetArrayString(gunClassNames, index, weapon, sizeof(weapon));
@@ -640,12 +664,16 @@ int spawnGun(int index, const float origin[3] = NULL_VECTOR) {
 		DispatchSpawn(ent);
 		ActivateEntity(ent);
  		
-		 // make it selectable
 		if(guntype == GunType_Custom){
-			SetEntProp(ent, Prop_Send, "m_iPrimaryAmmoType", 12);
-			SetEntProp(ent, Prop_Send, "m_iClip2", 1);
+			if(!GetArrayCell(gunCustomKeepAmmo, index)){
+				SetEntProp(ent, Prop_Send, "m_iPrimaryAmmoType", 12);
+				// make it selectable
+				SetEntProp(ent, Prop_Send, "m_iClip2", 1);
+			}
 		} else if (guntype == GunType_Throwable){
 			SetEntProp(ent, Prop_Send, "m_iClip2", 1);
+		} else {
+			SetEntProp(ent, Prop_Data, "m_bReloadsSingly", GetArrayCell(gunReloadsSingly, index));
 		}
 		
 		TeleportEntity(ent, origin, NULL_VECTOR, NULL_VECTOR);

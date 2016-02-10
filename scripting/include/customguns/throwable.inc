@@ -60,10 +60,6 @@ void throwableReset(int client){
 	m_bRedraw[client] = false;
 }
 
-void decrementAmmo(int weapon, int client){
-	SDKCall(CALL_RemoveAmmo, client, 1, GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType"));
-}
-
 void reload(int weapon, int index, int client){
 
 	// if limited ammo weapon and has no ammo, dont reload
@@ -218,7 +214,7 @@ MRESReturn Throwable_Operator_HandleAnimEvent(int weapon, int client, int event)
 	}
 	
 	if(bThrewGrenade){
-		decrementAmmo(weapon, client);
+		RemovePlayerAmmo(client, weapon);
 		
 		#define RETHROW_DELAY	0.5
 		SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", GetGameTime() + RETHROW_DELAY);

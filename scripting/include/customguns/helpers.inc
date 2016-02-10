@@ -66,6 +66,8 @@ loadConfig() {
 							}
 							else if (StrEqual(buffer, "custom", false))
 							{
+								shouldGoBack = KvGotoFirstSubKey(kv);
+								KvJumpToKeyFix(kv, "custom_settings")
 								PushArrayCell(gunType, GunType_Custom);
 							}
 							else
@@ -77,10 +79,16 @@ loadConfig() {
 								PushArrayCell(gunType, GunType_Bullet);
 							}
 							
+							// Load custom weapon
+							{
+								PushArrayCell(gunCustomKeepAmmo, KvGetNum(kv, "uses_game_ammo", 0));
+							}
+							
 							// Load bullet weapon
 							{
 								PushArrayCell(gunDmg, KvGetNum(kv, "damage", 0));
 								PushArrayCell(gunFireVisible, KvGetNum(kv, "bullet_fire_visible", 1));
+								PushArrayCell(gunReloadsSingly, KvGetNum(kv, "reloads_singly", 0));
 								PushArrayCell(gunFireLoopFix, KvGetNum(kv, "fire_sound_is_loop", 0));
 								PushArrayCell(gunFireLoopLength, KvGetFloat(kv, "fire_sound_loop_length", 0.0));
 								
@@ -172,6 +180,10 @@ void removeCustomWeapon(int client){
 			AcceptEntityInput(weapon, "FireUser4");
 		}
 	}
+}
+
+void RemovePlayerAmmo(int client, int weapon, int ammo = 1){
+	SDKCall(CALL_RemoveAmmo, client, ammo, GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType"));
 }
 
 bool hasCustomWeapon(int client){
@@ -266,6 +278,12 @@ int selectBestIndex(int client){
 		}
 	}
 	return index;
+}
+
+void updateWeaponInventoryAmmo(int weapon, int weaponIndex, int client){
+	// save current ammo values in player's inventory
+	int saveAmmo = SDKCall(CALL_UsesClipsForAmmo1, weapon)? GetEntProp(weapon, Prop_Data, "m_iClip1") : 0;
+	setInventoryAmmo(client, weaponIndex, saveAmmo, GetEntProp(weapon, Prop_Data, "m_iPrimaryAmmoType"));
 }
 
 void setInventoryAmmo(int client, int weaponIndex, int ammo, int ammoType) {

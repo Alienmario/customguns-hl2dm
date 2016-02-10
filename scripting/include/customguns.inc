@@ -28,6 +28,23 @@ forward void CG_OnPrimaryAttack(int client, int weapon);
 forward void CG_OnSecondaryAttack(int client, int weapon);
 
 /**
+ * Weapon's "think" forward
+ *
+ * @param client			client index
+ * @param weapon			weapon entity index
+ */
+forward void CG_ItemPostFrame(int client, int weapon);
+
+/**
+ * Called when weapon is being holstered. Useful for variable resets, sound stops, etc.
+ *
+ * @param client			client index
+ * @param weapon			weapon entity index being holstered
+ * @param switchingTo		weapon entity index player is switching to or -1
+ */
+forward void CG_OnHolster(int client, int weapon, int switchingTo);
+
+/**
  * Gets weapon shoot position of client
  *
  * @param client			client index
@@ -110,6 +127,16 @@ native float CG_PlaySecondaryAttack(int weapon);
  */
 native void CG_SetPlayerAnimation(int client, PLAYER_ANIM playerAnim)
 
+/**
+ * Removes player's ammo of specified weapon's ammo type
+ * (for custom weapons with keep_ammo)
+ *
+ * @param client			client index
+ * @param weapon			weapon entity index
+ * @param count				ammo count to remove
+ *
+ */
+native void CG_RemovePlayerAmmo(int client, int weapon, int count = 1)
 
 /**
  * Delays both attacks by specified amount of time, allowing the weapon to 'cooldown' until it can be fired again
@@ -131,3 +158,7 @@ stock void CG_SetNextPrimaryAttack(int weapon, float time){
 stock void CG_SetNextSecondaryAttack(int weapon, float time){
 	SetEntPropFloat(weapon, Prop_Send, "m_flNextSecondaryAttack", time)
 }
+
+//
+//	See Stocks file for more functions!
+//

@@ -36,6 +36,26 @@ stock int getWeaponAmmo(int client){
 	return GetEntProp(GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon"), Prop_send, "m_iClip1");
 }
 
+/**
+ * @return client's ammo count of type
+ */
+stock int getClientAmmoOfType(int client, int ammoType){
+	if(MAX_AMMO_SLOTS < ammoType < 0){
+		ThrowError("Ammo type out of range");
+	}
+	int ammoOffset = FindDataMapOffs(client, "m_iAmmo");
+	int offset = ammoOffset + (ammoType * 4);
+	return GetEntData(client, offset);
+}
+
+stock int getClientPrimaryAmmoForWeapon(int client, int weapon){
+	return getClientAmmoOfType(client, GetEntProp(weapon, Prop_Data, "m_iPrimaryAmmoType"));
+}
+
+stock int getClientSecondaryAmmoForWeapon(int client, int weapon){
+	return getClientAmmoOfType(client, GetEntProp(weapon, Prop_Data, "m_iPrimaryAmmoType"));
+}
+
 stock int getClientInProximity(int client, float radius, bool sameTeam = false, bool onlyWounded = false){
 	int closest = -1;
 	float minDistance = radius;
@@ -145,6 +165,66 @@ stock void itemPickup(int client){
 	Handle hPickup = StartMessageOne("ItemPickup", client);
 	BfWriteString(hPickup, "item_longjump");
 	EndMessage();
+}
+
+stock void physExplosion(const float origin[3], float magnitude = 60.0, bool noDmg = false){
+	//SF_NO_DAMAGE 1
+	//SF_PUSH_PLAYERS 2
+	//SF_PUSH_RADIALLY 4
+	//SF_TEST_LOS 8
+	//SF_DISORIENT_PLAYER 16
+	int ent = CreateEntityByName("env_physexplosion");
+	if(ent != -1){
+		DispatchKeyValueFloat(ent, "magnitude", magnitude);
+		DispatchKeyValue(ent, "radius", "0");
+		DispatchKeyValue(ent, "inner_radius", "0");
+		DispatchKeyValue(ent, "spawnflags", noDmg? "11" : "10");
+		DispatchKeyValueVector(ent, "origin", origin);
+		DispatchSpawn(ent);
+		AcceptEntityInput(ent, "Explode");
+		AcceptEntityInput(ent, "Kill");
+	}
+}
+
+stock void CreatePointHurt(const float origin[3], float dmg, float dmgRadius, int dmgType){
+	//SF_PHURT_START_ON 1
+	int ent = CreateEntityByName("point_hurt");
+	if(ent != -1){
+		DispatchKeyValueVector(ent, "origin", origin);
+		DispatchKeyValueFloat(ent, "Damage", dmg);
+		SetEntProp(ent, Prop_Data, "m_bitsDamageType", dmgType);
+		DispatchSpawn(ent);
+		SetEntPropFloat(ent, Prop_Data, "m_flRadius", dmgRadius);
+		AcceptEntityInput(ent, "Hurt");
+		AcceptEntityInput(ent, "Kill");
+	}
+}
+
+#define FFADE_IN			0x0001		// Just here so we don't pass 0 into the function
+#define FFADE_OUT			0x0002		// Fade out (not in)
+#define FFADE_MODULATE		0x0004		// Modulate (don't blend)
+#define FFADE_STAYOUT		0x0008		// ignores the duration, stays faded out until new ScreenFade message received
+#define FFADE_PURGE			0x0010		// Purges all other fades, replacing them with this one
+
+stock bool UTIL_ScreenFade(int client, int duration, int mode, int holdtime, int r=0, int g=0, int b=0, int a=255)
+{
+	Handle userMessage = StartMessageOne("Fade", client, USERMSG_RELIABLE);
+	
+	if (!userMessage) {
+		return false;
+	}
+
+	BfWriteShort(userMessage,	duration);	// Fade duration
+	BfWriteShort(userMessage,	holdtime);	// Fade hold time
+	BfWriteShort(userMessage,	mode);		// What to do
+	BfWriteByte(userMessage,	r);			// Color R
+	BfWriteByte(userMessage,	g);			// Color G
+	BfWriteByte(userMessage,	b);			// Color B
+	BfWriteByte(userMessage,	a);			// Color Alpha
+
+	EndMessage();
+	
+	return true;
 }
 
 //
@@ -262,14 +342,10 @@ stock void TE_SetupSpriteSpray(float[3] origin, float[3] vecDir, float[3] size, 
 	TE_WriteNum("m_nFlags", flags);
 }
 
-stock TE_SetupBeamEntPoints(startEntity, endEntity, const Float:start[3], const Float:end[3], ModelIndex, HaloIndex, StartFrame, FrameRate, Float:Life, 
+stock TE_SetupBeamEntPoint(startEntity, endEntity, const Float:start[3], const Float:end[3], ModelIndex, HaloIndex, StartFrame, FrameRate, Float:Life, 
 				Float:Width, Float:EndWidth, FadeLength, Float:Amplitude, const Color[4], Speed, flags)
 {
 	TE_Start("BeamEntPoint");
-	TE_WriteEncodedEnt("m_nStartEntity", startEntity);
-	TE_WriteEncodedEnt("m_nEndEntity", endEntity);
-	TE_WriteVector("m_vecStartPoint", start);
-	TE_WriteVector("m_vecEndPoint", end);
 	TE_WriteNum("m_nModelIndex", ModelIndex);
 	TE_WriteNum("m_nHaloIndex", HaloIndex);
 	TE_WriteNum("m_nStartFrame", StartFrame);
@@ -277,14 +353,18 @@ stock TE_SetupBeamEntPoints(startEntity, endEntity, const Float:start[3], const 
 	TE_WriteFloat("m_fLife", Life);
 	TE_WriteFloat("m_fWidth", Width);
 	TE_WriteFloat("m_fEndWidth", EndWidth);
+	TE_WriteNum("m_nFadeLength", FadeLength);
 	TE_WriteFloat("m_fAmplitude", Amplitude);
+	TE_WriteNum("m_nSpeed", Speed);
 	TE_WriteNum("r", Color[0]);
 	TE_WriteNum("g", Color[1]);
 	TE_WriteNum("b", Color[2]);
 	TE_WriteNum("a", Color[3]);
-	TE_WriteNum("m_nSpeed", Speed);
-	TE_WriteNum("m_nFadeLength", FadeLength);
 	TE_WriteNum("m_nFlags", flags);
+	TE_WriteEncodedEnt("m_nStartEntity", startEntity);
+	TE_WriteEncodedEnt("m_nEndEntity", endEntity);
+	TE_WriteVector("m_vecStartPoint", start);
+	TE_WriteVector("m_vecEndPoint", end);
 }
 
 stock TE_SetupBeamEnts(startEntity, endEntity, ModelIndex, HaloIndex, StartFrame, FrameRate, Float:Life, 
@@ -338,7 +418,7 @@ stock bool IsSolid(int entity){
 	&& !(SolidFlags_t:GetEntProp(entity, Prop_Data, "m_usSolidFlags", 2) & FSOLID_NOT_SOLID == FSOLID_NOT_SOLID)
 }
 
-stock void SetMinMaxSize(int entity, float vecMins[3], float vecMaxs[3])
+stock void SetMinMaxSize(int entity, const float vecMins[3], const float vecMaxs[3])
 {
 	for (int i=0; i<3; i++) {
 
@@ -397,6 +477,70 @@ stock void swapVM(int client, bool predicted){
 	//ChangeEdictState(client, FindSendPropInfo("CHL2MP_Player", "m_hViewModel"));
 }
 
+stock void VectorMin(const float vec1[3], const float vec2[3], float out[3]){
+	out[0] = vec1[0] < vec2[0]? vec1[0] : vec2[0];
+	out[1] = vec1[1] < vec2[1]? vec1[1] : vec2[1];
+	out[2] = vec1[2] < vec2[2]? vec1[2] : vec2[2];
+}
+
+stock void VectorMax(const float vec1[3], const float vec2[3], float out[3]){
+	out[0] = vec1[0] > vec2[0]? vec1[0] : vec2[0];
+	out[1] = vec1[1] > vec2[1]? vec1[1] : vec2[1];
+	out[2] = vec1[2] > vec2[2]? vec1[2] : vec2[2];
+}
+
+// Purpose : Creates both an decal and any associated impact effects (such
+//			 as flecks) for the given iDamageType and the trace's end position
+// Note: uses current global trace result
+/* stock UTIL_ImpactTrace(int iDamageType, const char[] pCustomImpactName){
+	if(TR_GetEntityIndex() == -1 || TR_GetFraction() == 1.0){ //check sky
+		return;
+	}
+} */
+
+stock TE_SetupEffectDispatch(const float origin[3], const float start[3], const float angles[3], const float normal[3],
+	int flags, float magnitude, float scale, int attachmentIndex, int surfaceProp, int effectName, int material, int damageType,
+	int hitbox, int entindex, int color, float radius, bool customColors, const float customColor1[3], const float customColor2[3],
+	bool controlPoint1, int cp1ParticleAttachment, const float cp1Offset[3])
+{
+	TE_Start("EffectDispatch");
+	TE_WriteFloat("m_vOrigin[0]", origin[0]);
+	TE_WriteFloat("m_vOrigin[1]", origin[1]);
+	TE_WriteFloat("m_vOrigin[2]", origin[2]);
+	TE_WriteFloat("m_vStart[0]", start[0]);
+	TE_WriteFloat("m_vStart[1]", start[1]);
+	TE_WriteFloat("m_vStart[2]", start[2]);
+	TE_WriteVector("m_vAngles", angles);
+	TE_WriteVector("m_vNormal", normal);
+	TE_WriteNum("m_fFlags", flags);
+	TE_WriteFloat("m_flMagnitude", magnitude);
+	TE_WriteFloat("m_flScale", scale);
+	TE_WriteNum("m_nAttachmentIndex", attachmentIndex);
+	TE_WriteNum("m_nSurfaceProp", surfaceProp);
+	TE_WriteNum("m_iEffectName", effectName);
+	TE_WriteNum("m_nMaterial", material);
+	TE_WriteNum("m_nDamageType", damageType);
+	TE_WriteNum("m_nHitBox", hitbox);
+	TE_WriteNum("entindex", entindex);
+	TE_WriteNum("m_nColor", color);
+	TE_WriteFloat("m_flRadius", radius);
+	TE_WriteNum("m_bCustomColors", customColors);
+	TE_WriteVector("m_CustomColors.m_vecColor1", customColor1);
+	TE_WriteVector("m_CustomColors.m_vecColor2", customColor2);
+	TE_WriteNum("m_bControlPoint1", controlPoint1);
+	TE_WriteNum("m_ControlPoint1.m_eParticleAttachment", cp1ParticleAttachment);
+	TE_WriteFloat("m_ControlPoint1.m_vecOffset[0]", cp1Offset[0]);
+	TE_WriteFloat("m_ControlPoint1.m_vecOffset[1]", cp1Offset[1]);
+	TE_WriteFloat("m_ControlPoint1.m_vecOffset[2]", cp1Offset[2]);
+}
+
+stock int getEffectDispatchStringTableIndex(char[] effectName){
+	static int table = INVALID_STRING_TABLE;
+	if(table == INVALID_STRING_TABLE){
+		table = FindStringTable("EffectDispatch");
+	}
+	return AddToStringTable(table, effectName);
+}
 
 /* This breaks thirdperson models and last weapon switching */
 /* 

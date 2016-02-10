@@ -61,7 +61,7 @@ WeaponData
 		// weapon_type - possible values:
 		//		bullet - (default) Standard bullet weapon, uses clip sizes and ammo type defined above
 		//		throwable - Throws something away from the player - grenades, molotovs, ..
-		//		custom - Overrides ammo to an unknown value. This means the gun won't fire or reload itself. Its ammo ("m_iClip1" value) can be managed via other plugins. If used, set "primary_ammo" other than "None" to enable HUD ammo display.
+		//		custom - Custom coded weapon
 		"weapon_type"		"bullet"
 		
 		"bullet_settings"	// Used by bullet weapons ONLY
@@ -100,17 +100,32 @@ WeaponData
 			
 			// Makes bullet fire (trail) visible to the attacker. This can look bad for some high power weapons (sniper)
 			"bullet_fire_visible"	"1"
+			
+			// weapon reloads one-by-one
+			"reloads_singly"		"0"
 		}
 		
 		"download"
 		{
 			"item"	"models/weapons/w_oicw.mdl"
-			"item"	"models/weapons/v_oicw.mdl"
+			"item"	"models/weapons/w_oicw.sw.vtx"
+			"item"	"models/weapons/w_oicw.dx90.vtx"
+			"item"	"models/weapons/w_oicw.dx80.vtx"
+			"item"	"models/weapons/w_oicw.vvd"
+			"item"	"models/weapons/w_oicw.phy"
 			
-			// Normally, the materials would download automatically, but this model has some strange naming conventions
+			"item"	"models/weapons/v_oicw.mdl"
+			"item"	"models/weapons/v_oicw.sw.vtx"
+			"item"	"models/weapons/v_oicw.dx90.vtx"
+			"item"	"models/weapons/v_oicw.dx80.vtx"
+			"item"	"models/weapons/v_oicw.vvd"
+			
 			"item"	"materials/models/weapons/v_oicw/v_oicw_sheet.vmt"
 			"item"	"materials/models/weapons/v_oicw/v_oicw_sheet.vtf"
 			"item"	"materials/models/weapons/v_oicw/v_oicw_sheet_normal.vtf"
+			
+			"item"	"materials/models/weapons/W_oicw/w_oicw.vmt"
+			"item"	"materials/models/weapons/W_oicw/w_oicw.vtf"
 			
 			// Scope
 			"item"	"materials/overlays/weapons/oicw/scope_lens.vmt"

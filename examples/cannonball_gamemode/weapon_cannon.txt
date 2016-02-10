@@ -40,18 +40,52 @@ WeaponData
 		// weapon_type - possible values:
 		//		bullet - (default) Standard bullet weapon, uses clip sizes and ammo type defined above
 		//		throwable - Throws something away from the player - grenades, molotovs, ..
-		//		custom - Overrides ammo to an unknown value. This means the gun won't fire or reload itself. Its ammo ("m_iClip1" value) can be managed via other plugins. If used, set "primary_ammo" other than "None" to enable HUD ammo display.
+		//		custom - Custom coded weapon
 		"weapon_type"		"custom"
+		
+		"custom_settings"
+		{
+			// * If set to 1, this custom gun will use game-defined ammo type (set above) and behavior instead of plugin managed ammo.
+			// * Fire functions will be managed by game, so they won't be called when the weapon runs out of ammo.
+			// * Use with CG_RemovePlayerAmmo() native
+			//
+			// ** Setting this to 0 will allow you to manage ammo ("m_iClip1" value) yourself via plugin. This overrides ammotype to an unknown value.
+			// ** Fire functions will always be called when the weapon is ready to fire, without any ammo checks. Also set this to 0 if your weapon doesn't use ammo.
+			// ** Set "primary_ammo" other than "None" to enable HUD ammo display.
+			"uses_game_ammo"		"0"
+		}
 		
 		"download"
 		{
 			"item"			"sound/weapons/serioussam/cannon/fire.wav"
 			"item"			"sound/weapons/serioussam/cannon/prepare.wav"
 			
-			"item"			"models/weapons/serioussam/v_cannon.mdl"
 			"item"			"models/weapons/serioussam/w_cannon.mdl"
+			"item"			"models/weapons/serioussam/w_cannon.sw.vtx"
+			"item"			"models/weapons/serioussam/w_cannon.dx90.vtx"
+			"item"			"models/weapons/serioussam/w_cannon.dx80.vtx"
+			"item"			"models/weapons/serioussam/w_cannon.vvd"
+			"item"			"models/weapons/serioussam/w_cannon.phy"
+			
+			"item"			"models/weapons/serioussam/v_cannon.mdl"
+			"item"			"models/weapons/serioussam/v_cannon.sw.vtx"
+			"item"			"models/weapons/serioussam/v_cannon.dx90.vtx"
+			"item"			"models/weapons/serioussam/v_cannon.dx80.vtx"
+			"item"			"models/weapons/serioussam/v_cannon.vvd"
 			
 			"item"			"models/projectiles/serioussam/cannonball.mdl"
+			"item"			"models/projectiles/serioussam/cannonball.sw.vtx"
+			"item"			"models/projectiles/serioussam/cannonball.dx90.vtx"
+			"item"			"models/projectiles/serioussam/cannonball.dx80.vtx"
+			"item"			"models/projectiles/serioussam/cannonball.vvd"
+			"item"			"models/projectiles/serioussam/cannonball.phy"
+			
+			"item"			"materials/models/weapons/serioussam/cannon/body.vmt"
+			"item"			"materials/models/weapons/serioussam/cannon/body.vtf"
+			"item"			"materials/models/weapons/serioussam/cannon/ironball.vmt"
+			"item"			"materials/models/weapons/serioussam/cannon/ironball.vtf"
+			"item"			"materials/models/weapons/serioussam/cannon/nukeball.vmt"
+			"item"			"materials/models/weapons/serioussam/cannon/nukeball.vtf"
 		}
 	}
 }

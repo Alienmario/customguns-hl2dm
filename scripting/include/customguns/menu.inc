@@ -41,9 +41,9 @@ drawMenu(int client) {
 	bool shouldDraw = GetGameTime() >= nextDraw[client]; // should draw text
 	
 	int size = GetArraySize(inventory[client]);
-	float beamEndWidth = 360.0/size/2.0;
+	float beamEndWidth = 360.0/size/2.0*MENU_BG_END_WIDTH_SCALE;
 	if(beamEndWidth > 25.0) beamEndWidth = 25.0;
-	float beamStartWidth = beamEndWidth/4;
+	float beamStartWidth = beamEndWidth/4*MENU_BG_START_WIDTH_SCALE;
 		
 	//DRAW MODELS
 	for (int i = 0; i < size; i++) {
@@ -75,7 +75,7 @@ drawMenu(int client) {
 			}
 		}
 		
-		float scale = 0.9 - animScale * 0.5; // scale inwards the circle
+		float scale = 0.9 - animScale * 0.4; // scale inwards the circle
 		float fwdScale = 1.0 - animScale * 0.25; // scale towards the player
 		SetArrayCell(inventoryAnimScale[client], i, animScale);
 		
@@ -96,9 +96,9 @@ drawMenu(int client) {
 		beamEndPos[1] = eyePos[1] + rightVector[1] * localPos[0] + fwdVector[1] * localPos[1] * fwdScale + upVector[1] * localPos[2];
 		beamEndPos[2] = eyePos[2] + rightVector[2] * localPos[0] + fwdVector[2] * localPos[1] * fwdScale + upVector[2] * localPos[2];
 		
-		MoveVector(center, beamEndPos, 0.25, beamStartPos);
+		MoveVector(center, beamEndPos, fwdScale*1.9 - 1.6, beamStartPos);
 		
-		TE_SetupBeamPoints(beamStartPos, beamEndPos, modelBG, -1, 0, 30, 0.1, beamStartWidth, beamEndWidth, 0, 0.0, i==selected? MENU_BG_COLOR_SELECT : (selectable? MENU_BG_COLOR:MENU_BG_COLOR_UNSELECTABLE), 9);
+		TE_SetupBeamPoints(beamStartPos, beamEndPos, modelBG, -1, 0, 30, 0.1, beamStartWidth, beamEndWidth, 0, 0.0, i==selected? MENU_BG_COLOR_SELECT : (selectable? MENU_BG_COLOR:MENU_BG_COLOR_UNSELECTABLE), MENU_BG_SPEED);
 		TE_SendToClient(client);
 		
 		// draw text

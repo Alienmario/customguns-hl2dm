@@ -53,7 +53,7 @@ WeaponData
 		// weapon_type - possible values:
 		//		bullet - (default) Standard bullet weapon, uses clip sizes and ammo type defined above
 		//		throwable - Throws something away from the player - grenades, molotovs, ..
-		//		custom - Overrides ammo to an unknown value. This weapon must be coded in order to do anything. Its ammo can be managed via "m_iClip1" value. If used, set "primary_ammo" to valid type like "pistol" to enable HUD ammo display.
+		//		custom - Custom coded weapon
 		"weapon_type"				"throwable"
 		
 		"throwable_settings"	// Used by throwable weapons ONLY
@@ -111,8 +111,29 @@ WeaponData
 		
 		"download"
 		{
-			"item" "models/weapons/v_molotov.mdl"
-			"item" "models/weapons/w_molotov.mdl"
+			"item"	"models/weapons/w_molotov.mdl"
+			"item"	"models/weapons/w_molotov.sw.vtx"
+			"item"	"models/weapons/w_molotov.dx90.vtx"
+			"item"	"models/weapons/w_molotov.dx80.vtx"
+			"item"	"models/weapons/w_molotov.vvd"
+			"item"	"models/weapons/w_molotov.phy"
+			
+			"item"	"models/weapons/v_molotov.mdl"
+			"item"	"models/weapons/v_molotov.sw.vtx"
+			"item"	"models/weapons/v_molotov.dx90.vtx"
+			"item"	"models/weapons/v_molotov.dx80.vtx"
+			"item"	"models/weapons/v_molotov.vvd"
+			
+			"item"	"materials/models/weapons/molotov/molotov_3rdDiffuse.vmt"
+			"item"	"materials/models/weapons/molotov/molotov_3rdDiffuse.vtf"
+			"item"	"materials/models/weapons/molotov/molotov_3rdNormalsMap.vtf"
+			"item"	"materials/models/weapons/molotov/molotovfull_diffuse.vmt"
+			"item"	"materials/models/weapons/molotov/molotovfull_diffuse.vtf"
+			"item"	"materials/models/weapons/molotov/molotovfull_normal.vtf"
+			"item"	"materials/models/weapons/w_molotov/molotov.vmt"
+			"item"	"materials/models/weapons/w_molotov/molotov.vtf"
+			"item"	"materials/models/weapons/w_molotov/rag.vmt"
+			"item"	"materials/models/weapons/w_molotov/rag.vtf"
 		}
 	}
 }
