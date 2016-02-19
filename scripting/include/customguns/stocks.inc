@@ -187,7 +187,6 @@ stock void physExplosion(const float origin[3], float magnitude = 60.0, bool noD
 }
 
 stock void CreatePointHurt(const float origin[3], float dmg, float dmgRadius, int dmgType){
-	//SF_PHURT_START_ON 1
 	int ent = CreateEntityByName("point_hurt");
 	if(ent != -1){
 		DispatchKeyValueVector(ent, "origin", origin);
@@ -491,13 +490,24 @@ stock void VectorMax(const float vec1[3], const float vec2[3], float out[3]){
 
 // Purpose : Creates both an decal and any associated impact effects (such
 //			 as flecks) for the given iDamageType and the trace's end position
+//
 // Note: uses current global trace result
-/* stock UTIL_ImpactTrace(int iDamageType, const char[] pCustomImpactName){
-	if(TR_GetEntityIndex() == -1 || TR_GetFraction() == 1.0){ //check sky
+stock UTIL_ImpactTrace(const float start[3], int iDamageType, const char[] pCustomImpactName = "Impact"){
+	if(TR_GetEntityIndex() == -1 || TR_GetFraction() == 1.0){ //+check sky
 		return;
 	}
-} */
+	float vecZero[3] = {0.0, 0.0, 0.0};
+	float origin[3]; TR_GetEndPosition(origin);
+	
+	TE_SetupEffectDispatch(origin, start, vecZero, vecZero, 0, 0.0, 1.0, 0, 0,
+		getEffectDispatchStringTableIndex(pCustomImpactName), 0, iDamageType, TR_GetHitGroup(), TR_GetEntityIndex(), 0, 0.0, false,
+		vecZero, vecZero, false, 0, vecZero);
+	TE_SendToAll();
+}
 
+//#define MAX_EFFECT_FLAG_BITS 8
+//#define CUSTOM_COLOR_CP1		9
+//#define CUSTOM_COLOR_CP2		10
 stock TE_SetupEffectDispatch(const float origin[3], const float start[3], const float angles[3], const float normal[3],
 	int flags, float magnitude, float scale, int attachmentIndex, int surfaceProp, int effectName, int material, int damageType,
 	int hitbox, int entindex, int color, float radius, bool customColors, const float customColor1[3], const float customColor2[3],
@@ -534,13 +544,37 @@ stock TE_SetupEffectDispatch(const float origin[3], const float start[3], const 
 	TE_WriteFloat("m_ControlPoint1.m_vecOffset[2]", cp1Offset[2]);
 }
 
-stock int getEffectDispatchStringTableIndex(char[] effectName){
+stock int getEffectDispatchStringTableIndex(const char[] effectName){
 	static int table = INVALID_STRING_TABLE;
 	if(table == INVALID_STRING_TABLE){
 		table = FindStringTable("EffectDispatch");
 	}
-	return AddToStringTable(table, effectName);
+	int index;
+	if( (index = FindStringIndex(table, effectName)) != INVALID_STRING_INDEX)
+		return index;
+	AddToStringTable(table, effectName);
+	return FindStringIndex(table, effectName)
 }
+
+
+/* float UTIL_Approach( float target, float value, float speed ){
+	float delta = target - value;
+
+	if ( delta > speed )
+		value += speed;
+	else if ( delta < -speed )
+		value -= speed;
+	else 
+		value = target;
+
+	return value;
+}
+
+float UTIL_AngleMod(float a){
+	a = (360.0/65536) * (RoundToFloor(a*(65536.0/360.0)) & 65535);
+	return a;
+}
+ */
 
 /* This breaks thirdperson models and last weapon switching */
 /* 

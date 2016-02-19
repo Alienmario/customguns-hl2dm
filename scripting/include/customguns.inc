@@ -125,7 +125,7 @@ native float CG_PlaySecondaryAttack(int weapon);
  * @param playerAnim		one of PLAYER_ANIM values (see const.inc)
  *
  */
-native void CG_SetPlayerAnimation(int client, PLAYER_ANIM playerAnim)
+native void CG_SetPlayerAnimation(int client, PLAYER_ANIM playerAnim);
 
 /**
  * Removes player's ammo of specified weapon's ammo type
@@ -136,7 +136,14 @@ native void CG_SetPlayerAnimation(int client, PLAYER_ANIM playerAnim)
  * @param count				ammo count to remove
  *
  */
-native void CG_RemovePlayerAmmo(int client, int weapon, int count = 1)
+native void CG_RemovePlayerAmmo(int client, int weapon, int count = 1);
+
+/**
+ * Does radius damage
+ *
+ */
+native void CG_RadiusDamage(int inflictor, int attacker, float dmg, int dmgType, int weapon, const float origin[3], float radius, int ignoreEntity = -1);
+
 
 /**
  * Delays both attacks by specified amount of time, allowing the weapon to 'cooldown' until it can be fired again

@@ -46,13 +46,6 @@
 				"linux"		"254"
 				"mac"		"254"
 			}
-			// bool CHL2MPRules::CanHavePlayerItem( CBasePlayer *pPlayer, CBaseCombatWeapon *pItem )
-			//"CanHavePlayerItem"
-			//{
-			//	"windows"	"85"
-			//	"linux"		"86"
-			//	"mac"		"86"
-			//}	
 			// bool CHL2MP_Player::Weapon_Switch( CBaseCombatWeapon *pWeapon, int viewmodelindex = 0)
 			"Weapon_Switch"
 			{
@@ -234,6 +227,13 @@
 				"windows"	"265"
 				"linux"		"266"
 				"mac"		"266"
+			}
+			// void CGameRules::RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrcIn, float flRadius, int iClassIgnore, CBaseEntity *pEntityIgnore )
+			"RadiusDamage"
+			{
+				"windows"	"68"
+				"linux"		"69"
+				"mac"		"69"
 			}
 		}
 	}

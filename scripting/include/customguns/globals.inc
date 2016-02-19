@@ -6,6 +6,9 @@
 
 int modelText;
 int modelBG;
+#if MENU_CENTER_MODEL_ENABLED
+int modelCenter;
+#endif
 //int modelBorder;
 
 
@@ -59,7 +62,7 @@ int CLIENT_BEING_EQUIPPED = -1;
 
 bool open[MAXPLAYERS + 1];
 float firstOpen[MAXPLAYERS + 1];
-float nextDraw[MAXPLAYERS + 1];
+float nextDrawText[MAXPLAYERS + 1];
 float startEyeAngles[MAXPLAYERS + 1][3];
 
 int gunEnt[MAXPLAYERS + 1] =  { -1, ... };
@@ -94,6 +97,7 @@ Handle DHOOK_WeaponSound;
 Handle DHOOK_Drop;
 Handle DHOOK_GetDefaultClip1;
 Handle DHOOK_Explode;
+Handle DHOOK_RadiusDamage;
 
 Handle CALL_HasPrimaryAmmo;
 Handle CALL_HasSecondaryAmmo;

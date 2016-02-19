@@ -184,6 +184,7 @@ void removeCustomWeapon(int client){
 
 void RemovePlayerAmmo(int client, int weapon, int ammo = 1){
 	SDKCall(CALL_RemoveAmmo, client, ammo, GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType"));
+	updateWeaponInventoryAmmo(weapon, getIndexEnt(weapon), client);
 }
 
 bool hasCustomWeapon(int client){
@@ -347,10 +348,12 @@ int getInventoryIndex(int client, int weaponIndex) {
 bool canSelectItem(int client, int inventoryIndex) {
 	int invAmmo = GetArrayCell(inventoryAmmo[client], inventoryIndex);
 	int invAmmoType = GetArrayCell(inventoryAmmoType[client], inventoryIndex);
+	int gunIndex = GetArrayCell(inventory[client], inventoryIndex);
+
 	return invAmmo == -1
 		|| invAmmo > 0 // got ammo (cached clips) in inventory
 		|| invAmmoType == -1 // melee/other
-		|| getType(GetArrayCell(inventory[client], inventoryIndex)) == GunType_Custom // custom-ammotype-guns always selectable
+		|| getType(gunIndex) == GunType_Custom && !GetArrayCell(gunCustomKeepAmmo, gunIndex)  // custom-ammotype-guns always selectable
 		|| SDKCall(CALL_GetAmmoCount, client, invAmmoType) > 0 // got ammo in stock
 }
 
@@ -410,4 +413,79 @@ public Action delayedKill(Handle timer, any ent) {
 	if (IsValidEntity(ent)) {
 		AcceptEntityInput(ent, "kill");
 	}
+}
+
+/////////////
+
+// void CGameRules::RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrcIn, float flRadius, int iClassIgnore, CBaseEntity *pEntityIgnore )
+/* "CTakeDamageInfo":
+	0 m_vecDamageForce
+	12 m_vecDamagePosition
+	24 m_vecReportedPosition // Position players are told damage is coming from
+	36 m_hInflictor
+	40 m_hAttacker
+	44 m_hWeapon
+	48 m_flDamage
+	52 m_flMaxDamage
+	56 m_flBaseDamage // The damage amount before skill leve adjustments are made. Used to get uniform damage forces.
+	60 m_bitsDamageType
+	64 m_iDamageCustom
+	68 m_iDamageStats
+	72 m_iAmmoType // AmmoType of the weapon used to cause this damage, if any
+	76 m_iDamagedOtherPlayers
+	80 m_iPlayerPenetrateCount
+	84 m_flDamageBonus // Anything that increases damage (crit) - store the delta
+	88 m_bForceFriendlyFire // Ideally this would be a dmg type, but we can't add more
+*/
+
+int RDH_INFLICTOR;
+int RDH_ATTACKER;
+int RDH_WEAPON;
+//int RDH_IGNORE_ENT;
+//int RDH_IGNORE_CLASS;
+
+void RadiusDamageHack(int inflictor, int attacker, float dmg, int dmgType, int weapon, const float origin[3], float radius, int ignoreEntity)
+{
+	#define	DAMAGE_NO 0
+	
+	int prevTakeDamage;
+	if(ignoreEntity != -1){
+		prevTakeDamage = GetEntProp(ignoreEntity, Prop_Data, "m_takedamage", 1);
+		SetEntProp(ignoreEntity, Prop_Data, "m_takedamage", DAMAGE_NO, 1);
+	}
+	
+ 	int hookID = DHookGamerules(DHOOK_RadiusDamage, false);
+	if(hookID != -1){
+		RDH_INFLICTOR = inflictor;
+		RDH_ATTACKER = attacker;
+		RDH_WEAPON = weapon;
+		//RDH_IGNORE_ENT = ignoreEntity;
+		//RDH_IGNORE_CLASS = iClassIgnore;
+		CreatePointHurt(origin, dmg, radius, dmgType);
+		DHookRemoveHookID(hookID);
+	}
+	
+	if(ignoreEntity != -1){
+		SetEntProp(ignoreEntity, Prop_Data, "m_takedamage", prevTakeDamage, 1);
+	}
+}
+
+public MRESReturn RadiusDamage(Handle hParams) {	
+ 	DHookSetParamObjectPtrVar(hParams, 1, 36, ObjectValueType_Ehandle, RDH_INFLICTOR);
+	DHookSetParamObjectPtrVar(hParams, 1, 40, ObjectValueType_Ehandle, RDH_ATTACKER);
+	if(RDH_WEAPON != -1)
+		DHookSetParamObjectPtrVar(hParams, 1, 44, ObjectValueType_Ehandle, RDH_WEAPON);
+	
+	// THESE CRASH
+/* 	if(RDH_IGNORE_CLASS != -1){
+		DHookSetParam(hParams, 4, RDH_IGNORE_CLASS);
+	}
+ 	if(RDH_IGNORE_ENT != -1){
+		//DHookSetParam(hParams, 5, RDH_IGNORE_ENT);
+	}
+		
+	if(RDH_IGNORE_ENT != -1 || RDH_IGNORE_CLASS != -1){
+		return MRES_ChangedHandled;
+	} */
+	return MRES_Ignored;
 }
