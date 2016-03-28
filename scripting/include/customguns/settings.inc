@@ -14,7 +14,7 @@
 #define MOLOTOV_EXPLODE "ambient/fire/mtov_flame2.wav"
 #define MOLOTOV_BURN_LOOP "ambient/fire/fire_small_loop2.wav"
 
-//#define BOUNCY_STYLE2
+#define BOUNCY_STYLE2
 
 #if defined BOUNCY_STYLE2
 

@@ -218,10 +218,44 @@ stock bool addToInventory(int client, const char[] weapon, bool refreshWheel = t
 stock bool addToInventoryIndex(int client, int weaponIndex, bool refreshWheel = true, bool ignoreAdminLevel = false) {
 	if (weaponIndex != -1) {
 		if (IsPlayerAlive(client) && canHaveGun(client, weaponIndex, ignoreAdminLevel)) {
-			PushArrayCell(inventory[client], weaponIndex);
-			PushArrayCell(inventoryAnimScale[client], 0.0);
-			PushArrayCell(inventoryAmmo[client], -1);
-			PushArrayCell(inventoryAmmoType[client], -1);
+			
+			int size = GetArraySize(inventory[client]);
+			bool push = true;
+			
+			if(GetConVarBool(customguns_order_alphabetically) && size > 0)
+			{
+				char newName[32];
+				GetArrayString(gunNames, weaponIndex, newName, sizeof(newName));
+				
+				for (int inventoryIndex = 0; inventoryIndex < size; inventoryIndex++)
+				{
+					char name[32];
+					GetArrayString(gunNames, GetArrayCell(inventory[client], inventoryIndex), name, sizeof(name));
+					if(strcmp(newName, name, false) <= 0)
+					{
+						ShiftArrayUp(inventory[client], inventoryIndex);
+						ShiftArrayUp(inventoryAnimScale[client], inventoryIndex);
+						ShiftArrayUp(inventoryAmmo[client], inventoryIndex);
+						ShiftArrayUp(inventoryAmmoType[client], inventoryIndex);
+						
+						SetArrayCell(inventory[client], inventoryIndex, weaponIndex);
+						SetArrayCell(inventoryAnimScale[client], inventoryIndex, 2.0);
+						SetArrayCell(inventoryAmmo[client], inventoryIndex, -1);
+						SetArrayCell(inventoryAmmoType[client], inventoryIndex, -1);
+						push = false;
+						break;
+					}
+				}
+			}
+ 			
+			if(push)
+			{
+				PushArrayCell(inventory[client], weaponIndex);
+				PushArrayCell(inventoryAnimScale[client], 2.0);
+				PushArrayCell(inventoryAmmo[client], -1);
+				PushArrayCell(inventoryAmmoType[client], -1);
+			}
+			
 			itemPickup(client);
 			
 			if (refreshWheel) {

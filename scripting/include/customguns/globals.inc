@@ -16,6 +16,7 @@ int modelCenter;
 Handle customguns_default;
 Handle customguns_global_switcher;
 Handle customguns_autogive;
+Handle customguns_order_alphabetically;
 
 // Config
 // All
@@ -113,8 +114,6 @@ Handle CALL_GetAmmoCount;
 Handle CALL_RemoveAmmo;
 Handle CALL_SetAnimation;
 Handle CALL_ShootPosition;
-/* Handle CALL_ClearMultiDamage;
-Handle CALL_ApplyMultiDamage; */
 
 Handle PrimaryAttackForward;
 Handle SecondaryAttackForward;

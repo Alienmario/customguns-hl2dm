@@ -339,6 +339,13 @@ stock void TE_SetupSpriteSpray(float[3] origin, float[3] vecDir, float[3] size, 
 	TE_WriteNum("m_nCount", count);
 	TE_WriteFloat("m_fTime", life);
 	TE_WriteNum("m_nFlags", flags);
+/* 	TE_Start("Sprite Spray");
+	TE_WriteVector("m_vecOrigin", origin);
+	TE_WriteVector("m_vecDirection", vecDir);
+	TE_WriteNum("m_nModelIndex", modelIndex);
+	TE_WriteFloat("m_fNoise", life);
+	TE_WriteNum("m_nSpeed", random);
+	TE_WriteNum("m_nCount", count); */
 }
 
 stock TE_SetupBeamEntPoint(startEntity, endEntity, const Float:start[3], const Float:end[3], ModelIndex, HaloIndex, StartFrame, FrameRate, Float:Life, 
@@ -492,18 +499,36 @@ stock void VectorMax(const float vec1[3], const float vec2[3], float out[3]){
 //			 as flecks) for the given iDamageType and the trace's end position
 //
 // Note: uses current global trace result
-stock UTIL_ImpactTrace(const float start[3], int iDamageType, const char[] pCustomImpactName = "Impact"){
+stock void UTIL_ImpactTrace(const float start[3], int iDamageType, const char[] pCustomImpactName = "Impact"){
 	if(TR_GetEntityIndex() == -1 || TR_GetFraction() == 1.0){ //+check sky
 		return;
 	}
-	float vecZero[3] = {0.0, 0.0, 0.0};
 	float origin[3]; TR_GetEndPosition(origin);
 	
-	TE_SetupEffectDispatch(origin, start, vecZero, vecZero, 0, 0.0, 1.0, 0, 0,
+	TE_SetupEffectDispatch(origin, start, NULL_VECTOR, NULL_VECTOR, 0, 0.0, 1.0, 0, 0,
 		getEffectDispatchStringTableIndex(pCustomImpactName), 0, iDamageType, TR_GetHitGroup(), TR_GetEntityIndex(), 0, 0.0, false,
-		vecZero, vecZero, false, 0, vecZero);
+		NULL_VECTOR, NULL_VECTOR, false, 0, NULL_VECTOR);
 	TE_SendToAll();
 }
+
+stock void UTIL_Tracer( const float vecStart[3], const float vecEnd[3], int iEntIndex, int iAttachment, float flVelocity, bool bWhiz, const char[] pCustomTracerName = "Tracer", int iParticleID = 0 )
+{
+	int flags, m_nAttachmentIndex;
+	if(bWhiz)
+	{
+		flags |= TRACER_FLAG_WHIZ;
+	}
+	if ( iAttachment != TRACER_DONT_USE_ATTACHMENT )
+	{
+		flags |= TRACER_FLAG_USEATTACHMENT;
+		m_nAttachmentIndex = iAttachment;
+	}
+	TE_SetupEffectDispatch(vecEnd, vecStart, NULL_VECTOR, NULL_VECTOR, flags, 0.0, flVelocity, m_nAttachmentIndex, 0,
+		getEffectDispatchStringTableIndex(pCustomTracerName), 0, 0, iParticleID, iEntIndex, 0, 0.0, false,
+		NULL_VECTOR, NULL_VECTOR, false, 0, NULL_VECTOR);
+	TE_SendToAll();
+}
+
 
 //#define MAX_EFFECT_FLAG_BITS 8
 //#define CUSTOM_COLOR_CP1		9
