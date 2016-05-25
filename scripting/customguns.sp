@@ -18,7 +18,7 @@
 #include <customguns/menu>
 #include <customguns/addons_scope>
 
-#define PLUGIN_VERSION  "1.4.1"
+#define PLUGIN_VERSION  "1.4.2"
 
 public Plugin myinfo =
 {

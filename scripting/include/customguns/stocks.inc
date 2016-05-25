@@ -529,7 +529,6 @@ stock void UTIL_Tracer( const float vecStart[3], const float vecEnd[3], int iEnt
 	TE_SendToAll();
 }
 
-
 //#define MAX_EFFECT_FLAG_BITS 8
 //#define CUSTOM_COLOR_CP1		9
 //#define CUSTOM_COLOR_CP2		10
@@ -645,16 +644,4 @@ void followEntity(int ent, int parent){
 	SetEntProp(ent, Prop_Data, "m_usSolidFlags", solidFlags|0x0004); //FSOLID_NOT_SOLID
 	TeleportEntity(ent, Float:{0.0,0.0,0.0}, Float:{0.0,0.0,0.0}, NULL_VECTOR);
 }
-*/
-
-
-/*
-	TE_Start("Sprite Spray");
-	TE_WriteVector("m_vecOrigin", gunPos);
-	TE_WriteVector("m_vecDirection", Float:{0.0,0.0,0.0});
-	TE_WriteNum("m_nModelIndex", GetArrayCell(gunModelIndexes, GetArrayCell(inventory[client], i)));
-	TE_WriteFloat("m_fNoise", 500.0);
-	TE_WriteNum("m_nSpeed", 200);
-	TE_WriteNum("m_nCount", 2);
-	TE_SendToClient(client);
 */

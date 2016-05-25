@@ -96,7 +96,7 @@ public MRESReturn GetDefaultClip1(int weapon, Handle hReturn) {
 
 // float CBaseCombatWeapon::GetFireRate( void )
 public MRESReturn GetFireRate(int weapon, Handle hReturn) {
-	DHookSetReturn(hReturn, GetArrayCell(gunRof, selectedGunIndex[GetOwner(weapon)]));
+	DHookSetReturn(hReturn, GetArrayCell(gunRof, getIndexEnt(weapon)));
 	return MRES_Supercede;
 }
 
@@ -104,11 +104,12 @@ public MRESReturn GetFireRate(int weapon, Handle hReturn) {
 public MRESReturn AddViewKick(int weapon) {
 	int client = GetOwner(weapon);
 	if (IsPlayer(client)) {
-		float maxTime = GetArrayCell(gunViewKickTime, selectedGunIndex[client]);
+		int index = getIndexEnt(weapon);
+		float maxTime = GetArrayCell(gunViewKickTime, index);
 		
 		Tools_AddViewKick(client, 
-			GetArrayCell(gunViewKickScale, selectedGunIndex[client]), 
-			GetArrayCell(gunViewKickAngle, selectedGunIndex[client]), 
+			GetArrayCell(gunViewKickScale, index), 
+			GetArrayCell(gunViewKickAngle, index), 
 			maxTime < 0.0 ? 1.0 : GetEntPropFloat(weapon, Prop_Data, "m_fFireDuration"), 
 			maxTime < 0.0 ? 1.0 : maxTime);
 	}
@@ -262,7 +263,8 @@ public MRESReturn ReloadOrSwitchWeapons(int weapon, Handle hReturn) {
 		return MRES_Ignored;
 	}
 	
-	updateWeaponInventoryAmmo(weapon, getIndexEnt(weapon), owner);
+	int index = getIndexEnt(weapon);
+	updateWeaponInventoryAmmo(weapon, index, owner);
 		
 	int buttons = GetClientButtons(owner);
 	if (/* GetArrayCell(gunAmmoTypes, selectedGunIndex[owner]) == -1 && */ !(buttons & IN_ATTACK) && !(buttons & IN_ATTACK2)
@@ -271,7 +273,7 @@ public MRESReturn ReloadOrSwitchWeapons(int weapon, Handle hReturn) {
 
 		// first get rid of bound weapon if any
 		char classname[32];
-		GetArrayString(gunBind, selectedGunIndex[owner], classname, sizeof(classname));
+		GetArrayString(gunBind, index, classname, sizeof(classname));
 		
 		if (!StrEqual(classname, "")) {
 			int offset = FindDataMapOffs(owner, "m_hMyWeapons") - 4;
@@ -493,7 +495,7 @@ public MRESReturn Holster(int weapon, Handle hReturn, Handle hParams) {
 // void CBaseCombatWeapon:WeaponSound( WeaponSound_t sound_type, float soundtime = 0.0f )
 public MRESReturn WeaponSound(int weapon, Handle hParams) {
 	int client = GetOwner(weapon);
-	if (IsPlayer(client)) {
+	if (IsPlayer(client) && selectedGunIndex[client] != -1) {
 		if (firing[client] && DHookGetParam(hParams, 1) == SINGLE) {
 			if (GetGameTime() >= nextFireSound[client]) {
 				float rof = GetArrayCell(gunRof, selectedGunIndex[client]);
