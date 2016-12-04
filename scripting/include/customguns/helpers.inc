@@ -166,7 +166,7 @@ bool KvJumpToKeyFix(Handle kv, const char[] key) {
 
 void removeCustomWeapon(int client){
 	//Loop through all client weapons and remove ours
-	int offset = FindDataMapOffs(client, "m_hMyWeapons") - 4;
+	int offset = FindDataMapInfo(client, "m_hMyWeapons") - 4;
 	for (new i = 0; i < MAX_WEAPONS; i++) {
 		offset += 4;
 		
@@ -188,7 +188,7 @@ void RemovePlayerAmmo(int client, int weapon, int ammo = 1){
 }
 
 bool hasCustomWeapon(int client){
-	int offset = FindDataMapOffs(client, "m_hMyWeapons") - 4;
+	int offset = FindDataMapInfo(client, "m_hMyWeapons") - 4;
 	for (new i = 0; i < MAX_WEAPONS; i++) {
 		offset += 4;
 		

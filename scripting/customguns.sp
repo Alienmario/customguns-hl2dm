@@ -18,7 +18,7 @@
 #include <customguns/menu>
 #include <customguns/addons_scope>
 
-#define PLUGIN_VERSION  "1.4.2"
+#define PLUGIN_VERSION  "1.4.3"
 
 public Plugin myinfo =
 {
@@ -397,7 +397,7 @@ public OnPluginStart()
 	HookEvent("player_spawn", OnSpawn);
 	HookEvent("player_death", OnDeath);
 
-	CreateConVar("hl2dm_customguns_version", PLUGIN_VERSION, "Customguns version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
+	CreateConVar("hl2dm_customguns_version", PLUGIN_VERSION, "Customguns version", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
 	customguns_default = CreateConVar("customguns_default", "weapon_hands", "The preferred custom weapon that players should spawn with");
 	customguns_global_switcher = CreateConVar("customguns_global_switcher", "1", "Enables fast switching from any weapon by holding reload button. If 0, players can switch only when holding a custom weapon.", _, true, 0.0, true, 1.0);
 	customguns_order_alphabetically = CreateConVar("customguns_order_alphabetically", "1", "If enabled, orders weapons by name in the menu, rather than the order they were picked up.", _, true, 0.0, true, 1.0);

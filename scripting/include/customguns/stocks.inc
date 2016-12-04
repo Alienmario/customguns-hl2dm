@@ -43,7 +43,7 @@ stock int getClientAmmoOfType(int client, int ammoType){
 	if(MAX_AMMO_SLOTS < ammoType < 0){
 		ThrowError("Ammo type out of range");
 	}
-	int ammoOffset = FindDataMapOffs(client, "m_iAmmo");
+	int ammoOffset = FindDataMapInfo(client, "m_iAmmo");
 	int offset = ammoOffset + (ammoType * 4);
 	return GetEntData(client, offset);
 }

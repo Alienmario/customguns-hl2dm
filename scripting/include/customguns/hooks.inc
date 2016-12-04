@@ -52,7 +52,7 @@ public OnWeaponSwitchPost(client, weapon)
 				giveCustomGun(client, i, true);
 				
 				SetEntPropEnt(client, Prop_Data, "m_hLastWeapon", lastWeapon);
-				ChangeEdictState(client, FindDataMapOffs(client, "m_hLastWeapon"));
+				ChangeEdictState(client, FindDataMapInfo(client, "m_hLastWeapon"));
 			}
 		}
 	}
@@ -276,7 +276,7 @@ public MRESReturn ReloadOrSwitchWeapons(int weapon, Handle hReturn) {
 		GetArrayString(gunBind, index, classname, sizeof(classname));
 		
 		if (!StrEqual(classname, "")) {
-			int offset = FindDataMapOffs(owner, "m_hMyWeapons") - 4;
+			int offset = FindDataMapInfo(owner, "m_hMyWeapons") - 4;
 			for (new i = 0; i < MAX_WEAPONS; i++) {
 				offset += 4;
 				
