@@ -182,7 +182,7 @@ MRESReturn Throwable_ItemPostFrame(int weapon, int index, int client) {
 	{
 		reload(weapon, index, client);
 	}
-	return MRES_Handled;
+	return MRES_Ignored;
 }
 
 MRESReturn Throwable_Operator_HandleAnimEvent(int weapon, int client, int event) {

@@ -18,7 +18,7 @@
 #include <customguns/menu>
 #include <customguns/addons_scope>
 
-#define PLUGIN_VERSION  "1.4.3"
+#define PLUGIN_VERSION  "1.4.4"
 
 public Plugin myinfo =
 {
@@ -167,7 +167,7 @@ public OnPluginStart()
 		// void CHL2MP_Player::FireBullets ( const FireBulletsInfo_t &info )
 		offset = GameConfGetOffset(gamedata, "FireBullets");
 		DHOOK_FireBullets = DHookCreate(offset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, FireBullets);
-		DHookAddParam(DHOOK_FireBullets, HookParamType_ObjectPtr, -1, DHookPass_ByVal);
+		DHookAddParam(DHOOK_FireBullets, HookParamType_ObjectPtr, -1, DHookPass_ByRef);
 
 		// Activity CBaseCombatCharacter::Weapon_TranslateActivity( Activity baseAct, bool *pRequired )
 		offset = GameConfGetOffset(gamedata, "Weapon_TranslateActivity");
@@ -340,15 +340,6 @@ public OnPluginStart()
 		PrepSDKCall_SetFromConf(gamedata, SDKConf_Virtual, "Weapon_ShootPosition");
 		PrepSDKCall_SetReturnInfo(SDKType_Vector, SDKPass_ByValue);
 		CALL_ShootPosition = EndPrepSDKCall();
-
-/* 		// void CServerTools::ClearMultiDamage( void )
- 		StartPrepSDKCall(SDKCall_Static);
-		PrepSDKCall_SetFromConf(gamedata, SDKConf_Signature, "ClearMultiDamage");
-		CALL_ClearMultiDamage = EndPrepSDKCall();
-
- 		StartPrepSDKCall(SDKCall_Static);
-		PrepSDKCall_SetFromConf(gamedata, SDKConf_Signature, "ApplyMultiDamage");
-		CALL_ApplyMultiDamage = EndPrepSDKCall(); */
 	}
 
 	CloseHandle(gamedata);

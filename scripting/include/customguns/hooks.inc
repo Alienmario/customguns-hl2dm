@@ -156,7 +156,7 @@ public MRESReturn FireBullets(int client, Handle hParams) {
 		TE_SendToClient(client);
 
 	}
-	return MRES_Handled;
+	return MRES_Ignored;
 }
 
 // Activity CBaseCombatCharacter::Weapon_TranslateActivity( Activity baseAct, bool *pRequired )
@@ -364,21 +364,17 @@ public MRESReturn ItemPostFrame(int weapon) {
 		else if(!GetArrayCell(gunCustomKeepAmmo, index)){
 			if ( ( GetClientButtons(client) & IN_ATTACK ) && GetGameTime() > GetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack") )
 			{
-				//SDKCall(CALL_ClearMultiDamage);
 				Call_StartForward(PrimaryAttackForward);
 				Call_PushCell(client);
 				Call_PushCell(weapon);
 				Call_Finish();
-				//SDKCall(CALL_ApplyMultiDamage);
 			}
 			else if ( ( GetClientButtons(client) & IN_ATTACK2 ) && GetGameTime() > GetEntPropFloat(weapon, Prop_Send, "m_flNextSecondaryAttack") )
 			{
-				//SDKCall(CALL_ClearMultiDamage);
 				Call_StartForward(SecondaryAttackForward);
 				Call_PushCell(client);
 				Call_PushCell(weapon);
 				Call_Finish();
-				//SDKCall(CALL_ApplyMultiDamage);
 			}
 		}
 	}

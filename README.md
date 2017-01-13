@@ -41,7 +41,6 @@ Weapon types & Examples
 Installing the examples
 ---------
 This is the preferred way of organizing because files inside the custom folder take priority:
-(On some systems the custom folder can be inaccessible - resulting in 0 weapons, therefore drop the content directly under hl2mp)
 ```
 hl2mp
 └───custom
@@ -52,6 +51,7 @@ hl2mp
         │   └───unused
         └───sound
 ```
+(On some systems the custom folder can be inaccessible - resulting in 0 weapons, therefore drop the content directly under hl2mp)
 
 Weapon scripts (txt files) go in scripts folder. Weapons can also be easily disabled by moving to the unused folder.  
 
