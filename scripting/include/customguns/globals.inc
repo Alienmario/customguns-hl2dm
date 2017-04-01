@@ -17,6 +17,7 @@ Handle customguns_default;
 Handle customguns_global_switcher;
 Handle customguns_autogive;
 Handle customguns_order_alphabetically;
+Handle customguns_static_wheel;
 
 // Config
 // All

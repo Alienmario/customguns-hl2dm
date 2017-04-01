@@ -162,7 +162,7 @@ bool KvJumpToKeyFix(Handle kv, const char[] key) {
 		}
 	} while (KvGotoNextKey(kv));
 	return false;
-} 
+}
 
 void removeCustomWeapon(int client){
 	//Loop through all client weapons and remove ours

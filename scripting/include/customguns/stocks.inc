@@ -53,7 +53,7 @@ stock int getClientPrimaryAmmoForWeapon(int client, int weapon){
 }
 
 stock int getClientSecondaryAmmoForWeapon(int client, int weapon){
-	return getClientAmmoOfType(client, GetEntProp(weapon, Prop_Data, "m_iPrimaryAmmoType"));
+	return getClientAmmoOfType(client, GetEntProp(weapon, Prop_Data, "m_iSecondaryAmmoType"));
 }
 
 stock int getClientInProximity(int client, float radius, bool sameTeam = false, bool onlyWounded = false){

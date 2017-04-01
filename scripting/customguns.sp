@@ -18,7 +18,7 @@
 #include <customguns/menu>
 #include <customguns/addons_scope>
 
-#define PLUGIN_VERSION  "1.4.4"
+#define PLUGIN_VERSION  "1.5"
 
 public Plugin myinfo =
 {
@@ -391,8 +391,10 @@ public OnPluginStart()
 	CreateConVar("hl2dm_customguns_version", PLUGIN_VERSION, "Customguns version", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
 	customguns_default = CreateConVar("customguns_default", "weapon_hands", "The preferred custom weapon that players should spawn with");
 	customguns_global_switcher = CreateConVar("customguns_global_switcher", "1", "Enables fast switching from any weapon by holding reload button. If 0, players can switch only when holding a custom weapon.", _, true, 0.0, true, 1.0);
-	customguns_order_alphabetically = CreateConVar("customguns_order_alphabetically", "1", "If enabled, orders weapons by name in the menu, rather than the order they were picked up.", _, true, 0.0, true, 1.0);
+	customguns_order_alphabetically = CreateConVar("customguns_order_alphabetically", "1", "If enabled, orders weapons by name in the menu, rather than the order they were picked up. Only applies to dynamic wheel mode", _, true, 0.0, true, 1.0);
 	customguns_autogive = CreateConVar("customguns_autogive", "1", "Globally enables/disables auto-giving of all custom weapons", _, true, 0.0, true, 1.0);
+	customguns_static_wheel = CreateConVar("customguns_static_wheel", "1", "Enables stationary item placement in the radial menu (1) versus dynamic placement and resizing (0)", _, true, 0.0, true, 1.0);
+	HookConVarChange(customguns_static_wheel, WheelModeChanged);
 
 	PrimaryAttackForward = CreateGlobalForward("CG_OnPrimaryAttack", ET_Ignore, Param_Cell, Param_Cell);
 	SecondaryAttackForward = CreateGlobalForward("CG_OnSecondaryAttack", ET_Ignore, Param_Cell, Param_Cell);

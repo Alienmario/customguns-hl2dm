@@ -72,6 +72,7 @@ customguns_default | The preferred custom weapon that players should spawn with 
 customguns_global_switcher | Enables fast switching from any weapon by holding reload button. If 0, players can switch only when holding a custom weapon.
 customguns_autogive | Globally enables/disables auto-giving of all custom weapons
 customguns_order_alphabetically | If enabled, orders weapons by name in the menu, rather than the order they were picked up
+customguns_static_wheel | Enables stationary item placement in the radial menu (1) versus dynamic placement and resizing (0)
 hl2dm_customguns_version | Plugin version
 ```
 Commands:

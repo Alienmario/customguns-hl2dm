@@ -3,14 +3,29 @@
 #endif
 #define _CustomGuns_Menu_included
 
+public void WheelModeChanged(ConVar convar, const char[] oldValue, const char[] newValue){
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i) && !IsFakeClient(i)) {
+			generateWheel(i);
+		}
+	}
+}
 
 generateWheel(int client) {
-	ClearArray(inventoryWheel[client]);
+	Handle sourceArray;
+	if(GetConVarBool(customguns_static_wheel)){
+		sourceArray = gunClassNames;
+	} else {
+		sourceArray = inventory[client];
+	}
+	int size = GetArraySize(sourceArray);
+	if(size == GetArraySize(inventoryWheel[client])){
+		return; // already correct calculations for current wheel size
+	}
 	
-	int size = GetArraySize(inventory[client]);
 	float piece = 360.0 / size;
 	float pos[3];
-	
+	ClearArray(inventoryWheel[client]);
 	if (size == 1) {
 		pos[1] = MENU_DISTANCE;
 		PushArrayArray(inventoryWheel[client], pos)
@@ -22,13 +37,6 @@ generateWheel(int client) {
 			PushArrayArray(inventoryWheel[client], pos)
 		}
 	}
-/* 	
-	float wep1Pos[3], wep2Pos[3];
-	if (size > 1) {
-		GetArrayArray(inventoryWheel[client], 0, wep1Pos); NormalizeVector(wep1Pos, wep1Pos);
-		GetArrayArray(inventoryWheel[client], 1, wep2Pos); NormalizeVector(wep2Pos, wep2Pos);
-		threshold[client] = GetVectorDotProduct(wep1Pos, wep2Pos);
-	} else threshold[client] = 0.0; */
 }
 
 drawMenu(int client) {
@@ -39,9 +47,10 @@ drawMenu(int client) {
 	
 	int selected = getInventoryAimIndex(client);
 	bool shouldDrawText = GetGameTime() >= nextDrawText[client]; // should draw text
+	bool staticWheel = GetConVarBool(customguns_static_wheel);
 	
 	int size = GetArraySize(inventory[client]);
-	float beamEndWidth = 360.0/size/2.0*MENU_BG_END_WIDTH_SCALE;
+	float beamEndWidth = 360.0/(staticWheel?GetArraySize(gunClassNames):size)/2.0*MENU_BG_END_WIDTH_SCALE;
 	if(beamEndWidth > 25.0) beamEndWidth = 25.0;
 	float beamStartWidth = beamEndWidth/4*MENU_BG_START_WIDTH_SCALE;
 	
@@ -68,9 +77,10 @@ drawMenu(int client) {
 		float gunPos[3];
 		float animScale = GetArrayCell(inventoryAnimScale[client], i);
 		bool selectable = canSelectItem(client, i);
+		int thisGunIndex = GetArrayCell(inventory[client], i);
 		
-		GetArrayArray(inventoryWheel[client], i, localPos);
-		
+		GetArrayArray(inventoryWheel[client], staticWheel? thisGunIndex:i, localPos);
+
 		if (i == selected && selectable) {
 			if (animScale < 1.0) {
 				float speed = 1.02 - animScale;
@@ -95,7 +105,7 @@ drawMenu(int client) {
 			gunPos[1] = eyePos[1] + rightVector[1] * localPos[0] * scale + fwdVector[1] * localPos[1] * fwdScale + upVector[1] * localPos[2] * scale;
 			gunPos[2] = eyePos[2] + rightVector[2] * localPos[0] * scale + fwdVector[2] * localPos[1] * fwdScale + upVector[2] * localPos[2] * scale;
 			
-			TE_SetupGlowSprite(gunPos, GetArrayCell(gunModelIndexes, GetArrayCell(inventory[client], i)), 0.1, 0.2, selectable ? 255 : 35);
+			TE_SetupGlowSprite(gunPos, GetArrayCell(gunModelIndexes, thisGunIndex), 0.1, 0.2, selectable ? 255 : 35);
 			TE_SendToClient(client);
 			
 			//draw BG beams
@@ -169,13 +179,13 @@ int getInventoryAimIndex(int client) {
 	
 	float highest = 0.0;
 	int highestIndex = -1;
-
+	bool staticWheel = GetConVarBool(customguns_static_wheel);
 	int size = GetArraySize(inventory[client]);
 	for (int i = 0; i < size; i++) {
 		if (!canSelectItem(client, i)) continue;
 		
 		float localPos[3];
-		GetArrayArray(inventoryWheel[client], i, localPos);
+		GetArrayArray(inventoryWheel[client], staticWheel? GetArrayCell(inventory[client], i):i, localPos);
 		
 		//bullfix
 		float temp = -localPos[0];
