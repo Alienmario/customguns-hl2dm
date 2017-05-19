@@ -1,0 +1,85 @@
+Styles
+{
+	"DefaultGreen"
+	{
+		"MENU_DISTANCE"						"60.0"
+		"MENU_RADIUS"						"40.0"
+		"SELECT_THRESHOLD"					"0.86"
+		
+		"MENU_CENTER_MODEL_ENABLED"			"0"
+		"MENU_CENTER_MODEL"					"materials/.vmt"
+		"MENU_CENTER_MODEL_SIZE"			"0.1"
+		"MENU_CENTER_MODEL_SIZE_SELECTED"	"0.2"
+		
+		// background beams drawing settings
+		"MENU_BG_MODEL"						"materials/effects/laserplane.vmt"
+		"MENU_BG_SPEED"						"8"
+		"MENU_BG_COLOR"						"20 150 255 255"
+		"MENU_BG_COLOR_SELECT"				"150 255 255 255"
+		"MENU_BG_COLOR_UNSELECTABLE"		"255 150 50 50"
+		"MENU_BG_START_WIDTH_SCALE"			"0.5"
+		"MENU_BG_END_WIDTH_SCALE"			"0.6"
+		"MENU_BG_DISTANCE_OFFSET"			"-25.0"
+		
+		// from center (0) to menu radius (1), where the beams start
+		"MENU_BG_CENTER_START_SCALE_ADD"	"0.25"
+		"MENU_BG_CENTER_START_SCALE_SELECTED_MULTIPLIER" "0.0"
+		
+		"MODEL_TEXT"						"materials/sprites/lgtning_noz.vmt"
+		"TEXT_DISTANCE_OFFSET"				"-25.0"
+	}
+	
+	"LightingBlue"
+	{
+		MENU_DISTANCE 						"60.0"
+		MENU_RADIUS 						"45.0"
+		SELECT_THRESHOLD 					"0.86"
+
+		MENU_CENTER_MODEL_ENABLED			"0"
+		MENU_CENTER_MODEL 					"materials/.vmt"
+		MENU_CENTER_MODEL_SIZE 				"0.1"
+		MENU_CENTER_MODEL_SIZE_SELECTED 	"0.2"
+
+		MENU_BG_MODEL 						"materials/sprites/blueshaft1.vmt"
+		MENU_BG_SPEED 						"9"
+		MENU_BG_COLOR 						"255 255 255 20"
+		MENU_BG_COLOR_SELECT 				"255 125 50 200"
+		MENU_BG_COLOR_UNSELECTABLE 			"80 5 5 70"
+		MENU_BG_START_WIDTH_SCALE 			"1.0"
+		MENU_BG_END_WIDTH_SCALE 			"0.9"
+		MENU_BG_DISTANCE_OFFSET 			"-25.0"
+		
+		MENU_BG_CENTER_START_SCALE_ADD 		"0.25"
+		MENU_BG_CENTER_START_SCALE_SELECTED_MULTIPLIER "0.0"
+
+		MODEL_TEXT 							"materials/sprites/lgtning_noz.vmt"
+		TEXT_DISTANCE_OFFSET 				"-25.0"
+	}
+	
+	"PeekOrange"
+	{
+		MENU_DISTANCE 						"60.0"
+		MENU_RADIUS							"45.0"
+		SELECT_THRESHOLD					"0.84"
+
+		MENU_CENTER_MODEL_ENABLED 			"0"
+		MENU_CENTER_MODEL					"materials/vgui/ui_logo.vmt"
+		MENU_CENTER_MODEL_SIZE 				"0.1"
+		MENU_CENTER_MODEL_SIZE_SELECTED 	"0.2"
+
+		MENU_BG_MODEL 						"materials/sprites/reticle2.vmt"
+		MENU_BG_SPEED 						"0"
+		MENU_BG_COLOR 						"200 100 255 255"
+		MENU_BG_COLOR_SELECT 				"255 255 255 255"
+		MENU_BG_COLOR_UNSELECTABLE 			"150 255 255 200"
+		MENU_BG_START_WIDTH_SCALE 			"0.7"
+		MENU_BG_END_WIDTH_SCALE 			"0.7"
+		MENU_BG_DISTANCE_OFFSET 			"-25.0"
+		
+		MENU_BG_CENTER_START_SCALE_ADD 		"-1.8"
+		MENU_BG_CENTER_START_SCALE_SELECTED_MULTIPLIER "2.0"
+
+		MODEL_TEXT 							"materials/sprites/lgtning_noz.vmt"
+		TEXT_DISTANCE_OFFSET 				"-25.0"
+	}
+}

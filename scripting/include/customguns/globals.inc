@@ -4,20 +4,15 @@
 #define _CustomGuns_Globals_included
 
 
-int modelText;
-int modelBG;
-#if MENU_CENTER_MODEL_ENABLED
-int modelCenter;
-#endif
-//int modelBorder;
-
-
 // CVARS
 Handle customguns_default;
 Handle customguns_global_switcher;
 Handle customguns_autogive;
 Handle customguns_order_alphabetically;
 Handle customguns_static_wheel;
+
+// COOKIES
+Handle cookie_menu_style;
 
 // Config
 // All
@@ -59,7 +54,6 @@ Handle gunFireLoopLength;
 Handle gunFireVisible;
 Handle gunReloadsSingly;
 
-
 int CLIENT_BEING_EQUIPPED = -1;
 
 bool open[MAXPLAYERS + 1];
@@ -81,6 +75,7 @@ bool firing[MAXPLAYERS + 1];
 float nextFireSound[MAXPLAYERS + 1];
 float lastFired[MAXPLAYERS+1];
 
+int menuStyle[MAXPLAYERS+1];
 
 Handle DHOOK_FireBullets;
 Handle DHOOK_TranslateActivity;

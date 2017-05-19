@@ -3,6 +3,12 @@
 #endif
 #define _CustomGuns_Throwable_included
 
+#define MOLOTOV_BURN_DMG 2.0
+#define MOLOTOV_BURN_DMG_PL 0.4
+
+#define MOLOTOV_EXPLODE "ambient/fire/mtov_flame2.wav"
+#define MOLOTOV_BURN_LOOP "ambient/fire/fire_small_loop2.wav"
+
 Handle gunThrowModel;
 Handle gunThrowForce;
 Handle gunThrowPullback;

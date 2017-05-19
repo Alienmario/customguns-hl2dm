@@ -3,6 +3,12 @@
 #endif
 #define _CustomGuns_Menu_included
 
+#define SND_OPEN "npc/roller/remote_yes.wav" // "npc/roller/remote_yes.wav" // "ui/buttonclickrelease.wav" // "common/null.wav"
+#define SND_CLOSE_OK "common/wpn_hudoff.wav" // "ui/buttonclickrelease.wav"
+#define SND_CLOSE_CANC "Player.DenyWeaponSelection"
+#define SND_SELECT "Player.WeaponSelectionMoveSlot" //mouseover
+
+
 public void WheelModeChanged(ConVar convar, const char[] oldValue, const char[] newValue){
 	for (int i = 1; i <= MaxClients; i++) {
 		if (IsClientInGame(i) && !IsFakeClient(i)) {
@@ -23,17 +29,18 @@ generateWheel(int client) {
 		return; // already correct calculations for current wheel size
 	}
 	
+	Style s = GetClientStyle(client);
 	float piece = 360.0 / size;
 	float pos[3];
 	ClearArray(inventoryWheel[client]);
 	if (size == 1) {
-		pos[1] = MENU_DISTANCE;
+		pos[1] = s.GetFl(MENU_DISTANCE);
 		PushArrayArray(inventoryWheel[client], pos)
 	} else {
 		for (int i = 0; i < size; i++) {
-			pos[0] = Cosine(DegToRad(i * piece)) * MENU_RADIUS;
-			pos[1] = MENU_DISTANCE;
-			pos[2] = Sine(DegToRad(i * piece)) * MENU_RADIUS;
+			pos[0] = Cosine(DegToRad(i * piece)) * s.GetFl(MENU_RADIUS);
+			pos[1] = s.GetFl(MENU_DISTANCE);
+			pos[2] = Sine(DegToRad(i * piece)) * s.GetFl(MENU_RADIUS);
 			PushArrayArray(inventoryWheel[client], pos)
 		}
 	}
@@ -42,21 +49,21 @@ generateWheel(int client) {
 drawMenu(int client) {
 	float eyePos[3], fwdVector[3], rightVector[3], upVector[3];
 	GetClientEyePosition(client, eyePos);
-	
 	GetAngleVectors(startEyeAngles[client], fwdVector, rightVector, upVector);
 	
+	Style s = GetClientStyle(client);
 	int selected = getInventoryAimIndex(client);
-	bool shouldDrawText = GetGameTime() >= nextDrawText[client]; // should draw text
+	bool shouldDrawText = GetGameTime() >= nextDrawText[client];
 	bool staticWheel = GetConVarBool(customguns_static_wheel);
 	
 	int size = GetArraySize(inventory[client]);
-	float beamEndWidth = 360.0/(staticWheel?GetArraySize(gunClassNames):size)/2.0*MENU_BG_END_WIDTH_SCALE;
+	float beamEndWidth = 360.0/(staticWheel?GetArraySize(gunClassNames):size)/2.0*s.GetFl(MENU_BG_END_WIDTH_SCALE);
 	if(beamEndWidth > 25.0) beamEndWidth = 25.0;
-	float beamStartWidth = beamEndWidth/4*MENU_BG_START_WIDTH_SCALE;
+	float beamStartWidth = beamEndWidth/4*s.GetFl(MENU_BG_START_WIDTH_SCALE);
 	
 	float center[3];
 	center = fwdVector;
-	ScaleVector(center, MENU_DISTANCE);
+	ScaleVector(center, s.GetFl(MENU_DISTANCE));
 	AddVectors(eyePos, center, center);
 	
 	static int lastSelected[MAXPLAYERS+1];
@@ -66,10 +73,10 @@ drawMenu(int client) {
 	}
 	
 	// DRAW CENTER SPRITE
-	#if MENU_CENTER_MODEL_ENABLED
-	TE_SetupGlowSprite(center, modelCenter, 0.1, selected==-1? MENU_CENTER_MODEL_SIZE_SELECTED:MENU_CENTER_MODEL_SIZE, 255);
-	TE_SendToClient(client);
-	#endif
+	if(s.Get(MENU_CENTER_MODEL_ENABLED)){
+		TE_SetupGlowSprite(center, s.Get(MENU_CENTER_MODEL_ID), 0.1, selected==-1? s.GetFl(MENU_CENTER_MODEL_SIZE_SELECTED):s.GetFl(MENU_CENTER_MODEL_SIZE), 255);
+		TE_SendToClient(client);
+	}
 	
 	//DRAW MODELS
 	for (int i = 0; i < size; i++) {
@@ -114,9 +121,11 @@ drawMenu(int client) {
 			beamEndPos[1] = eyePos[1] + rightVector[1] * localPos[0] + fwdVector[1] * localPos[1] * fwdScale + upVector[1] * localPos[2];
 			beamEndPos[2] = eyePos[2] + rightVector[2] * localPos[0] + fwdVector[2] * localPos[1] * fwdScale + upVector[2] * localPos[2];
 			
-			MoveVector(center, beamEndPos, fwdScale*MENU_BG_CENTER_START_SCALE_SELECTED_MULTIPLIER + MENU_BG_CENTER_START_SCALE_ADD, beamStartPos);
+			MoveVector(center, beamEndPos, fwdScale*s.GetFl(MENU_BG_CENTER_START_SCALE_SELECTED_MULTIPLIER) + s.GetFl(MENU_BG_CENTER_START_SCALE_ADD), beamStartPos);
 			
-			TE_SetupBeamPoints(beamStartPos, beamEndPos, modelBG, -1, 0, 30, 0.1, beamStartWidth, beamEndWidth, 0, 0.0, i==selected? MENU_BG_COLOR_SELECT : (selectable? MENU_BG_COLOR:MENU_BG_COLOR_UNSELECTABLE), MENU_BG_SPEED);
+			int color[4];
+			s.GetArray(i==selected? MENU_BG_COLOR_SELECT : (selectable? MENU_BG_COLOR:MENU_BG_COLOR_UNSELECTABLE), color, sizeof(color));
+			TE_SetupBeamPoints(beamStartPos, beamEndPos, s.Get(MENU_BG_MODEL_ID), -1, 0, 30, 0.1, beamStartWidth, beamEndWidth, 0, 0.0, color, s.Get(MENU_BG_SPEED));
 			TE_SendToClient(client);
 		}
 		
@@ -129,7 +138,7 @@ drawMenu(int client) {
 			char buffer[32];
 			GetArrayString(gunNames, GetArrayCell(inventory[client], selected), buffer, sizeof(buffer));
 			
-			ScaleVector(minText, MENU_DISTANCE+TEXT_DISTANCE_OFFSET);
+			ScaleVector(minText, s.GetFl(MENU_DISTANCE) + s.GetFl(TEXT_DISTANCE_OFFSET));
 			AddVectors(eyePos, minText, minText);
 
 			maxText = minText;
@@ -140,7 +149,7 @@ drawMenu(int client) {
 			ScaleVector(textRightVector, -1.0);
 			AddVectors(maxText, textRightVector, maxText);
 			
-			DrawText(client, minText, maxText, modelText, buffer, 0.20, DRAWTEXT_ALIGN_CENTER, _, DRAWTEXT_WIDTH_DEFAULT*1.5, DRAWTEXT_HEIGHT_DEFAULT*1.5, DRAWTEXT_SIZE_DEFAULT, 50.0 * (1-animScale));
+			DrawText(client, minText, maxText, s.Get(MODEL_TEXT_ID), buffer, 0.20, DRAWTEXT_ALIGN_CENTER, _, DRAWTEXT_WIDTH_DEFAULT*1.5, DRAWTEXT_HEIGHT_DEFAULT*1.5, DRAWTEXT_SIZE_DEFAULT, 50.0 * (1-animScale));
 		}
 	}
 
@@ -181,6 +190,8 @@ int getInventoryAimIndex(int client) {
 	int highestIndex = -1;
 	bool staticWheel = GetConVarBool(customguns_static_wheel);
 	int size = GetArraySize(inventory[client]);
+	float threshold = GetClientStyle(client).GetFl(SELECT_THRESHOLD);
+	
 	for (int i = 0; i < size; i++) {
 		if (!canSelectItem(client, i)) continue;
 		
@@ -195,7 +206,7 @@ int getInventoryAimIndex(int client) {
 		NormalizeVector(localPos, localPos);
 		
 		float a = GetVectorDotProduct(localPos, fwdVector);
-		if (SELECT_THRESHOLD < a > highest) {
+		if (threshold < a > highest) {
 			highest = a;
 			highestIndex = i;
 		}

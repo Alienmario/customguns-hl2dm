@@ -1,6 +1,6 @@
-// Include libraries
 #include <sourcemod>
 #include <sdktools>
+#include <clientprefs>
 #include <sdkhooks>
 #include <dhooks>
 
@@ -8,17 +8,16 @@
 #include <customguns/drawingtools>
 #include <customguns/const>
 #include <customguns/stocks>
-#include <customguns/settings>
-
-// Include plugin parts
 #include <customguns/globals>
+
+#include <customguns/styles>
 #include <customguns/hooks>
 #include <customguns/throwable>
 #include <customguns/helpers>
 #include <customguns/menu>
 #include <customguns/addons_scope>
 
-#define PLUGIN_VERSION  "1.5"
+#define PLUGIN_VERSION  "1.6"
 
 public Plugin myinfo =
 {
@@ -383,6 +382,7 @@ public OnPluginStart()
 
 	Throwable_OnPluginStart();
 	loadConfig();
+	loadStyles();
 
 	LoadTranslations("common.phrases");
 	HookEvent("player_spawn", OnSpawn);
@@ -401,8 +401,11 @@ public OnPluginStart()
 	ItemPostFrameForward = CreateGlobalForward("CG_ItemPostFrame", ET_Ignore, Param_Cell, Param_Cell);
 	HolsterForward = CreateGlobalForward("CG_OnHolster", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 
+	cookie_menu_style = RegClientCookie("customguns_style", "CustomGuns menu style cookie", CookieAccess_Public);
+	
 	RegAdminCmd("sm_customgun", CustomGun, ADMFLAG_ROOT, "Spawns a custom gun by classname");
 	RegAdminCmd("sm_customguns", CustomGun, ADMFLAG_ROOT, "Spawns a custom gun by classname");
+	RegConsoleCmd("sm_gunmenu", ShowStyleMenu, "Opens customguns wheel style selector");
 	RegAdminCmd("sm_seqtest", SeqTest, ADMFLAG_ROOT, "Viewmodel sequence test");
 
 	for (int i = 1; i <= MaxClients; i++) {
@@ -474,13 +477,8 @@ public Action CustomGun(int client, int args) {
 }
 
 public OnConfigsExecuted() {
-	modelBG = PrecacheModel(MENU_BG_MODEL, true);
-	modelText = PrecacheModel(MODEL_TEXT, true);
-	#if MENU_CENTER_MODEL_ENABLED
-	modelCenter = PrecacheModel(MENU_CENTER_MODEL, true);
-	#endif
-
-	//modelBorder = PrecacheModel(MODEL_BORDER, true);
+	precacheStyles();
+	
 	PrecacheSound(SND_OPEN, true);
 	PrecacheSound(SND_CLOSE_OK, true);
 	PrecacheScriptSound(SND_CLOSE_CANC);
@@ -526,12 +524,17 @@ public OnClientDisconnect(int client) {
 		nextFireSound[client] = 0.0;
 		nextDrawText[client] = 0.0;
 		firstOpen[client] = 0.0;
+		menuStyle[client] = 0;
 		delete inventory[client];
 		delete inventoryWheel[client];
 		delete inventoryAnimScale[client];
 		delete inventoryAmmo[client];
 		delete inventoryAmmoType[client];
 	}
+}
+
+public OnClientCookiesCached(int client) {
+	ReloadStyle(client);
 }
 
 public Action OnSpawn(Handle event, const char[] name, bool dontBroadcast)
