@@ -1,0 +1,81 @@
+WeaponData
+{
+	// Weapon data is loaded by both the Game and Client DLLs.
+	"viewmodel"			"models/weapons/v_shovel.mdl"
+	"playermodel"		"models/weapons/w_shovel.mdl"
+	
+	// this prefix will be used and fixed by customguns if this gun is custom
+	// more prefixes can be found in weapon scripts files
+	"anim_prefix"		"crowbar"
+	
+	"clip_size"			"-1"
+	"primary_ammo"		"None"
+	"secondary_ammo"	"None"
+	
+	"autoswitchto"		"0"
+	"autoswitchfrom"	"0"
+
+	SoundData
+	{
+		"single_shot"		"Weapon_Crowbar.Single"
+		"melee_hit"			"Weapon_Crowbar.Melee_Hit"
+		"melee_hit_world"	"Weapon_Crowbar.Melee_HitWorld"
+	}
+
+	"CustomGunsPluginData"
+	{
+		"name"						"Shovel"
+		
+		// mdl or vmt for selection menu
+		"model"						"models/weapons/w_shovel.mdl"
+		
+		// make the gun usable only by admins who have this flag(s), or -1 to alow everyone to use the gun
+		"admin_level"				"-1"
+		
+		// add this gun to player's inventory on spawn?
+		"give_on_spawn"				"1"
+		
+		// add this gun to player's inventory when he equips this weapon
+		"give_with_weapon"			""
+		
+		// binds to this weapon, auto switching when player selects it; if set, both weapons should use the same ammo type and give_with_weapon should be set the same as this!
+		"bind_to_weapon"			""
+		
+		// if 1, does not disappear from inventory when player drops the physical weapon or is stripped from weapons; recommended for admin weapons or weapons given on spawn
+		"persistent"				"1"
+		
+		// weapon_type - possible values:
+		//		bullet - (default) Standard bullet weapon, uses clip sizes and ammo type defined above
+		//		throwable - Throws something away from the player - grenades, molotovs, ..
+		//		custom - Custom coded weapon
+		"weapon_type"		"custom"
+		
+		"custom_settings"
+		{
+			// * If set to 1, this custom gun will use game-defined ammo type (set above) and behavior instead of plugin managed ammo.
+			// * Fire functions will be managed by game, so they won't be called when the weapon runs out of ammo.
+			// * Use with CG_RemovePlayerAmmo() native
+			//
+			// ** Setting this to 0 will allow you to manage ammo ("m_iClip1" value) yourself via plugin. This overrides ammotype to an unknown value.
+			// ** Fire functions will always be called when the weapon is ready to fire, without any ammo checks. Also set this to 0 if your weapon doesn't use ammo.
+			// ** Set "primary_ammo" other than "None" to enable HUD ammo display.
+			"uses_game_ammo"		"0"
+		}
+		
+		"download"
+		{
+			"item" "models/weapons/v_shovel.dx80.vtx"
+			"item" "models/weapons/v_shovel.dx90.vtx"
+			"item" "models/weapons/v_shovel.mdl"
+			"item" "models/weapons/v_shovel.sw.vtx"
+			"item" "models/weapons/v_shovel.vvd"
+			
+			"item" "models/weapons/w_shovel.dx80.vtx"
+			"item" "models/weapons/w_shovel.dx90.vtx"
+			"item" "models/weapons/w_shovel.mdl"
+			"item" "models/weapons/w_shovel.phy"
+			"item" "models/weapons/w_shovel.sw.vtx"
+			"item" "models/weapons/w_shovel.vvd"
+		}
+	}
+}
