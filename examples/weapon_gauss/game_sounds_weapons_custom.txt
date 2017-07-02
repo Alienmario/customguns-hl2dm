@@ -1,0 +1,41 @@
+// CUSTOM Weapons
+
+// GAUSS
+
+"Weapon_Gauss.ChargeLoop"
+{
+	"channel"		"CHAN_WEAPON"
+	"volume"		"VOL_NORM"
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"weapons/gauss/chargeloop.wav"
+}
+
+"Weapon_Gauss.Single"
+{
+	"channel"		"CHAN_WEAPON"
+	"volume"		"0.75" // "0.750, 1.000"
+	"pitch"			"95, 105"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"weapons/gauss/fire1.wav"
+}
+
+"Weapon_Gauss.Charged"
+{
+	"channel"	"CHAN_ITEM"
+	"volume"	"1.0"
+	"soundlevel"  "SNDLVL_NORM"
+
+	"wave"	"items/suitchargeok1.wav"
+}
+
+"Weapon_Gauss.OverCharged"
+{
+	"channel"	"CHAN_ITEM"
+	"volume"	"1.0"
+	"soundlevel"  "SNDLVL_75dB"
+
+	"wave"	"npc/roller/mine/rmine_shockvehicle2.wav"
+}

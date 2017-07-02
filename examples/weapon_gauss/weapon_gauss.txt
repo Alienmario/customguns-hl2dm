@@ -1,0 +1,107 @@
+WeaponData
+{
+	// Weapon data is loaded by both the Game and Client DLLs.
+	"viewmodel"				"models/weapons/v_gauss_suit.mdl"
+	"playermodel"			"models/weapons/w_gauss_suit.mdl"
+		
+	// this prefix determines how player holds the gun in third person and will be used by customguns if this gun is custom
+	// more prefixes can be found in weapon scripts files
+	"anim_prefix"			"ar2"
+
+	"primary_ammo"			"SMG1"
+	"secondary_ammo"		"None"
+	"clip_size"				"-1"
+	"default_clip"			"100"
+	"clip2_size"			"-1"
+	"default_clip2"			"-1"
+	
+	"autoswitchto"			"0"
+	"autoswitchfrom"		"0"
+
+	// In order to get custom weapon sounds working, copy game_sounds_weapons.txt (can be found in /hl2/scripts)
+	// to /hl2mp/custom/Custom_Weapons/scripts and add a new sound entry, f.e. Weapon_Minigun.Single and then just link it here.
+	SoundData
+	{
+		"single_shot"                   "Weapon_Gauss.Single"
+		"special1"                      "Weapon_Gauss.ChargeLoop"
+		"special2"                      "Weapon_Gauss.Charged"
+		"special3"                      "Weapon_Gauss.OverCharged"
+	}
+	
+	"CustomGunsPluginData"
+	{
+		"name"						"Gauss"
+		
+		// mdl or vmt for selection menu
+		"model"						"models/weapons/w_gauss_suit.mdl" 
+
+		// make the gun usable only by admins who have this flag(s), or -1 to alow everyone to use the gun
+		"admin_level"				"-1"
+		
+		// add this gun to player's inventory on spawn?
+		"give_on_spawn"				"1"
+		
+		// add this gun to player's inventory when he equips this weapon
+		"give_with_weapon"			"weapon_smg1"
+		
+		// binds to this weapon, auto switching when player selects it; if set, both weapons should use the same ammo type and give_with_weapon should be set the same as this!
+		"bind_to_weapon"			""
+		
+		// if 1, does not disappear from inventory when player drops the physical weapon or is stripped from weapons; recommended for admin weapons or weapons given on spawn
+		"persistent"				"0"
+		
+		// weapon_type - possible values:
+		//		bullet - (default) Standard bullet weapon, uses clip sizes and ammo type defined above
+		//		throwable - Throws something away from the player - grenades, molotovs, ..
+		//		custom - Custom coded weapon
+		"weapon_type"		"custom"
+		
+		"custom_settings"
+		{
+			// * If set to 1, this custom gun will use game-defined ammo type (set above) and behavior instead of plugin managed ammo.
+			// * Fire functions will be managed by game, so they won't be called when the weapon runs out of ammo.
+			// * Use with CG_RemovePlayerAmmo() native
+			//
+			// ** Setting this to 0 will allow you to manage ammo ("m_iClip1" value) yourself via plugin. This overrides ammotype to an unknown value.
+			// ** Fire functions will always be called when the weapon is ready to fire, without any ammo checks. Also set this to 0 if your weapon doesn't use ammo.
+			// ** Set "primary_ammo" other than "None" to enable HUD ammo display.
+			"uses_game_ammo"		"1"
+		}
+		
+		"download"
+		{
+			"item"	"models/weapons/w_gauss_suit.mdl"
+			"item"	"models/weapons/w_gauss_suit.sw.vtx"
+			"item"	"models/weapons/w_gauss_suit.dx90.vtx"
+			"item"	"models/weapons/w_gauss_suit.dx80.vtx"
+			"item"	"models/weapons/w_gauss_suit.vvd"
+			"item"	"models/weapons/w_gauss_suit.phy"
+			
+			"item"	"models/weapons/v_gauss_suit.mdl"
+			"item"	"models/weapons/v_gauss_suit.sw.vtx"
+			"item"	"models/weapons/v_gauss_suit.dx90.vtx"
+			"item"	"models/weapons/v_gauss_suit.dx80.vtx"
+			"item"	"models/weapons/v_gauss_suit.vvd"
+			
+			"item"	"materials/models/weapons/v_gauss/back.vmt"
+			"item"	"materials/models/weapons/v_gauss/back.vtf"
+			"item"	"materials/models/weapons/v_gauss/capacitor.vmt"
+			"item"	"materials/models/weapons/v_gauss/capacitor.vtf"
+			"item"	"materials/models/weapons/v_gauss/coils.vmt"
+			"item"	"materials/models/weapons/v_gauss/coils.vtf"
+			"item"	"materials/models/weapons/v_gauss/details1.vmt"
+			"item"	"materials/models/weapons/v_gauss/details1.vtf"
+			"item"	"materials/models/weapons/v_gauss/generator.vmt"
+			"item"	"materials/models/weapons/v_gauss/generator.vtf"
+			"item"	"materials/models/weapons/v_gauss/glowchrome.vmt"
+			"item"	"materials/models/weapons/v_gauss/glowchrome.vtf"
+			"item"	"materials/models/weapons/v_gauss/spindle.vmt"
+			"item"	"materials/models/weapons/v_gauss/spindle.vtf"
+			"item"	"materials/models/weapons/v_gauss/supportarm.vmt"
+			"item"	"materials/models/weapons/v_gauss/supportarm.vtf"
+			
+			"item"	"materials/models/weapons/v_gauss/hand.vmt"
+			"item"	"materials/models/weapons/v_gauss/hand.vtf"
+		}
+	}
+}
