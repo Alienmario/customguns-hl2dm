@@ -81,7 +81,7 @@ public Action vmSwapDelay(Handle timer, any data){
 }
 
 // int CBaseCombatWeapon::GetDefaultClip1( void )
-// Kind of a hack: If we're giving a weapon to player, override it's default ammo with our saved ammo from inventory if any. Otherwise, do nothing.
+// Kind of a hack: If we're giving a weapon to player, override its default ammo with our saved ammo from inventory if any. Otherwise, do nothing.
 public MRESReturn GetDefaultClip1(int weapon, Handle hReturn) {
 	if (IsPlayer(CLIENT_BEING_EQUIPPED)) {
 		int gunIndex = getIndexEnt(weapon);
@@ -330,33 +330,42 @@ public MRESReturn ItemPostFrame(int weapon) {
 		}
 		else if (type == GunType_Bullet)
 		{
-			static bool inSpinUp[MAXPLAYERS+1];
-			
 			int buttons = GetClientButtons(client);
 			float curtime = GetGameTime();
 			
 			float delay = GetArrayCell(gunDelay, index);
-			float delayFireCooldown = GetArrayCell(gunDelayFireCooldown, index);
-			int delaySequence = GetArrayCell(gunDelaySequence, index);
+			if (delay > 0.0){
+				static bool inSpinUp[MAXPLAYERS+1];
+				
+				float delayFireCooldown = GetArrayCell(gunDelayFireCooldown, index);
+				int delaySequence = GetArrayCell(gunDelaySequence, index);
 
-			if( buttons & IN_ATTACK
-			&& curtime >= lastFired[client] + delayFireCooldown
-			&& GetEntPropFloat(weapon, Prop_Data, "m_fFireDuration") <= 0.0
-			&& SDKCall(CALL_HasPrimaryAmmo, weapon))
-			{
-				if(delaySequence != -1) SDKCall(CALL_SendViewModelAnim, weapon, delaySequence);
-				SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", curtime+delay);
-				SDKCall(CALL_WeaponSound, weapon, SPECIAL1, 0.0);
-				inSpinUp[client] = true;
+				if( buttons & IN_ATTACK
+				&& curtime >= lastFired[client] + delayFireCooldown
+				&& GetEntPropFloat(weapon, Prop_Data, "m_fFireDuration") <= 0.0
+				&& SDKCall(CALL_HasPrimaryAmmo, weapon))
+				{
+					if(delaySequence != -1) SDKCall(CALL_SendViewModelAnim, weapon, delaySequence);
+					SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", curtime+delay);
+					SDKCall(CALL_WeaponSound, weapon, SPECIAL1, 0.0);
+					inSpinUp[client] = true;
+				}
+				else if (inSpinUp[client])
+				{
+					if( !(buttons & IN_ATTACK) || GetEntPropFloat(weapon, Prop_Data, "m_fFireDuration") <= 0.0){ // spinup cancelled by player (unpressed button)
+						SDKCall(CALL_StopWeaponSound, weapon, SPECIAL1);
+						SDKCall(CALL_SendWeaponAnim, weapon, ACT_VM_IDLE);
+						inSpinUp[client] = false;
+					} else if (curtime >= GetEntPropFloat(weapon, Prop_Data, "m_flNextPrimaryAttack")) { // spinup transitioning to firing
+						inSpinUp[client] = false;
+					}
+				}
 			}
-			else if (inSpinUp[client])
-			{
-				if( !(buttons & IN_ATTACK) || GetEntPropFloat(weapon, Prop_Data, "m_fFireDuration") <= 0.0){ // spinup cancelled by player (unpressed button)
-					SDKCall(CALL_StopWeaponSound, weapon, SPECIAL1);
-					SDKCall(CALL_SendWeaponAnim, weapon, ACT_VM_IDLE);
-					inSpinUp[client] = false;
-				} else if (curtime >= GetEntPropFloat(weapon, Prop_Data, "m_flNextPrimaryAttack")) { // spinup transitioning to firing
-					inSpinUp[client] = false;
+			
+			// semi-auto handling
+			if(GetArrayCell(gunFireType, index) == 1) {
+				if(!(buttons & IN_ATTACK)){
+					SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", curtime - 0.1);
 				}
 			}
 		} 
@@ -410,6 +419,11 @@ public MRESReturn PrimaryAttack(int weapon) {
 				firing[client] = true;
 			}
 			lastFired[client] = GetGameTime();
+			
+			if(GetArrayCell(gunFireType, index) == 1) {
+				// semi-auto handling
+				SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", FLT_IDKWHATSMAX);
+			}
 		}
 		
 		Call_StartForward(PrimaryAttackForward);

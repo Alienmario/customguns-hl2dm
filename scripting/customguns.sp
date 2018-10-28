@@ -17,7 +17,7 @@
 #include <customguns/menu>
 #include <customguns/addons_scope>
 
-#define PLUGIN_VERSION  "1.6"
+#define PLUGIN_VERSION  "1.7"
 
 public Plugin myinfo =
 {
@@ -374,6 +374,7 @@ public OnPluginStart()
 	gunFireLoopLength = CreateArray();
 	gunFireVisible = CreateArray();
 	gunReloadsSingly = CreateArray();
+	gunFireType = CreateArray();
 	gunCustomKeepAmmo = CreateArray();
 	gunScopeFov = CreateArray();
 	gunScopeOverlay = CreateArray(PLATFORM_MAX_PATH);
@@ -648,7 +649,7 @@ int spawnGun(int index, const float origin[3] = NULL_VECTOR) {
 			DHookEntity(DHOOK_Reload, true, ent);
 			DHookEntity(DHOOK_PrimaryAttack, true, ent);
 
-			if (GetArrayCell(gunDelay, index) > 0.0){
+			if (GetArrayCell(gunDelay, index) > 0.0 || GetArrayCell(gunFireType, index) == 1){
 				DHookEntity(DHOOK_ItemPostFrame, false, ent);
 			}
 

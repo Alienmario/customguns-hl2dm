@@ -82,6 +82,9 @@ WeaponData
 			// Fix! set to -1 if this is not a machine gun and view kick should be constant instead of calculated from start of fire
 			"view_kick_max_time" "1.0"
 			
+			// 0 = automatic, 1 = semi-automatic
+			"fire_type" "0"
+			
 			// fire rate, time between each bullet, in seconds
 			// ==> 1 / (RPM / 60)
 			"fire_rate" "0.13"

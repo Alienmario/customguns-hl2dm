@@ -93,6 +93,7 @@ loadConfig() {
 								PushArrayCell(gunFireLoopLength, KvGetFloat(kv, "fire_sound_loop_length", 0.0));
 								
 								PushArrayCell(gunSpread, KvGetFloat(kv, "spread", 0.0));
+								PushArrayCell(gunFireType, KvGetNum(kv, "fire_type", 0));
 								PushArrayCell(gunRof, KvGetFloat(kv, "fire_rate", 0.075));
 								
 								PushArrayCell(gunDelay, KvGetFloat(kv, "fire_delay", 0.0));

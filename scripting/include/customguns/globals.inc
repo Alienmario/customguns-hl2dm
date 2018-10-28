@@ -53,6 +53,7 @@ Handle gunFireLoopFix;
 Handle gunFireLoopLength;
 Handle gunFireVisible;
 Handle gunReloadsSingly;
+Handle gunFireType;
 
 int CLIENT_BEING_EQUIPPED = -1;
 
