@@ -17,7 +17,7 @@
 #include <customguns/menu>
 #include <customguns/addons_scope>
 
-#define PLUGIN_VERSION  "1.7"
+#define PLUGIN_VERSION "1.7"
 
 public Plugin myinfo =
 {
@@ -83,7 +83,8 @@ public Native_SetPlayerAnimation(Handle plugin, numParams)
 public Native_GetShootPosition(Handle plugin, numParams)
 {
 	int client = GetNativeCell(1);
-	float pos[3]; getShootPosition(client, pos);
+	float pos[3];
+	getShootPosition(client, pos);
 	float forwardOffset = GetNativeCell(3);
 	float rightOffset = GetNativeCell(4);
 	float upOffset = GetNativeCell(5);
@@ -91,9 +92,9 @@ public Native_GetShootPosition(Handle plugin, numParams)
 	float eyeAngles[3], fwd[3], right[3], up[3];
 	GetClientEyeAngles(client, eyeAngles);
 	GetAngleVectors(eyeAngles, fwd, right, up);
-	pos[0] += fwd[0] * forwardOffset + right[0] * rightOffset +  up[0] * upOffset;
-	pos[1] += fwd[1] * forwardOffset + right[1] * rightOffset +  up[1] * upOffset;
-	pos[2] += fwd[2] * forwardOffset + right[2] * rightOffset +  up[2] * upOffset;
+	pos[0] += fwd[0] * forwardOffset + right[0] * rightOffset + up[0] * upOffset;
+	pos[1] += fwd[1] * forwardOffset + right[1] * rightOffset + up[1] * upOffset;
+	pos[2] += fwd[2] * forwardOffset + right[2] * rightOffset + up[2] * upOffset;
 
 	SetNativeArray(2, pos, sizeof(pos));
 }
@@ -233,7 +234,7 @@ public OnPluginStart()
 		// int CBaseCombatWeapon::GetDefaultClip1( void )
 		offset = GameConfGetOffset(gamedata, "GetDefaultClip1");
 		DHOOK_GetDefaultClip1 = DHookCreate(offset, HookType_Entity, ReturnType_Int, ThisPointer_CBaseEntity, GetDefaultClip1);
-		
+
 		// void CGameRules::RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrcIn, float flRadius, int iClassIgnore, CBaseEntity *pEntityIgnore )
 		offset = GameConfGetOffset(gamedata, "RadiusDamage");
 		DHOOK_RadiusDamage = DHookCreate(offset, HookType_GameRules, ReturnType_Void, ThisPointer_Ignore, RadiusDamage);
@@ -389,7 +390,7 @@ public OnPluginStart()
 	HookEvent("player_spawn", OnSpawn);
 	HookEvent("player_death", OnDeath);
 
-	CreateConVar("hl2dm_customguns_version", PLUGIN_VERSION, "Customguns version", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
+	CreateConVar("hl2dm_customguns_version", PLUGIN_VERSION, "Customguns version", FCVAR_SPONLY | FCVAR_REPLICATED | FCVAR_NOTIFY);
 	customguns_default = CreateConVar("customguns_default", "weapon_hands", "The preferred custom weapon that players should spawn with");
 	customguns_global_switcher = CreateConVar("customguns_global_switcher", "1", "Enables fast switching from any weapon by holding reload button. If 0, players can switch only when holding a custom weapon.", _, true, 0.0, true, 1.0);
 	customguns_order_alphabetically = CreateConVar("customguns_order_alphabetically", "1", "If enabled, orders weapons by name in the menu, rather than the order they were picked up. Only applies to dynamic wheel mode", _, true, 0.0, true, 1.0);
@@ -403,16 +404,19 @@ public OnPluginStart()
 	HolsterForward = CreateGlobalForward("CG_OnHolster", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 
 	cookie_menu_style = RegClientCookie("customguns_style", "CustomGuns menu style cookie", CookieAccess_Public);
-	
+
 	RegAdminCmd("sm_customgun", CustomGun, ADMFLAG_ROOT, "Spawns a custom gun by classname");
 	RegAdminCmd("sm_customguns", CustomGun, ADMFLAG_ROOT, "Spawns a custom gun by classname");
 	RegConsoleCmd("sm_gunmenu", ShowStyleMenu, "Opens customguns wheel style selector");
 	RegAdminCmd("sm_seqtest", SeqTest, ADMFLAG_ROOT, "Viewmodel sequence test");
 
-	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i)) {
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (IsClientInGame(i))
+		{
 			OnClientPutInServer(i);
-			if(!IsFakeClient(i) && IsPlayerAlive(i)){
+			if (!IsFakeClient(i) && IsPlayerAlive(i))
+			{
 				addSpawnWeapons(i);
 				giveCustomGun(i);
 			}
@@ -420,41 +424,55 @@ public OnPluginStart()
 	}
 }
 
-public OnPluginEnd(){
+public OnPluginEnd()
+{
 	for (int i = 1; i <= MaxClients; i++)
 		if (IsClientInGame(i))
 			removeCustomWeapon(i)
 }
 
-public Action SeqTest(int client, int args) {
-	char seq[32]; GetCmdArgString(seq, 32);
+public Action SeqTest(int client, int args)
+{
+	char seq[32];
+	GetCmdArgString(seq, 32);
 	vmSeq(client, StringToInt(seq), 4.0);
 	return Plugin_Handled;
 }
 
-public Action CustomGun(int client, int args) {
-	if (args == 1 || args == 2) {
-		char classname[32]; GetCmdArg(1, classname, 32);
-		if (args == 1) {
-			if(client == 0){
+public Action CustomGun(int client, int args)
+{
+	if (args == 1 || args == 2)
+	{
+		char classname[32];
+		GetCmdArg(1, classname, 32);
+		if (args == 1)
+		{
+			if (client == 0)
+			{
 				ReplyToCommand(client, "Sorry, you need to be in-game to spawn guns at your origin");
 				return Plugin_Handled;
 			}
 			float origin[3];
 			GetClientAbsOrigin(client, origin);
 			origin[2] += 25.0;
-			if (spawnGun(getIndex(classname), origin) == -1) {
+			if (spawnGun(getIndex(classname), origin) == -1)
+			{
 				ReplyToCommand(client, "Unable to spawn %s", classname);
-			} else {
+			}
+			else {
 				ReplyToCommand(client, "You have spawned %s", classname);
 			}
-		} else if (args == 2) {
-			char arg2[32]; GetCmdArg(2, arg2, 32);
+		}
+		else if (args == 2) {
+			char arg2[32];
+			GetCmdArg(2, arg2, 32);
 			int target;
-			if ((target = FindTarget(client, arg2, true, false)) == -1) {
+			if ((target = FindTarget(client, arg2, true, false)) == -1)
+			{
 				return Plugin_Handled;
 			}
-			if (!IsPlayerAlive(target)) {
+			if (!IsPlayerAlive(target))
+			{
 				ReplyToCommand(client, "But he's dead!");
 			}
 			else if (!addToInventory(target, classname, true, true)) {
@@ -465,10 +483,12 @@ public Action CustomGun(int client, int args) {
 				PrintToChat(target, "Admin %N gave you %s", client, classname);
 			}
 		}
-	} else {
+	}
+	else {
 		ReplyToCommand(client, "Usage: !customgun <classname> [player]");
 		ReplyToCommand(client, "\nListing classnames:");
-		for (int i = 0; i < GetArraySize(gunClassNames); i++) {
+		for (int i = 0; i < GetArraySize(gunClassNames); i++)
+		{
 			char sWeapon[32];
 			GetArrayString(gunClassNames, i, sWeapon, sizeof(sWeapon));
 			ReplyToCommand(client, sWeapon);
@@ -477,9 +497,10 @@ public Action CustomGun(int client, int args) {
 	return Plugin_Handled;
 }
 
-public OnConfigsExecuted() {
+public OnConfigsExecuted()
+{
 	precacheStyles();
-	
+
 	PrecacheSound(SND_OPEN, true);
 	PrecacheSound(SND_CLOSE_OK, true);
 	PrecacheScriptSound(SND_CLOSE_CANC);
@@ -488,28 +509,32 @@ public OnConfigsExecuted() {
 
 	ClearArray(gunModelIndexes);
 	char buffer[PLATFORM_MAX_PATH];
-	for (int i = 0; i < GetArraySize(gunModels); i++) {
+	for (int i = 0; i < GetArraySize(gunModels); i++)
+	{
 		GetArrayString(gunModels, i, buffer, sizeof(buffer));
 		PushArrayCell(gunModelIndexes, PrecacheModel(buffer, true));
 	}
-	for (int i = 0; i < GetArraySize(gunDownloads); i++) {
+	for (int i = 0; i < GetArraySize(gunDownloads); i++)
+	{
 		GetArrayString(gunDownloads, i, buffer, sizeof(buffer));
 		AddFileToDownloadsTable(buffer);
 	}
 }
 
-public OnClientPutInServer(int client) {
-	if (!IsFakeClient(client)) {
+public OnClientPutInServer(int client)
+{
+	if (!IsFakeClient(client))
+	{
 		inventory[client] = CreateArray();
 		inventoryWheel[client] = CreateArray(3);
 		inventoryAnimScale[client] = CreateArray();
 		inventoryAmmo[client] = CreateArray();
 		inventoryAmmoType[client] = CreateArray();
 
- 		SDKHook(client, SDKHook_WeaponSwitch, OnWeaponSwitch);
+		SDKHook(client, SDKHook_WeaponSwitch, OnWeaponSwitch);
 		SDKHook(client, SDKHook_WeaponSwitchPost, OnWeaponSwitchPost);
 		SDKHook(client, SDKHook_WeaponEquipPost, OnWeaponEquipPost);
- 		DHookEntity(DHOOK_FireBullets, false, client);
+		DHookEntity(DHOOK_FireBullets, false, client);
 		DHookEntity(DHOOK_TranslateActivity, false, client);
 		DHookEntity(DHOOK_BumpWeapon, false, client);
 
@@ -517,8 +542,10 @@ public OnClientPutInServer(int client) {
 	}
 }
 
-public OnClientDisconnect(int client) {
-	if (!IsFakeClient(client)) {
+public OnClientDisconnect(int client)
+{
+	if (!IsFakeClient(client))
+	{
 		firing[client] = false;
 		open[client] = false;
 		preferedGunIndex[client] = -1;
@@ -534,31 +561,35 @@ public OnClientDisconnect(int client) {
 	}
 }
 
-public OnClientCookiesCached(int client) {
+public OnClientCookiesCached(int client)
+{
 	ReloadStyle(client);
 }
 
-public Action OnSpawn(Handle event, const char[] name, bool dontBroadcast)
+public void OnSpawn(Handle event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	if (!IsFakeClient(client)) {
+	if (!IsFakeClient(client))
+	{
 		selectedGunIndex[client] = -1;
-		if(GetConVarBool(customguns_autogive)){
+		if (GetConVarBool(customguns_autogive))
+		{
 			addSpawnWeapons(client);
 			giveCustomGun(client);
 			// delay against weapon strippers + allows to equip prefered gun, which might not be in the inventory when spawning
 			CreateTimer(1.0, tGiveCustomGun, GetEventInt(event, "userid"), TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
-	return Plugin_Continue;
 }
 
-public Action OnDeath(Handle event, const char[] name, bool dontBroadcast)
+public void OnDeath(Handle event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	if (!IsFakeClient(client)) {
+	if (!IsFakeClient(client))
+	{
 		selectedGunIndex[client] = -1;
-		if(inventory[client]){
+		if (inventory[client])
+		{
 			ClearArray(inventory[client]);
 			ClearArray(inventoryWheel[client]);
 			ClearArray(inventoryAnimScale[client]);
@@ -571,9 +602,10 @@ public Action OnDeath(Handle event, const char[] name, bool dontBroadcast)
 public Action tGiveCustomGun(Handle timer, any userid)
 {
 	int client = GetClientOfUserId(userid);
-	if (client > 0 && IsClientInGame(client) && IsPlayerAlive(client)) {
-		if( preferedGunIndex[client] != -1
-			&& selectedGunIndex[client] != preferedGunIndex[client] && canSelectInInventory(client, preferedGunIndex[client]))
+	if (client > 0 && IsClientInGame(client) && IsPlayerAlive(client))
+	{
+		if (preferedGunIndex[client] != -1
+		    && selectedGunIndex[client] != preferedGunIndex[client] && canSelectInInventory(client, preferedGunIndex[client]))
 		{
 			giveCustomGun(client, preferedGunIndex[client]);
 		}
@@ -582,23 +614,30 @@ public Action tGiveCustomGun(Handle timer, any userid)
 			giveCustomGun(client);
 		}
 	}
+	return Plugin_Handled;
 }
 
 /*
 ** index = -1 >> give physical weapon if client doesn't have it yet
 ** valid index >> give new weapon of index
 */
-stock giveCustomGun(client, int index = -1, bool switchTo = false) {
-	if (GetArraySize(gunClassNames) > 0) {
-
-		if(index == -1){
-			if(!hasCustomWeapon(client)){
-				if(selectedGunIndex[client] == -1){
+stock giveCustomGun(client, int index = -1, bool switchTo = false)
+{
+	if (GetArraySize(gunClassNames) > 0)
+	{
+		if (index == -1)
+		{
+			if (!hasCustomWeapon(client))
+			{
+				if (selectedGunIndex[client] == -1)
+				{
 					index = selectBestIndex(client);
-				} else {
+				}
+				else {
 					index = selectedGunIndex[client];
 				}
-			} else return;
+			}
+			else return;
 		}
 
 		removeCustomWeapon(client);
@@ -606,22 +645,27 @@ stock giveCustomGun(client, int index = -1, bool switchTo = false) {
 		CLIENT_BEING_EQUIPPED = client;
 
 		int ent = spawnGun(index);
-		if (ent != -1) {
+		if (ent != -1)
+		{
 			selectedGunIndex[client] = index;
 			EquipPlayerWeapon(client, ent);
-			if (switchTo) {
+			if (switchTo)
+			{
 				SDKCall(CALL_Weapon_Switch, client, ent, 0);
 				CreateTimer(0.1, deploySound, EntIndexToEntRef(ent));
 			}
-		} else {
+		}
+		else {
 			selectedGunIndex[client] = -1;
 		}
 		CLIENT_BEING_EQUIPPED = -1;
 	}
 }
 
-int spawnGun(int index, const float origin[3] = NULL_VECTOR) {
-	if (0 > index || index >= GetArraySize(gunClassNames)) {
+int spawnGun(int index, const float origin[3] = NULL_VECTOR)
+{
+	if (0 > index || index >= GetArraySize(gunClassNames))
+	{
 		return -1;
 	}
 
@@ -630,18 +674,18 @@ int spawnGun(int index, const float origin[3] = NULL_VECTOR) {
 	// basehlcombatweapon : pretty good, but overshadowing with other weapons at slot 0,0
 	// weapon_cubemap : also good, but does not show stock ammo of player (pesky cubemap has -1 clips and no ammotype on client by default)
 	int ent = CreateEntityByName("weapon_cubemap");
-	if (ent != -1) {
+	if (ent != -1)
+	{
+		GunType guntype = GetArrayCell(gunType, index);
 
- 		GunType guntype = GetArrayCell(gunType, index);
-
-		//inventory ammo save-load hooks
+		// inventory ammo save-load hooks
 		DHookEntity(DHOOK_Holster, true, ent);
 		DHookEntity(DHOOK_GetDefaultClip1, true, ent);
 
 		DHookEntity(DHOOK_SecondaryAttack, false, ent);
 		DHookEntity(DHOOK_Drop, false, ent);
 
-		if(guntype == GunType_Bullet)
+		if (guntype == GunType_Bullet)
 		{
 			DHookEntity(DHOOK_GetFireRate, false, ent);
 			DHookEntity(DHOOK_AddViewKick, false, ent);
@@ -649,11 +693,13 @@ int spawnGun(int index, const float origin[3] = NULL_VECTOR) {
 			DHookEntity(DHOOK_Reload, true, ent);
 			DHookEntity(DHOOK_PrimaryAttack, true, ent);
 
-			if (GetArrayCell(gunDelay, index) > 0.0 || GetArrayCell(gunFireType, index) == 1){
+			if (GetArrayCell(gunDelay, index) > 0.0 || GetArrayCell(gunFireType, index) == 1)
+			{
 				DHookEntity(DHOOK_ItemPostFrame, false, ent);
 			}
 
-			if (GetArrayCell(gunFireLoopFix, index)) {
+			if (GetArrayCell(gunFireLoopFix, index))
+			{
 				DHookEntity(DHOOK_ItemPostFramePost, true, ent);
 				DHookEntity(DHOOK_WeaponSound, false, ent);
 			}
@@ -665,13 +711,15 @@ int spawnGun(int index, const float origin[3] = NULL_VECTOR) {
 			DHookEntity(DHOOK_Operator_HandleAnimEvent, false, ent);
 		}
 		else
-		{ // custom
-			if(GetArrayCell(gunCustomKeepAmmo, index)){
+		{  // custom
+			if (GetArrayCell(gunCustomKeepAmmo, index))
+			{
 				// game managed ammo and attack functions
 				DHookEntity(DHOOK_ItemPostFrame, false, ent);
 				DHookEntity(DHOOK_PrimaryAttack, false, ent);
 				DHookEntity(DHOOK_ReloadOrSwitchWeapons, true, ent);
-			} else {
+			}
+			else {
 				// plugin managed ammo, attack forwards called manually
 				DHookEntity(DHOOK_ItemPostFrame, true, ent);
 			}
@@ -684,15 +732,19 @@ int spawnGun(int index, const float origin[3] = NULL_VECTOR) {
 		DispatchSpawn(ent);
 		ActivateEntity(ent);
 
-		if(guntype == GunType_Custom){
-			if(!GetArrayCell(gunCustomKeepAmmo, index)){
+		if (guntype == GunType_Custom)
+		{
+			if (!GetArrayCell(gunCustomKeepAmmo, index))
+			{
 				SetEntProp(ent, Prop_Send, "m_iPrimaryAmmoType", 12);
 				// make it selectable
 				SetEntProp(ent, Prop_Send, "m_iClip2", 1);
 			}
-		} else if (guntype == GunType_Throwable){
+		}
+		else if (guntype == GunType_Throwable) {
 			SetEntProp(ent, Prop_Send, "m_iClip2", 1);
-		} else {
+		}
+		else {
 			SetEntProp(ent, Prop_Data, "m_bReloadsSingly", GetArrayCell(gunReloadsSingly, index));
 		}
 
@@ -703,45 +755,52 @@ int spawnGun(int index, const float origin[3] = NULL_VECTOR) {
 
 public Action OnPlayerRunCmd(client, &buttons, &impulse, float vel[3], float angles[3], &weapon, &subtype, &cmdnum, &tickcount, &seed, mouse[2])
 {
-	if(!IsFakeClient(client)){
-
+	if (!IsFakeClient(client))
+	{
 		char sWeapon[32];
 		GetClientWeapon(client, sWeapon, sizeof(sWeapon));
 		int gunIndex = getIndex(sWeapon);
 
-		//handle opening/closing menu
-		if (!open[client] && IsPlayerAlive(client) && !zooming(client) && inventory[client] && GetArraySize(inventory[client])>0 && GetEntProp(client, Prop_Send, "m_iTeamNum") != 1) {
-			if (buttons & IN_ATTACK3) {
+		// handle opening/closing menu
+		if (!open[client] && IsPlayerAlive(client) && !zooming(client) && inventory[client] && GetArraySize(inventory[client]) > 0 && GetEntProp(client, Prop_Send, "m_iTeamNum") != 1)
+		{
+			if (buttons & IN_ATTACK3)
+			{
 				onMenuOpening(client);
 				open[client] = true;
 			}
 			else if (buttons & IN_RELOAD) {
-				if( !(!GetConVarBool(customguns_global_switcher) && gunIndex == -1) ){
-					if (!(GetEntProp(client, Prop_Data, "m_nOldButtons") & IN_RELOAD)) {
+				if (!(!GetConVarBool(customguns_global_switcher) && gunIndex == -1))
+				{
+					if (!(GetEntProp(client, Prop_Data, "m_nOldButtons") & IN_RELOAD))
+					{
 						firstOpen[client] = GetGameTime();
 					}
 					else if (GetGameTime() >= firstOpen[client] + 0.25) {
-						//if (!StrEqual(sWeapon, "weapon_physcannon")) {
-							onMenuOpening(client);
-							open[client] = true;
+						// if (!StrEqual(sWeapon, "weapon_physcannon")) {
+						onMenuOpening(client);
+						open[client] = true;
 						//}
 					}
 				}
 			}
 		}
-		//if not holding any button or dead -> close the menu
+		// if not holding any button or dead -> close the menu
 		else if (open[client] && (!(buttons & IN_ATTACK3) && !(buttons & IN_RELOAD)) || !IsPlayerAlive(client)) {
-			if (IsClientInGame(client) && IsPlayerAlive(client)) {
+			if (IsClientInGame(client) && IsPlayerAlive(client))
+			{
 				onMenuClosing(client);
 			}
 			open[client] = false;
 		}
 
-		if (open[client]) {
+		if (open[client])
+		{
 			drawMenu(client);
 		}
 
 		// check scope
 		ScopeThink(client, buttons, gunIndex, open[client]);
 	}
+	return Plugin_Continue;
 }

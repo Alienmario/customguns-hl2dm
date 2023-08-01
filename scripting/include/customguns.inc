@@ -10,7 +10,7 @@
 /**
  * Main forward for handling custom weapons
  * Called when client is pressing primary attack button and the weapon is ready to fire
- * If this is custom-type weapon, this will be called repeatedly until the next attack is delayed (eg. by calling CG_PlayPrimaryAttack) 
+ * If this is custom-type weapon, this will be called repeatedly until the next attack is delayed (eg. by calling CG_PlayPrimaryAttack)
  *
  * @param client			client index
  * @param weapon			weapon entity index
@@ -20,7 +20,7 @@ forward void CG_OnPrimaryAttack(int client, int weapon);
 /**
  * Main forward for handling custom weapons
  * Called when client is pressing secondary attack button and the weapon is ready to fire
- * If this is custom-type weapon, this will be called repeatedly until the next attack is delayed (eg. by calling CG_PlaySecondaryAttack) 
+ * If this is custom-type weapon, this will be called repeatedly until the next attack is delayed (eg. by calling CG_PlaySecondaryAttack)
  *
  * @param client			client index
  * @param weapon			weapon entity index
@@ -76,7 +76,7 @@ native bool CG_GiveGun(int client, const char[] classname, bool ignoreAdminLevel
  *
  * @return					entity index or -1
  */
-native int CG_SpawnGun(const char[] classname, float[3] origin);
+native int CG_SpawnGun(const char[] classname, float origin[3]);
 
 /**
  * Clears player's inventory
@@ -85,7 +85,6 @@ native int CG_SpawnGun(const char[] classname, float[3] origin);
  *
  */
 native void CG_ClearInventory(int client);
-
 
 /**
  * Plays an activity of choice, the weapon must support such activity
@@ -98,7 +97,6 @@ native void CG_ClearInventory(int client);
  * @return					sequence duration
  */
 native float CG_PlayActivity(int weapon, Activity activity);
-
 
 /**
  * Plays ACT_VM_PRIMARYATTACK on the weapon and delays the next attack with the sequence duration
@@ -144,7 +142,6 @@ native void CG_RemovePlayerAmmo(int client, int weapon, int count = 1);
  */
 native void CG_RadiusDamage(int inflictor, int attacker, float dmg, int dmgType, int weapon, const float origin[3], float radius, int ignoreEntity = -1);
 
-
 /**
  * Delays both attacks by specified amount of time, allowing the weapon to 'cooldown' until it can be fired again
  *
@@ -152,7 +149,8 @@ native void CG_RadiusDamage(int inflictor, int attacker, float dmg, int dmgType,
  * @param length			duration of cooldown
  *
  */
-stock void CG_Cooldown(int weapon, float length){
+stock void CG_Cooldown(int weapon, float length)
+{
 	float CG_nextAttack = GetGameTime() + length;
 	CG_SetNextPrimaryAttack(weapon, CG_nextAttack);
 	CG_SetNextSecondaryAttack(weapon, CG_nextAttack);
@@ -162,7 +160,8 @@ stock void CG_SetNextPrimaryAttack(int weapon, float time){
 	SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", time)
 }
 
-stock void CG_SetNextSecondaryAttack(int weapon, float time){
+stock void CG_SetNextSecondaryAttack(int weapon, float time)
+{
 	SetEntPropFloat(weapon, Prop_Send, "m_flNextSecondaryAttack", time)
 }
 

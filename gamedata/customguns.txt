@@ -81,7 +81,7 @@
 				"linux"		"271"
 				"mac"		"271"
 			}	
-			// void CBaseCombatWeapon:WeaponSound( WeaponSound_t sound_type, float soundtime = 0.0f )
+			// void CBaseCombatWeapon::WeaponSound( WeaponSound_t sound_type, float soundtime = 0.0f )
 			"WeaponSound"
 			{
 				"windows"	"289"

@@ -3,7 +3,6 @@
 #endif
 #define _CustomGuns_Globals_included
 
-
 // CVARS
 Handle customguns_default;
 Handle customguns_global_switcher;
@@ -62,7 +61,7 @@ float firstOpen[MAXPLAYERS + 1];
 float nextDrawText[MAXPLAYERS + 1];
 float startEyeAngles[MAXPLAYERS + 1][3];
 
-int gunEnt[MAXPLAYERS + 1] =  { -1, ... };
+int gunEnt[MAXPLAYERS + 1] = { -1, ... };
 int selectedGunIndex[MAXPLAYERS + 1] = { -1, ... };
 int preferedGunIndex[MAXPLAYERS + 1] = { -1, ... };
 
@@ -74,9 +73,9 @@ Handle inventoryAmmoType[MAXPLAYERS + 1];
 
 bool firing[MAXPLAYERS + 1];
 float nextFireSound[MAXPLAYERS + 1];
-float lastFired[MAXPLAYERS+1];
+float lastFired[MAXPLAYERS + 1];
 
-int menuStyle[MAXPLAYERS+1];
+int menuStyle[MAXPLAYERS + 1];
 
 Handle DHOOK_FireBullets;
 Handle DHOOK_TranslateActivity;
