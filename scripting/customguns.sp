@@ -753,7 +753,7 @@ int spawnGun(int index, const float origin[3] = NULL_VECTOR)
 	return ent;
 }
 
-public Action OnPlayerRunCmd(client, &buttons, &impulse, float vel[3], float angles[3], &weapon, &subtype, &cmdnum, &tickcount, &seed, mouse[2])
+public void OnPlayerRunCmdPost(int client, int buttons, int impulse, const float vel[3], const float angles[3], int weapon, int subtype, int cmdnum, int tickcount, int seed, const int mouse[2])
 {
 	if (!IsFakeClient(client))
 	{
@@ -802,5 +802,4 @@ public Action OnPlayerRunCmd(client, &buttons, &impulse, float vel[3], float ang
 		// check scope
 		ScopeThink(client, buttons, gunIndex, open[client]);
 	}
-	return Plugin_Continue;
 }
