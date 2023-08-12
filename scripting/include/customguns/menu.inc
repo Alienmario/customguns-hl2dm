@@ -3,7 +3,7 @@
 #endif
 #define _CustomGuns_Menu_included
 
-#define SND_OPEN       "npc/roller/remote_yes.wav"  // "npc/roller/remote_yes.wav" // "ui/buttonclickrelease.wav" // "common/null.wav"
+#define SND_OPEN       "buttons/button16.wav"  // "npc/roller/remote_yes.wav" // "ui/buttonclickrelease.wav" // "common/null.wav"
 #define SND_CLOSE_OK   "common/wpn_hudoff.wav"      // "ui/buttonclickrelease.wav"
 #define SND_CLOSE_CANC "Player.DenyWeaponSelection"
 #define SND_SELECT     "Player.WeaponSelectionMoveSlot"  // mouseover
