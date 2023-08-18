@@ -772,7 +772,7 @@ public void OnPlayerRunCmdPost(int client, int buttons, int impulse, const float
 			else if (buttons & IN_RELOAD) {
 				if (!(!GetConVarBool(customguns_global_switcher) && gunIndex == -1))
 				{
-					if (!(GetEntProp(client, Prop_Data, "m_nOldButtons") & IN_RELOAD))
+					if (!(GetEntProp(client, Prop_Data, "m_afButtonLast") & IN_RELOAD))
 					{
 						firstOpen[client] = GetGameTime();
 					}
