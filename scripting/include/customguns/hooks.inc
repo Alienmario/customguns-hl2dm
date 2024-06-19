@@ -518,6 +518,10 @@ public MRESReturn Drop(int weapon)
 	int client = GetOwner(weapon);
 	if (IsPlayer(client) && isCustom(weapon))
 	{
+		if (selectedGunIndex[client] == -1) {
+			PrintToServer("[CG Hook] Preventing infinite recursion in Drop");
+			return MRES_Ignored;
+		}
 		PrintToServer("[CG] Dropping custom weapon %d", client);
 		clearInventory(client);
 
