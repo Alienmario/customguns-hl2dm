@@ -796,7 +796,7 @@ public Action OnPlayerRunCmd(client, &buttons, &impulse, float vel[3], float ang
 		int gunIndex = getIndex(sWeapon);
 
 		// handle opening/closing menu
-		if (customguns_allow_menu && !open[client] && IsPlayerAlive(client) && !zooming(client) && inventory[client] && GetArraySize(inventory[client]) > 0 && GetEntProp(client, Prop_Send, "m_iTeamNum") != 1)
+		if (GetConVarBool(customguns_allow_menu) && (!open[client] && IsPlayerAlive(client) && !zooming(client) && inventory[client] && GetArraySize(inventory[client]) > 0 && GetEntProp(client, Prop_Send, "m_iTeamNum") != 1))
 		{
 			if (buttons & IN_ATTACK3)
 			{

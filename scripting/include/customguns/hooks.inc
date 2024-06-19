@@ -225,7 +225,6 @@ public MRESReturn Operator_HandleAnimEvent(int weapon, Handle hParams)
 // bool CBasePlayer::BumpWeapon( CBaseCombatWeapon *pWeapon )
 public MRESReturn BumpWeapon(int client, Handle hReturn, Handle hParams)
 {
-	PrintToServer("BumWeapon");
 	int gun = DHookGetParam(hParams, 1);
 	int gunIndex = getIndexEnt(gun);
 
