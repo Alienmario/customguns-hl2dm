@@ -37,6 +37,15 @@ enum explodeType
 	EXPL_BUGBAIT = 5
 }
 
+// Needed to use various fof weapons as base
+enum FofBase
+{
+	FofBase_Pistol,
+	FofBase_Melee,
+	FofBase_Large,
+	FofBase_Boom,
+}
+
 /****************************
  *
  *	 SDK CONSTANTS

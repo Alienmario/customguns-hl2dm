@@ -9,6 +9,7 @@ Handle customguns_global_switcher;
 Handle customguns_autogive;
 Handle customguns_order_alphabetically;
 Handle customguns_static_wheel;
+Handle customguns_allow_menu;
 
 // COOKIES
 Handle cookie_menu_style;
@@ -19,6 +20,7 @@ Handle gunClassNames;
 Handle gunNames;
 Handle gunAnimPrefix;
 Handle gunType;
+Handle fofBase;
 Handle gunModels;
 Handle gunModelIndexes;
 Handle gunSkin;

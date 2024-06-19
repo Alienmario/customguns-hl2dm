@@ -57,6 +57,9 @@ loadConfig()
 							KvGetString(kv, "scope_sound_off", buffer, sizeof(buffer), "");
 							PushArrayString(gunScopeSoundOff, buffer);
 
+							KvGetString(kv, "fof_base", buffer, sizeof(buffer), "");
+							PushArrayString(fofBase, buffer);
+
 							KvGetString(kv, "weapon_type", buffer, sizeof(buffer), "");
 
 							bool shouldGoBack = false;

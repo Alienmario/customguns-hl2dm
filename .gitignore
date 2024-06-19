@@ -215,3 +215,6 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 *.dat
+
+# wsl weirdness
+*:Zone.Identifier

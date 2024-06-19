@@ -1,6 +1,6 @@
 "Games"
 {
-	"hl2mp"
+	"fof"
 	{
 		"Offsets"
 		{
@@ -14,219 +14,249 @@
 			// Activity CBaseCombatCharacter::Weapon_TranslateActivity( Activity baseAct, bool *pRequired )
 			"Weapon_TranslateActivity"
 			{
-				"windows"	"257"
-				"linux"		"258"
-				"mac"		"258"
+				"windows"	"258"
+				"linux"		"259"
+				"mac"		"259"
 			}
 			// float CBaseCombatWeapon::GetFireRate( void )
 			"GetFireRate"
 			{
-				"windows"	"283"
-				"linux"		"284"
-				"mac"		"284"
+				// assuming the windows difference remains -1 here
+				"windows"	"284"
+				"linux"		"285"
+				"mac"		"285"
 			}
 			// bool CBaseCombatWeapon::HasPrimaryAmmo( void )
 			"HasPrimaryAmmo"
 			{
-				"windows"	"243"
-				"linux"		"244"
-				"mac"		"244"
+				// and here
+				"windows"	"244"
+				"linux"		"245"
+				"mac"		"245"
 			}	
 			// bool CBaseCombatWeapon::HasSecondaryAmmo( void )
 			"HasSecondaryAmmo"
 			{
-				"windows"	"244"
-				"linux"		"245"
-				"mac"		"245"
+				// here too
+				"windows"	"245"
+				"linux"		"246"
+				"mac"		"246"
 			}
 			// bool CBaseCombatWeapon::ReloadOrSwitchWeapons( void )
 			"ReloadOrSwitchWeapons"
 			{
-				"windows"	"253"
-				"linux"		"254"
-				"mac"		"254"
+				// another spot assuming windows is just -1 (I ain't checkin)
+				"windows"	"254"
+				"linux"		"255"
+				"mac"		"255"
 			}
 			// bool CHL2MP_Player::Weapon_Switch( CBaseCombatWeapon *pWeapon, int viewmodelindex = 0)
 			"Weapon_Switch"
 			{
-				"windows"	"264"
-				"linux"		"265"
-				"mac"		"265"
+				// yup another
+				"windows"	"265"
+				"linux"		"266"
+				"mac"		"266"
 			}
 			// void CBasePlayer::Weapon_Equip( CBaseCombatWeapon *pWeapon )
 			"Weapon_Equip"
 			{
-				"windows"	"261"
-				"linux"		"262"
-				"mac"		"262"
+				// windows -1
+				"windows"	"262"
+				"linux"		"263"
+				"mac"		"263"
 			}
 			// bool CBasePlayer::BumpWeapon( CBaseCombatWeapon *pWeapon )
 			"BumpWeapon"
 			{
-				"windows"	"396"
-				"linux"		"397"
-				"mac"		"397"
+				// another -1
+				"windows"	"397"
+				"linux"		"398"
+				"mac"		"398"
 			}	
 			// void CBaseCombatWeapon::AddViewKick( void )
 			"AddViewKick"
 			{
-				"windows"	"298"
-				"linux"		"299"
-				"mac"		"299"
+				// windows -1
+				"windows"	"299"
+				"linux"		"300"
+				"mac"		"300"
 			}
 			// bool CBaseCombatWeapon::Reload( void )
 			"Reload"
 			{
-				"windows"	"270"
-				"linux"		"271"
-				"mac"		"271"
+				// windows -1
+				"windows"	"271"
+				"linux"		"272"
+				"mac"		"272"
 			}	
 			// void CBaseCombatWeapon::WeaponSound( WeaponSound_t sound_type, float soundtime = 0.0f )
 			"WeaponSound"
 			{
-				"windows"	"289"
-				"linux"		"290"
-				"mac"		"290"
-			}	
-			// void CBaseCombatWeapon::StopWeaponSound( WeaponSound_t sound_type )
-			"StopWeaponSound"
-			{
+				// windows -1
 				"windows"	"290"
 				"linux"		"291"
 				"mac"		"291"
 			}	
+			// void CBaseCombatWeapon::StopWeaponSound( WeaponSound_t sound_type )
+			"StopWeaponSound"
+			{
+				// windows -1
+				"windows"	"291"
+				"linux"		"292"
+				"mac"		"292"
+			}	
 			// void CBaseCombatWeapon::ItemPostFrame( void )
 			"ItemPostFrame"
 			{
-				"windows"	"259"
-				"linux"		"260"
-				"mac"		"260"
+				// windows -1
+				"windows"	"260"
+				"linux"		"261"
+				"mac"		"261"
 			}
 			// void CBaseCombatWeapon::PrimaryAttack( void )
 			"PrimaryAttack"
 			{
-				"windows"	"273"
-				"linux"		"274"
-				"mac"		"274"
-			}
-			// void CBaseCombatWeapon::SecondaryAttack( void )
-			"SecondaryAttack"
-			{
+				// windows -1
 				"windows"	"274"
 				"linux"		"275"
 				"mac"		"275"
 			}
+			// void CBaseCombatWeapon::SecondaryAttack( void )
+			"SecondaryAttack"
+			{
+				// windows -1
+				"windows"	"275"
+				"linux"		"276"
+				"mac"		"276"
+			}
 			// bool CBaseCombatWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
 			"Holster"
 			{
-				"windows"	"249"
-				"linux"		"250"
-				"mac"		"250"
+				// windows -1
+				"windows"	"250"
+				"linux"		"251"
+				"mac"		"251"
 			}
 			// bool CBaseCombatWeapon::SendWeaponAnim( int iActivity )
 			"SendWeaponAnim"
 			{
-				"windows"	"236"
-				"linux"		"237"
-				"mac"		"237"
-			}
-			// void CBaseCombatWeapon::SendViewModelAnim( int nSequence )
-			"SendViewModelAnim"
-			{
+				// windows -1
 				"windows"	"237"
 				"linux"		"238"
 				"mac"		"238"
 			}
-			// void CBaseCombatWeapon::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator )
-			"Operator_HandleAnimEvent"
+			// void CBaseCombatWeapon::SendViewModelAnim( int nSequence )
+			"SendViewModelAnim"
 			{
-				"windows"	"359"
-				"linux"		"360"
-				"mac"		"360"
-			}
-			// int CBaseCombatWeapon::GetDefaultClip1( void )
-			"GetDefaultClip1"
-			{
-				"windows"	"313"
-				"linux"		"314"
-				"mac"		"314"
-			}
-			// void CBaseCombatWeapon::CheckRespawn( void )
-			"CheckRespawn"
-			{
-				"windows"	"349"
-				"linux"		"350"
-				"mac"		"350"
-			}	
-			// bool CBaseCombatWeapon::UsesClipsForAmmo1( void )
-			"UsesClipsForAmmo1"
-			{
-				"windows"	"326"
-				"linux"		"327"
-				"mac"		"327"
-			}
-			// int CHL2_Player::GiveAmmo( int nCount, int nAmmoIndex, bool bSuppressSound)
-			"GiveAmmo"
-			{
-				"windows"	"252"
-				"linux"		"253"
-				"mac"		"253"
-			}
-			// int CBaseCombatCharacter::GetAmmoCount( int iAmmoIndex )
-			"GetAmmoCount"
-			{
-				"windows"	"255"
-				"linux"		"256"
-				"mac"		"256"
-			}
-			// void CBaseCombatCharacter::RemoveAmmo( int iCount, int iAmmoIndex )
-			"RemoveAmmo"
-			{
-				"windows"	"254"
-				"linux"		"254"
-				"mac"		"254"
-			}
-			// void CHL2MP_Player::SetAnimation( PLAYER_ANIM playerAnim )
-			"SetAnimation"
-			{
-				"windows"	"365"
-				"linux"		"366"
-				"mac"		"366"
-			}
-			// void CBaseCombatWeapon::SetViewModel()
-			"SetViewModel"
-			{
+				// windows -1
 				"windows"	"238"
 				"linux"		"239"
 				"mac"		"239"
 			}
+			// void CBaseCombatWeapon::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator )
+			"Operator_HandleAnimEvent"
+			{
+				// windows -1
+				"windows"	"363"
+				"linux"		"364"
+				"mac"		"364"
+			}
+			// int CBaseCombatWeapon::GetDefaultClip1( void )
+			"GetDefaultClip1"
+			{
+				// windows -1
+				"windows"	"314"
+				"linux"		"315"
+				"mac"		"315"
+			}
+			// void CBaseCombatWeapon::CheckRespawn( void )
+			"CheckRespawn"
+			{
+				// windows -1
+				"windows"	"353"
+				"linux"		"354"
+				"mac"		"354"
+			}	
+			// bool CBaseCombatWeapon::UsesClipsForAmmo1( void )
+			"UsesClipsForAmmo1"
+			{
+				// windows -1
+				"windows"	"327"
+				"linux"		"328"
+				"mac"		"328"
+			}
+			// int CHL2_Player::GiveAmmo( int nCount, int nAmmoIndex, bool bSuppressSound)
+			"GiveAmmo"
+			{
+				// windows -1
+				"windows"	"253"
+				"linux"		"254"
+				"mac"		"254"
+			}
+			// int CBaseCombatCharacter::GetAmmoCount( int iAmmoIndex )
+			"GetAmmoCount"
+			{
+				// windows -1
+				"windows"	"256"
+				"linux"		"257"
+				"mac"		"257"
+			}
+			// void CBaseCombatCharacter::RemoveAmmo( int iCount, int iAmmoIndex )
+			"RemoveAmmo"
+			{
+				// windows was equal on this one so I'm not touching it
+				"windows"	"255"
+				"linux"		"255"
+				"mac"		"255"
+			}
+			// void CHL2MP_Player::SetAnimation( PLAYER_ANIM playerAnim )
+			"SetAnimation"
+			{
+				// windows -1
+				"windows"	"366"
+				"linux"		"367"
+				"mac"		"367"
+			}
+			// void CBaseCombatWeapon::SetViewModel()
+			"SetViewModel"
+			{
+				// windows-1
+				"windows"	"239"
+				"linux"		"240"
+				"mac"		"240"
+			}
 			// bool CBaseCombatWeapon::Deploy()
 			"Deploy"
 			{
-				"windows"	"248"
-				"linux"		"249"
-				"mac"		"249"
+				// windows -1
+				"windows"	"249"
+				"linux"		"250"
+				"mac"		"250"
 			}
 			// void CBaseCombatWeapon::Drop( const Vector &vecVelocity )
 			"Drop"
 			{
-				"windows"	"220"
-				"linux"		"221"
-				"mac"		"221"
+				// windows -1
+				"windows"	"221"
+				"linux"		"222"
+				"mac"		"222"
 			}
 			// void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 			"Explode"
 			{
-				"windows"	"224"
-				"linux"		"225"
-				"mac"		"225"
+				// windows -1
+				"windows"	"217"
+				"linux"		"218"
+				"mac"		"218"
 			}
 			// Vector CBaseCombatCharacter::Weapon_ShootPosition( )
 			"Weapon_ShootPosition"
 			{
-				"windows"	"265"
-				"linux"		"266"
-				"mac"		"266"
+				// windows -1
+				"windows"	"266"
+				"linux"		"267"
+				"mac"		"267"
 			}
 			// void CGameRules::RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrcIn, float flRadius, int iClassIgnore, CBaseEntity *pEntityIgnore )
 			"RadiusDamage"

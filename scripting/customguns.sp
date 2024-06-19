@@ -353,6 +353,7 @@ public OnPluginStart()
 	gunModels = CreateArray(PLATFORM_MAX_PATH);
 	gunSkin = CreateArray();
 	gunType = CreateArray();
+	fofBase = CreateArray();
 	gunDmg = CreateArray();
 	gunAnimPrefix = CreateArray(32);
 	gunType = CreateArray();
@@ -392,10 +393,11 @@ public OnPluginStart()
 
 	CreateConVar("hl2dm_customguns_version", PLUGIN_VERSION, "Customguns version", FCVAR_SPONLY | FCVAR_REPLICATED | FCVAR_NOTIFY);
 	customguns_default = CreateConVar("customguns_default", "weapon_hands", "The preferred custom weapon that players should spawn with");
-	customguns_global_switcher = CreateConVar("customguns_global_switcher", "1", "Enables fast switching from any weapon by holding reload button. If 0, players can switch only when holding a custom weapon.", _, true, 0.0, true, 1.0);
+	customguns_global_switcher = CreateConVar("customguns_global_switcher", "0", "Enables fast switching from any weapon by holding reload button. If 0, players can switch only when holding a custom weapon.", _, true, 0.0, true, 1.0);
 	customguns_order_alphabetically = CreateConVar("customguns_order_alphabetically", "1", "If enabled, orders weapons by name in the menu, rather than the order they were picked up. Only applies to dynamic wheel mode", _, true, 0.0, true, 1.0);
 	customguns_autogive = CreateConVar("customguns_autogive", "1", "Globally enables/disables auto-giving of all custom weapons", _, true, 0.0, true, 1.0);
 	customguns_static_wheel = CreateConVar("customguns_static_wheel", "1", "Enables stationary item placement in the radial menu (1) versus dynamic placement and resizing (0)", _, true, 0.0, true, 1.0);
+	customguns_allow_menu = CreateConVar("customguns_allow_menu", "0", "Enable weapon selection menu.", _, true, 0.0, true, 1.0);
 	HookConVarChange(customguns_static_wheel, WheelModeChanged);
 
 	PrimaryAttackForward = CreateGlobalForward("CG_OnPrimaryAttack", ET_Ignore, Param_Cell, Param_Cell);
@@ -405,6 +407,7 @@ public OnPluginStart()
 
 	cookie_menu_style = RegClientCookie("customguns_style", "CustomGuns menu style cookie", CookieAccess_Public);
 
+	RegAdminCmd("cg", CustomGun, ADMFLAG_ROOT, "Spawns a custom gun by classname");
 	RegAdminCmd("sm_customgun", CustomGun, ADMFLAG_ROOT, "Spawns a custom gun by classname");
 	RegAdminCmd("sm_customguns", CustomGun, ADMFLAG_ROOT, "Spawns a custom gun by classname");
 	RegConsoleCmd("sm_gunmenu", ShowStyleMenu, "Opens customguns wheel style selector");
@@ -673,7 +676,22 @@ int spawnGun(int index, const float origin[3] = NULL_VECTOR)
 	// weapon_hl2mp_base : the same as above, flickers
 	// basehlcombatweapon : pretty good, but overshadowing with other weapons at slot 0,0
 	// weapon_cubemap : also good, but does not show stock ammo of player (pesky cubemap has -1 clips and no ammotype on client by default)
-	int ent = CreateEntityByName("weapon_cubemap");
+	// int ent = CreateEntityByName("weapon_cubemap");
+	FofBase fofbase = GetArrayCell(fofBase, index);
+	int ent = -1;
+	if (fofbase == FofBase_Pistol) {
+		ent = CreateEntityByName("weapon_coltnavy");
+	}
+	else if (fofbase == FofBase_Melee) {
+		ent = CreateEntityByName("weapon_axe");
+	}
+	else if (fofbase == FofBase_Large) {
+		 ent = CreateEntityByName("weapon_shotgun");
+	}
+	else if (fofbase == FofBase_Boom) {
+		ent = CreateEntityByName("weapon_dynamite");
+	} 
+
 	if (ent != -1)
 	{
 		GunType guntype = GetArrayCell(gunType, index);
@@ -762,7 +780,7 @@ public Action OnPlayerRunCmd(client, &buttons, &impulse, float vel[3], float ang
 		int gunIndex = getIndex(sWeapon);
 
 		// handle opening/closing menu
-		if (!open[client] && IsPlayerAlive(client) && !zooming(client) && inventory[client] && GetArraySize(inventory[client]) > 0 && GetEntProp(client, Prop_Send, "m_iTeamNum") != 1)
+		if (customguns_allow_menu && !open[client] && IsPlayerAlive(client) && !zooming(client) && inventory[client] && GetArraySize(inventory[client]) > 0 && GetEntProp(client, Prop_Send, "m_iTeamNum") != 1)
 		{
 			if (buttons & IN_ATTACK3)
 			{
