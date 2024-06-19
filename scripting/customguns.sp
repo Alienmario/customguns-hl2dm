@@ -537,6 +537,8 @@ public OnClientPutInServer(int client)
 		SDKHook(client, SDKHook_WeaponSwitch, OnWeaponSwitch);
 		SDKHook(client, SDKHook_WeaponSwitchPost, OnWeaponSwitchPost);
 		SDKHook(client, SDKHook_WeaponEquipPost, OnWeaponEquipPost);
+		//SDKHook(client, SDKHook_PostThinkPost, OnPostThinkPost); Hooks for potential prediction fix, see hooks.inc for more
+		//SDKHook(client, SDKHook_ThinkPost, OnThinkPost);
 		DHookEntity(DHOOK_FireBullets, false, client);
 		DHookEntity(DHOOK_TranslateActivity, false, client);
 		DHookEntity(DHOOK_BumpWeapon, false, client);
