@@ -32,6 +32,7 @@ loadConfig()
 					{
 						if (KvJumpToKeyFix(kv, "CustomGunsPluginData"))
 						{
+							PrintToServer("STARTING LOAD OF %s", filename);
 							PushArrayString(gunAnimPrefix, animPrefix);
 							Format(filename, strlen(filename) - 3, filename);
 							PushArrayString(gunClassNames, filename);
@@ -58,8 +59,25 @@ loadConfig()
 							PushArrayString(gunScopeSoundOff, buffer);
 
 							KvGetString(kv, "fof_base", buffer, sizeof(buffer), "");
-							PushArrayString(fofBase, buffer);
-
+							if (StrEqual(buffer, "pistol", false)) {
+								PushArrayCell(fofBase, FofBase_Pistol);
+							}
+							else if (StrEqual(buffer, "melee", false)) {
+								PushArrayCell(fofBase, FofBase_Melee);
+							}
+							else if (StrEqual(buffer, "large", false)) {
+								PushArrayCell(fofBase, FofBase_Large);
+							}
+							else if (StrEqual(buffer, "zoom", false)) {
+								PushArrayCell(fofBase, FofBase_Zoom);
+							}
+							else if (StrEqual(buffer, "boom", false)) {
+								PushArrayCell(fofBase, FofBase_Boom);
+							} else {
+								PrintToServer("Error reading fof base, defaulting to pistol");
+								PushArrayCell(fofBase, FofBase_Pistol);
+							}
+							
 							KvGetString(kv, "weapon_type", buffer, sizeof(buffer), "");
 
 							bool shouldGoBack = false;
@@ -160,6 +178,7 @@ loadConfig()
 						}
 					}
 					delete kv;
+					PrintToServer("ENDING LOAD OF %s", filename);
 				}
 			}
 		}
@@ -480,16 +499,22 @@ int getDefaultIndex()
 
 bool canHaveGun(int client, int gunIndex, bool ignoreAdminLevel)
 {
+	// if (FindValueInArray(inventory[client], gunIndex) == -1)
+	// {
+	// 	int clientFlags = GetUserFlagBits(client);
+	// 	int gunFlags = GetArrayCell(gunAdminLevel, gunIndex);
+	// 	if (ignoreAdminLevel || gunFlags == -1 || clientFlags & ADMFLAG_ROOT || clientFlags & gunFlags)
+	// 	{
+	// 		return true;
+	// 	}
+	// }
+	// return false;
+	
+	// To be fof-like, player can only have gun if it is not in inventory already
 	if (FindValueInArray(inventory[client], gunIndex) == -1)
 	{
-		int clientFlags = GetUserFlagBits(client);
-		int gunFlags = GetArrayCell(gunAdminLevel, gunIndex);
-		if (ignoreAdminLevel || gunFlags == -1 || clientFlags & ADMFLAG_ROOT || clientFlags & gunFlags)
-		{
-			return true;
-		}
+		return true;
 	}
-	return false;
 }
 
 GunType getType(int index)

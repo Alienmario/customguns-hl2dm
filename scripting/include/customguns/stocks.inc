@@ -511,7 +511,8 @@ stock void swapVM(int client, bool predicted)
 {
 	int oldVM = GetEntPropEnt(client, Prop_Send, "m_hViewModel");
 	char newClassname[32];
-	newClassname = predicted ? "predicted_viewmodel" : "viewmodel";
+	//newClassname = predicted ? "predicted_viewmodel" : "viewmodel";
+	newClassname = "predicted_viewmodel";
 
 	if (oldVM != -1)
 	{

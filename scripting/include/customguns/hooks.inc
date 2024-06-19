@@ -225,6 +225,7 @@ public MRESReturn Operator_HandleAnimEvent(int weapon, Handle hParams)
 // bool CBasePlayer::BumpWeapon( CBaseCombatWeapon *pWeapon )
 public MRESReturn BumpWeapon(int client, Handle hReturn, Handle hParams)
 {
+	PrintToServer("BumWeapon");
 	int gun = DHookGetParam(hParams, 1);
 	int gunIndex = getIndexEnt(gun);
 
@@ -515,9 +516,13 @@ public MRESReturn SecondaryAttack(int weapon)
 public MRESReturn Drop(int weapon)
 {
 	int client = GetOwner(weapon);
-	if (IsPlayer(client))
+	if (IsPlayer(client) && isCustom(weapon))
 	{
+		PrintToServer("[CG] Dropping custom weapon %d", client);
 		clearInventory(client);
+
+		SDKHooks_DropWeapon(client, weapon);
+		return MRES_Supercede;
 	}
 	return MRES_Ignored;
 }

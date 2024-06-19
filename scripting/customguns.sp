@@ -395,7 +395,7 @@ public OnPluginStart()
 	customguns_default = CreateConVar("customguns_default", "weapon_hands", "The preferred custom weapon that players should spawn with");
 	customguns_global_switcher = CreateConVar("customguns_global_switcher", "0", "Enables fast switching from any weapon by holding reload button. If 0, players can switch only when holding a custom weapon.", _, true, 0.0, true, 1.0);
 	customguns_order_alphabetically = CreateConVar("customguns_order_alphabetically", "1", "If enabled, orders weapons by name in the menu, rather than the order they were picked up. Only applies to dynamic wheel mode", _, true, 0.0, true, 1.0);
-	customguns_autogive = CreateConVar("customguns_autogive", "1", "Globally enables/disables auto-giving of all custom weapons", _, true, 0.0, true, 1.0);
+	customguns_autogive = CreateConVar("customguns_autogive", "0", "Globally enables/disables auto-giving of all custom weapons", _, true, 0.0, true, 1.0);
 	customguns_static_wheel = CreateConVar("customguns_static_wheel", "1", "Enables stationary item placement in the radial menu (1) versus dynamic placement and resizing (0)", _, true, 0.0, true, 1.0);
 	customguns_allow_menu = CreateConVar("customguns_allow_menu", "0", "Enable weapon selection menu.", _, true, 0.0, true, 1.0);
 	HookConVarChange(customguns_static_wheel, WheelModeChanged);
@@ -678,19 +678,28 @@ int spawnGun(int index, const float origin[3] = NULL_VECTOR)
 	// weapon_cubemap : also good, but does not show stock ammo of player (pesky cubemap has -1 clips and no ammotype on client by default)
 	// int ent = CreateEntityByName("weapon_cubemap");
 	FofBase fofbase = GetArrayCell(fofBase, index);
+	PrintToServer("Fofbase: %d", fofbase)
 	int ent = -1;
 	if (fofbase == FofBase_Pistol) {
 		ent = CreateEntityByName("weapon_coltnavy");
+		PrintToServer("Pistol selected, %d", ent);
 	}
 	else if (fofbase == FofBase_Melee) {
 		ent = CreateEntityByName("weapon_axe");
+		PrintToServer("Melee selected, %d", ent);
 	}
 	else if (fofbase == FofBase_Large) {
-		 ent = CreateEntityByName("weapon_shotgun");
+		ent = CreateEntityByName("weapon_shotgun");
+	}
+	else if (fofbase == FofBase_Zoom) {
+		ent = CreateEntityByName("weapon_sharps");
 	}
 	else if (fofbase == FofBase_Boom) {
 		ent = CreateEntityByName("weapon_dynamite");
-	} 
+	} else {
+		PrintToServer("Error, entity is %d", ent);
+	}
+	PrintToServer("Entity: %d", ent);
 
 	if (ent != -1)
 	{
@@ -700,8 +709,15 @@ int spawnGun(int index, const float origin[3] = NULL_VECTOR)
 		DHookEntity(DHOOK_Holster, true, ent);
 		DHookEntity(DHOOK_GetDefaultClip1, true, ent);
 
-		DHookEntity(DHOOK_SecondaryAttack, false, ent);
-		DHookEntity(DHOOK_Drop, false, ent);
+		if (fofBase == FofBase_Melee) {
+			DHookEntity(DHOOK_SecondaryAttack, true, ent);
+			DHookEntity(DHOOK_Drop, true, ent);
+		}
+		else {
+			DHookEntity(DHOOK_SecondaryAttack, false, ent);
+			DHookEntity(DHOOK_Drop, false, ent);
+		}
+		
 
 		if (guntype == GunType_Bullet)
 		{
