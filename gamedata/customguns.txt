@@ -231,7 +231,7 @@
 			// void CGameRules::RadiusDamage( const CTakeDamageInfo &info, const Vector &vecSrcIn, float flRadius, int iClassIgnore, CBaseEntity *pEntityIgnore )
 			"RadiusDamage"
 			{
-				"windows"	"69"
+				"windows"	"68"
 				"linux"		"69"
 				"mac"		"69"
 			}
