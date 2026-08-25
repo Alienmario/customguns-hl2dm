@@ -557,8 +557,6 @@ int RDH_WEAPON;
 
 void RadiusDamageHack(int inflictor, int attacker, float dmg, int dmgType, int weapon, const float origin[3], float radius, int ignoreEntity)
 {
-#define DAMAGE_NO 0
-
 	int prevTakeDamage;
 	if (ignoreEntity != -1)
 	{
